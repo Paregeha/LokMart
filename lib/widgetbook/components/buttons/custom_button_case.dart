@@ -3,7 +3,7 @@ import 'package:flutter_base_architecture/widgets/buttons/custom_circle_radio_bu
 import 'package:flutter_base_architecture/widgets/buttons/custom_square_radio_button_widget.dart';
 import 'package:widgetbook/widgetbook.dart';
 
-import '../../../widgets/buttons/custom_button_widget.dart'; // поправ шлях
+import '../../../widgets/buttons/custom_button_widget.dart';
 
 final customButtonComponent = WidgetbookComponent(
   name: 'CustomButtonsWidget',
@@ -63,7 +63,14 @@ final customButtonComponent = WidgetbookComponent(
     WidgetbookUseCase(
       name: 'CircleRadioButton',
       builder: (context) {
-        return Center(child: CustomCircleRadioButtonWidget());
+        final bool isSelected = context.knobs.boolean(
+          label: 'Is Selected',
+          initialValue: true,
+        );
+
+        return Center(
+          child: CustomCircleRadioButtonWidget(isSelected: isSelected),
+        );
       },
     ),
   ],

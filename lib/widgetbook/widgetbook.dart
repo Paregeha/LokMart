@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_base_architecture/widgetbook/components/buttons/custom_slider_case.dart';
 import 'package:widgetbook/widgetbook.dart';
 
 import 'components/buttons/custom_button_case.dart';
@@ -30,7 +31,10 @@ class MyWidgetbook extends StatelessWidget {
         ),
       ],
       directories: [
-        WidgetbookCategory(name: 'UI', children: [customButtonComponent]),
+        WidgetbookCategory(
+          name: 'Widgets',
+          children: [customButtonComponent, customSliderComponent],
+        ),
       ],
     );
   }
