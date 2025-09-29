@@ -9,3 +9,7 @@ linter:
     - directives_ordering
     - prefer_single_quotes
     - sort_constructors_first
+
+analyzer:
+  exclude:
+    - lib/swagger_generated_code/**
