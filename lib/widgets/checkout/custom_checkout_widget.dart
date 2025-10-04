@@ -18,42 +18,73 @@ class _CustomCheckoutWidgetState extends State<CustomCheckoutWidget> {
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Ink(
-            child: Row(
-              // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.center,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
               children: [
-                Container(
-                  decoration: BoxDecoration(
-                    color: AppColors.orange,
-                    borderRadius: BorderRadius.circular(14.0),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Container(
+                        decoration: BoxDecoration(
+                          color: AppColors.orange,
+                          borderRadius: BorderRadius.circular(14.0),
+                        ),
+                        width: 40.0,
+                        height: 40.0,
+                        child: Icon(
+                          Icons.check_rounded,
+                          color: AppColors.white,
+                        ),
+                      ),
+                      Expanded(
+                        child: Container(height: 2.0, color: AppColors.orange),
+                      ),
+                      Container(
+                        decoration: BoxDecoration(
+                          color: AppColors.white,
+                          borderRadius: BorderRadius.circular(14.0),
+                          border: Border.all(
+                            width: 3.0,
+                            color: AppColors.orange,
+                          ),
+                        ),
+                        width: 40.0,
+                        height: 40.0,
+                        child: Center(
+                          child: Container(
+                            width: 20.0,
+                            height: 20.0,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: AppColors.orange,
+                            ),
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        child: Container(height: 2.0, color: AppColors.grey),
+                      ),
+                      Container(
+                        decoration: BoxDecoration(
+                          color: AppColors.grey,
+                          borderRadius: BorderRadius.circular(14.0),
+                        ),
+                        width: 40.0,
+                        height: 40.0,
+                      ),
+                    ],
                   ),
-                  width: 40.0,
-                  height: 40.0,
-                  child: Icon(Icons.check_rounded, color: AppColors.white),
                 ),
-                Expanded(
-                  child: Container(height: 2.0, color: AppColors.orange),
-                ),
-                Container(
-                  decoration: BoxDecoration(
-                    color: AppColors.orange,
-                    borderRadius: BorderRadius.circular(14.0),
-                  ),
-                  width: 40.0,
-                  height: 40.0,
-                  child: Icon(Icons.check_rounded, color: AppColors.white),
-                ),
-                Expanded(
-                  child: Container(height: 2.0, color: AppColors.orange),
-                ),
-                Container(
-                  decoration: BoxDecoration(
-                    color: AppColors.orange,
-                    borderRadius: BorderRadius.circular(14.0),
-                  ),
-                  width: 40.0,
-                  height: 40.0,
-                  child: Icon(Icons.check_rounded, color: AppColors.white),
+                SizedBox(height: 11.0),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text('Delivery'),
+                    Text('Address'),
+                    Text('Payment'),
+                  ],
                 ),
               ],
             ),
