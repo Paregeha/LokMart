@@ -137,6 +137,10 @@ class $AssetsImagesGen {
   AssetGenImage get mainBanner =>
       const AssetGenImage('assets/images/main_banner.png');
 
+  /// File path: assets/images/mastercard.png
+  AssetGenImage get mastercard =>
+      const AssetGenImage('assets/images/mastercard.png');
+
   /// File path: assets/images/on_boarding_four.png
   AssetGenImage get onBoardingFour =>
       const AssetGenImage('assets/images/on_boarding_four.png');
@@ -164,6 +168,9 @@ class $AssetsImagesGen {
   /// File path: assets/images/tomtato.png
   AssetGenImage get tomtato => const AssetGenImage('assets/images/tomtato.png');
 
+  /// File path: assets/images/visa.png
+  AssetGenImage get visa => const AssetGenImage('assets/images/visa.png');
+
   /// List of all assets
   List<AssetGenImage> get values => [
     apple,
@@ -178,6 +185,7 @@ class $AssetsImagesGen {
     icLemon,
     logo,
     mainBanner,
+    mastercard,
     onBoardingFour,
     onBoardingOne,
     onBoardingThree,
@@ -185,6 +193,7 @@ class $AssetsImagesGen {
     strawberry,
     strawberryTwo,
     tomtato,
+    visa,
   ];
 }
 

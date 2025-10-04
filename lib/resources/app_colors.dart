@@ -9,6 +9,12 @@ class AppColors {
   static const Color cardOneGradientOne = Color(0xFF2D5CFF);
   static const Color cardOneGradientTwo = Color(0xFF6958DD);
 
+  static const Color cardThreeGradientOne = Color(0xFF3887FC);
+  static const Color cardThreeGradientTwo = Color(0xFF024FC7);
+
+  static const Color cardFourGradientOne = Color(0xFFF91FCE);
+  static const Color cardFourGradientTwo = Color(0xFF7202C7);
+
   static const Color cardTwoGradientOne = Color(0xFF0FC4A9);
   static const Color cardTwoGradientTwo = Color(0xFF1089DE);
 

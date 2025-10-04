@@ -4,6 +4,7 @@ import 'package:flutter_base_architecture/widgetbook/components/Sliders/custom_s
 import 'package:flutter_base_architecture/widgetbook/components/TextFields/custom_text_field_case.dart';
 import 'package:flutter_base_architecture/widgetbook/components/buttons/custom_cards_buttons_case.dart';
 import 'package:flutter_base_architecture/widgetbook/components/checkout/custom_checkout_case.dart';
+import 'package:flutter_base_architecture/widgetbook/components/credit_card/custom_creadit_card_case.dart';
 import 'package:widgetbook/widgetbook.dart';
 
 import 'components/buttons/custom_button_case.dart';
@@ -46,6 +47,7 @@ class MyWidgetbook extends StatelessWidget {
             customTextFieldWidget,
             customCardsButtonsComponent,
             customCheckoutComponent,
+            customCreditCardCase,
           ],
         ),
       ],
