@@ -9,6 +9,8 @@
 // ignore_for_file: type=lint
 // ignore_for_file: deprecated_member_use,directives_ordering,implicit_dynamic_list_literal,unnecessary_import
 
+import 'package:flutter/widgets.dart';
+
 class $AssetsIconsGen {
   const $AssetsIconsGen();
 
@@ -89,8 +91,194 @@ class $AssetsIconsGen {
   ];
 }
 
+class $AssetsImagesGen {
+  const $AssetsImagesGen();
+
+  /// File path: assets/images/apple.png
+  AssetGenImage get apple => const AssetGenImage('assets/images/apple.png');
+
+  /// File path: assets/images/banana.png
+  AssetGenImage get banana => const AssetGenImage('assets/images/banana.png');
+
+  /// File path: assets/images/dog_biscuit.png
+  AssetGenImage get dogBiscuit =>
+      const AssetGenImage('assets/images/dog_biscuit.png');
+
+  /// File path: assets/images/fresh_chicken.png
+  AssetGenImage get freshChicken =>
+      const AssetGenImage('assets/images/fresh_chicken.png');
+
+  /// File path: assets/images/fresh_salad.png
+  AssetGenImage get freshSalad =>
+      const AssetGenImage('assets/images/fresh_salad.png');
+
+  /// File path: assets/images/ic_cabbage.png
+  AssetGenImage get icCabbage =>
+      const AssetGenImage('assets/images/ic_cabbage.png');
+
+  /// File path: assets/images/ic_cake.png
+  AssetGenImage get icCake => const AssetGenImage('assets/images/ic_cake.png');
+
+  /// File path: assets/images/ic_chicken.png
+  AssetGenImage get icChicken =>
+      const AssetGenImage('assets/images/ic_chicken.png');
+
+  /// File path: assets/images/ic_fish.png
+  AssetGenImage get icFish => const AssetGenImage('assets/images/ic_fish.png');
+
+  /// File path: assets/images/ic_lemon.png
+  AssetGenImage get icLemon =>
+      const AssetGenImage('assets/images/ic_lemon.png');
+
+  /// File path: assets/images/logo.png
+  AssetGenImage get logo => const AssetGenImage('assets/images/logo.png');
+
+  /// File path: assets/images/main_banner.png
+  AssetGenImage get mainBanner =>
+      const AssetGenImage('assets/images/main_banner.png');
+
+  /// File path: assets/images/on_boarding_four.png
+  AssetGenImage get onBoardingFour =>
+      const AssetGenImage('assets/images/on_boarding_four.png');
+
+  /// File path: assets/images/on_boarding_one.png
+  AssetGenImage get onBoardingOne =>
+      const AssetGenImage('assets/images/on_boarding_one.png');
+
+  /// File path: assets/images/on_boarding_three.png
+  AssetGenImage get onBoardingThree =>
+      const AssetGenImage('assets/images/on_boarding_three.png');
+
+  /// File path: assets/images/on_boarding_two.png
+  AssetGenImage get onBoardingTwo =>
+      const AssetGenImage('assets/images/on_boarding_two.png');
+
+  /// File path: assets/images/strawberry.png
+  AssetGenImage get strawberry =>
+      const AssetGenImage('assets/images/strawberry.png');
+
+  /// File path: assets/images/strawberry_two.png
+  AssetGenImage get strawberryTwo =>
+      const AssetGenImage('assets/images/strawberry_two.png');
+
+  /// File path: assets/images/tomtato.png
+  AssetGenImage get tomtato => const AssetGenImage('assets/images/tomtato.png');
+
+  /// List of all assets
+  List<AssetGenImage> get values => [
+    apple,
+    banana,
+    dogBiscuit,
+    freshChicken,
+    freshSalad,
+    icCabbage,
+    icCake,
+    icChicken,
+    icFish,
+    icLemon,
+    logo,
+    mainBanner,
+    onBoardingFour,
+    onBoardingOne,
+    onBoardingThree,
+    onBoardingTwo,
+    strawberry,
+    strawberryTwo,
+    tomtato,
+  ];
+}
+
 class Assets {
   const Assets._();
 
   static const $AssetsIconsGen icons = $AssetsIconsGen();
+  static const $AssetsImagesGen images = $AssetsImagesGen();
+}
+
+class AssetGenImage {
+  const AssetGenImage(
+    this._assetName, {
+    this.size,
+    this.flavors = const {},
+    this.animation,
+  });
+
+  final String _assetName;
+
+  final Size? size;
+  final Set<String> flavors;
+  final AssetGenImageAnimation? animation;
+
+  Image image({
+    Key? key,
+    AssetBundle? bundle,
+    ImageFrameBuilder? frameBuilder,
+    ImageErrorWidgetBuilder? errorBuilder,
+    String? semanticLabel,
+    bool excludeFromSemantics = false,
+    double? scale,
+    double? width,
+    double? height,
+    Color? color,
+    Animation<double>? opacity,
+    BlendMode? colorBlendMode,
+    BoxFit? fit,
+    AlignmentGeometry alignment = Alignment.center,
+    ImageRepeat repeat = ImageRepeat.noRepeat,
+    Rect? centerSlice,
+    bool matchTextDirection = false,
+    bool gaplessPlayback = true,
+    bool isAntiAlias = false,
+    String? package,
+    FilterQuality filterQuality = FilterQuality.medium,
+    int? cacheWidth,
+    int? cacheHeight,
+  }) {
+    return Image.asset(
+      _assetName,
+      key: key,
+      bundle: bundle,
+      frameBuilder: frameBuilder,
+      errorBuilder: errorBuilder,
+      semanticLabel: semanticLabel,
+      excludeFromSemantics: excludeFromSemantics,
+      scale: scale,
+      width: width,
+      height: height,
+      color: color,
+      opacity: opacity,
+      colorBlendMode: colorBlendMode,
+      fit: fit,
+      alignment: alignment,
+      repeat: repeat,
+      centerSlice: centerSlice,
+      matchTextDirection: matchTextDirection,
+      gaplessPlayback: gaplessPlayback,
+      isAntiAlias: isAntiAlias,
+      package: package,
+      filterQuality: filterQuality,
+      cacheWidth: cacheWidth,
+      cacheHeight: cacheHeight,
+    );
+  }
+
+  ImageProvider provider({AssetBundle? bundle, String? package}) {
+    return AssetImage(_assetName, bundle: bundle, package: package);
+  }
+
+  String get path => _assetName;
+
+  String get keyName => _assetName;
+}
+
+class AssetGenImageAnimation {
+  const AssetGenImageAnimation({
+    required this.isAnimation,
+    required this.duration,
+    required this.frames,
+  });
+
+  final bool isAnimation;
+  final Duration duration;
+  final int frames;
 }

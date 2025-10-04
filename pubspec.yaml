@@ -51,22 +51,31 @@ flutter:
   generate: true
   assets:
     - assets/icons/
-#    - assets/images/
+    - assets/images/
 #    - assets/translations/
 #    - assets/videos/
 #
-#  #Шрифти під різний тип жирності(можна побачити в resources > AppFonts)
-#  fonts:
-#    - family: Lato
-#      fonts:
-#        - asset: assets/fonts/lato/Lato-Regular.ttf
-#          weight: 400
-#        - asset: assets/fonts/lato/Lato-Bold.ttf
-#          weight: 700
-#        - asset: assets/fonts/lato/Lato-ExtraBold.ttf
-#          weight: 800
-#        - asset: assets/fonts/lato/Lato-Heavy.ttf
-#          weight: 900
+  fonts:
+    - family: Poppins
+      fonts:
+        - asset: assets/fonts/poppins/Poppins-Thin.ttf
+          weight: 100
+        - asset: assets/fonts/poppins/Poppins-ExtraLight.ttf
+          weight: 200
+        - asset: assets/fonts/poppins/Poppins-Light.ttf
+          weight: 300
+        - asset: assets/fonts/poppins/Poppins-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/poppins/Poppins-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/poppins/Poppins-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/poppins/Poppins-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/poppins/Poppins-ExtraBold.ttf
+          weight: 800
+        - asset: assets/fonts/poppins/Poppins-Black.ttf
+          weight: 900
 
 #flutter_gen:
 #  output: lib/gen/
