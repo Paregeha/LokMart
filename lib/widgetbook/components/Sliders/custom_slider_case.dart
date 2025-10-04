@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_base_architecture/widgets/buttons/custom_slider_widget.dart';
 import 'package:widgetbook/widgetbook.dart';
@@ -24,8 +23,8 @@ final customSliderComponent = WidgetbookComponent(
         return Center(
           child: CustomSliderWidget(
             values: RangeValues(start, end),
-            onChanged: (_) {}, // у цьому варіанті зворотний зв'язок не потрібен
-            currency: r'%',
+            onChanged: (_) {},
+            currency: r'$',
           ),
         );
       },

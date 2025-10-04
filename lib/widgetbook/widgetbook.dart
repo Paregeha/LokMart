@@ -1,11 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_base_architecture/widgetbook/components/Sliders/custom_slider_case.dart';
 import 'package:flutter_base_architecture/widgetbook/components/TextFields/custom_text_field_case.dart';
+import 'package:flutter_base_architecture/widgetbook/components/buttons/custom_cards_buttons_case.dart';
+import 'package:flutter_base_architecture/widgetbook/components/checkout/custom_checkout_case.dart';
 import 'package:widgetbook/widgetbook.dart';
 
 import 'components/buttons/custom_button_case.dart';
 
-void main() => runApp(const MyWidgetbook());
+void main() {
+  debugPaintBaselinesEnabled = false;
+  runApp(const MyWidgetbook());
+}
 
 class MyWidgetbook extends StatelessWidget {
   const MyWidgetbook({super.key});
@@ -38,6 +44,8 @@ class MyWidgetbook extends StatelessWidget {
             customButtonComponent,
             customSliderComponent,
             customTextFieldWidget,
+            customCardsButtonsComponent,
+            customCheckoutComponent,
           ],
         ),
       ],

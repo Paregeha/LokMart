@@ -14,7 +14,7 @@ class AppColors {
 
   static const Color disable = Color(0xFF2D2D2D);
   static const Color dark = Color(0xFF303733);
-  static const Color softColor = Color(0xFF7D8FAB);
+  static const Color softGray = Color(0xFF7D8FAB);
   static const Color grey = Color(0xFFBFC9DA);
   static const Color grey1 = Color(0xFFE8ECF2);
   static const Color white = Color(0xFFFFFFFF);

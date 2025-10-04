@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../resources/app_colors.dart';
+
 class CustomSliderWidget extends StatefulWidget {
   const CustomSliderWidget({
     super.key,
@@ -7,7 +9,7 @@ class CustomSliderWidget extends StatefulWidget {
     this.max = 500.0,
     required this.values,
     required this.onChanged,
-    this.currency = r'$',
+    this.currency = r'\$',
   });
 
   final double min;
@@ -25,75 +27,103 @@ class _CustomSliderWidgetState extends State<CustomSliderWidget> {
 
   @override
   Widget build(BuildContext context) {
-    const active = Color(0xFFF07A3B); // помаранчевий
-    const inactive = Color(0xFFE9EEF4); // сірий трек
+    const active = AppColors.orange;
+    const inactive = AppColors.grey1;
 
-    return LayoutBuilder(
-      builder: (context, bc) {
-        final w = bc.maxWidth;
-        // позиції підписів — частка від ширини
-        final leftX =
-            ((_values.start - widget.min) / (widget.max - widget.min)) * w;
-        final rightX =
-            ((_values.end - widget.min) / (widget.max - widget.min)) * w;
+    const labelHeight = 24.0;
+    const labelGap = 6.0;
+    const sliderHeight = 36.0;
+    const topOffset = labelHeight + labelGap;
 
-        return Stack(
-          clipBehavior: Clip.none,
-          children: [
-            // Підписи над ручками
-            Positioned(
-              left: (leftX - 20).clamp(0, w - 40),
-              top: -24,
-              width: 40,
-              child: _PriceLabel(
-                text: '${widget.currency}${_values.start.round()}',
-              ),
-            ),
-            Positioned(
-              left: (rightX - 28).clamp(0, w - 56),
-              top: -24,
-              width: 56,
-              child: _PriceLabel(
-                text: '${widget.currency}${_values.end.round()}',
-              ),
-            ),
+    return SizedBox(
+      height: topOffset + sliderHeight,
+      child: LayoutBuilder(
+        builder: (context, bc) {
+          final w = bc.maxWidth;
+          final leftX =
+              ((_values.start - widget.min) / (widget.max - widget.min)) * w;
+          final rightX =
+              ((_values.end - widget.min) / (widget.max - widget.min)) * w;
 
-            // Сам слайдер
-            SliderTheme(
-              data: SliderTheme.of(context).copyWith(
-                trackHeight: 3,
-                activeTrackColor: active,
-                inactiveTrackColor: inactive,
-                overlayShape: SliderComponentShape.noOverlay,
-                rangeThumbShape: _RoundThumbWithShadow(
-                  radius: 10,
-                  color: active,
+          return Stack(
+            clipBehavior: Clip.none,
+            children: [
+              Positioned.fill(
+                top: topOffset,
+                child: SliderTheme(
+                  data: SliderTheme.of(context).copyWith(
+                    trackHeight: 3,
+                    activeTrackColor: active,
+                    inactiveTrackColor: inactive,
+                    overlayShape: SliderComponentShape.noOverlay,
+                    rangeThumbShape: const _RoundThumbWithShadow(
+                      radius: 10,
+                      color: active,
+                    ),
+                    thumbColor: AppColors.white,
+                    rangeTrackShape: const RoundedRectRangeSliderTrackShape(),
+                    rangeValueIndicatorShape:
+                        const PaddleRangeSliderValueIndicatorShape(),
+                  ),
+                  child: RangeSlider(
+                    min: widget.min,
+                    max: widget.max,
+                    values: _values,
+                    onChanged: (v) {
+                      setState(() => _values = v);
+                      widget.onChanged(v);
+                    },
+                  ),
                 ),
-                thumbColor: Colors.white,
-                rangeTrackShape: const RoundedRectRangeSliderTrackShape(),
-                rangeValueIndicatorShape:
-                    const PaddleRangeSliderValueIndicatorShape(),
               ),
-              child: RangeSlider(
-                min: widget.min,
-                max: widget.max,
-                values: _values,
-                onChanged: (v) {
-                  setState(() => _values = v);
-                  widget.onChanged(v);
-                },
+
+              Positioned(
+                top: 0,
+                left: (leftX - 20).clamp(0, w - 40),
+                width: 40,
+                height: labelHeight,
+                child: _PriceLabelPlaceholder(),
               ),
-            ),
-          ],
-        );
-      },
+              Positioned(
+                top: 0,
+                left: (rightX - 28).clamp(0, w - 56),
+                width: 56,
+                height: labelHeight,
+                child: _PriceLabelPlaceholder(),
+              ),
+
+              Positioned(
+                top: 0,
+                left: (leftX - 20).clamp(0, w - 40),
+                width: 40,
+                height: labelHeight,
+                child: Center(
+                  child: _PriceLabel(
+                    text: '${widget.currency} ${_values.start.round()}',
+                  ),
+                ),
+              ),
+              Positioned(
+                top: 0,
+                left: (rightX - 28).clamp(0, w - 56),
+                width: 56,
+                height: labelHeight,
+                child: Center(
+                  child: _PriceLabel(
+                    text: '${widget.currency} ${_values.end.round()}',
+                  ),
+                ),
+              ),
+            ],
+          );
+        },
+      ),
     );
   }
 }
 
 class _PriceLabel extends StatelessWidget {
   const _PriceLabel({required this.text});
-
   final String text;
 
   @override
@@ -102,18 +132,22 @@ class _PriceLabel extends StatelessWidget {
       text,
       textAlign: TextAlign.center,
       style: const TextStyle(
-        fontSize: 14,
-        color: Color(0xFF8592A6), // сіро-блакитний як на скріні
+        fontSize: 12,
+        color: AppColors.softGray,
         fontWeight: FontWeight.w600,
       ),
     );
   }
 }
 
-/// Кастомний “кружок” з помаранчевим внутрішнім і білим кільцем + тінь
+class _PriceLabelPlaceholder extends StatelessWidget {
+  const _PriceLabelPlaceholder();
+  @override
+  Widget build(BuildContext context) => const SizedBox.shrink();
+}
+
 class _RoundThumbWithShadow extends RangeSliderThumbShape {
   const _RoundThumbWithShadow({required this.radius, required this.color});
-
   final double radius;
   final Color color;
 
@@ -135,19 +169,13 @@ class _RoundThumbWithShadow extends RangeSliderThumbShape {
     TextDirection textDirection = TextDirection.ltr,
     Thumb thumb = Thumb.start,
   }) {
-    final canvas = context.canvas;
-
-    // тінь
-    final shadowPaint =
+    final c = context.canvas;
+    final shadow =
         Paint()
-          ..color = Colors.black.withOpacity(0.15)
-          ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 6);
-    canvas.drawCircle(center.translate(0, 1), radius + 2, shadowPaint);
-
-    // біле кільце
-    canvas.drawCircle(center, radius + 4, Paint()..color = Colors.white);
-
-    // помаранчевий заповнювач
-    canvas.drawCircle(center, radius, Paint()..color = color);
+          ..color = Colors.black.withValues(alpha: 0.25)
+          ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 8);
+    c.drawCircle(center.translate(0, 2), radius + 4, shadow);
+    c.drawCircle(center, radius + 3, Paint()..color = AppColors.white);
+    c.drawCircle(center, radius, Paint()..color = color);
   }
 }

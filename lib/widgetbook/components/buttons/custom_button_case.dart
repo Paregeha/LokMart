@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_base_architecture/widgets/buttons/custom_button_count_widget.dart';
 import 'package:flutter_base_architecture/widgets/buttons/custom_button_profile_widget.dart';
 import 'package:flutter_base_architecture/widgets/buttons/custom_circle_radio_button_widget.dart';
 import 'package:flutter_base_architecture/widgets/buttons/custom_circle_second_radio_button_widget.dart';
@@ -109,6 +110,42 @@ final customButtonComponent = WidgetbookComponent(
             icon: SvgPicture.asset(Assets.icons.email),
             label: label,
             isLogout: isLogout,
+          ),
+        );
+      },
+    ),
+    WidgetbookUseCase(
+      name: 'ButtonCounts',
+      builder: (context) {
+        final String widthCountString = context.knobs.string(
+          label: 'widthCount',
+          initialValue: '100.0',
+        );
+        final double widthCount = double.tryParse(widthCountString) ?? 0;
+
+        final String heightCountString = context.knobs.string(
+          label: 'heightCount',
+          initialValue: '30.0',
+        );
+        final double heightCount = double.tryParse(heightCountString) ?? 0;
+
+        final String widthCountBigString = context.knobs.string(
+          label: 'widthBigCount',
+          initialValue: '100.0',
+        );
+        final double widthBigCount = double.tryParse(widthCountBigString) ?? 0;
+
+        final String heightCountBigString = context.knobs.string(
+          label: 'heightBigCount',
+          initialValue: '30.0',
+        );
+        final double heightBigCount =
+            double.tryParse(heightCountBigString) ?? 0;
+
+        return Center(
+          child: CustomButtonCountWidget(
+            heightCount: heightBigCount,
+            widthCount: widthBigCount,
           ),
         );
       },

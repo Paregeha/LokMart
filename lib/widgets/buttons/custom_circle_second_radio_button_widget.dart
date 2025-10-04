@@ -27,7 +27,7 @@ class CustomCircleSecondRadioButtonWidget extends StatelessWidget {
           color: isSelected ? null : Colors.transparent,
           shape: BoxShape.circle,
           border: Border.all(
-            color: isSelected ? Colors.transparent : AppColors.softColor,
+            color: isSelected ? Colors.transparent : AppColors.softGray,
             width: 2.0,
           ),
         ),

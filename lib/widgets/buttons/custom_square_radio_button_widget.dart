@@ -1,7 +1,5 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_base_architecture/resources/app_colors.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 class CustomRadioButtonWidget extends StatelessWidget {
   const CustomRadioButtonWidget({
@@ -38,7 +36,7 @@ class CustomRadioButtonWidget extends StatelessWidget {
           border:
               isSelected
                   ? null
-                  : Border.all(color: AppColors.softColor, width: 2.0),
+                  : Border.all(color: AppColors.softGray, width: 2.0),
         ),
         child: InkWell(
           onTap: onPressed,
