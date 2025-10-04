@@ -7,7 +7,14 @@ targets:
       - input_folder/**
       - swagger_examples/**
       - $package$
+
     builders:
+      # ВАЖЛИВО: використовуємо повну назву "package:builder"
+      json_serializable:json_serializable:
+        generate_for:
+          exclude:
+            - lib/swagger_generated_code/**
+
       chopper_generator:
         options:
           header: "//Generated code"
@@ -20,6 +27,7 @@ targets:
             - url: "https://raw.githubusercontent.com/Paregeha/strapi_example/refs/heads/main/src/extensions/documentation/documentation/1.0.0/full_documentation.json"
               file_name: "some_file_name.json"
             - url: "https://raw.githubusercontent.com/Paregeha/strapi_example/refs/heads/main/src/extensions/documentation/documentation/1.0.0/full_documentation.json"
+
           with_base_url: true
           with_converter: true
           use_path_for_request_names: true
@@ -27,29 +35,37 @@ targets:
           use_default_null_for_lists: false
           override_equals_and_hashcode: true
           build_only_models: false
+
           additional_headers:
             - "Cache-Control"
+
           overriden_models:
             - file_name: "pet_service_json"
               import_url: "../overriden_models.dart"
               overriden_models:
                 - "Pet"
                 - "Order"
+
           separate_models: false
           enums_case_sensitive: false
           cut_from_model_names: "ModelRenameV3"
+
           nullable_models:
             - "Pet"
             - "Dog"
+
           ignore_headers: false
           use_required_attribute_for_headers: false
           include_if_null: false
+
           classes_with_nullabe_lists:
             - "Pet"
             - "Dog"
             - "Cat"
+
           exclude_paths:
             - "/items/{id}"
+
           response_override_value_map:
             - url: "/v2/commons/availableColours"
               method: get
@@ -69,11 +85,13 @@ targets:
             - url: "/v2/detailscreen/{crid}"
               method: get
               overridden_value: "Map<String, dynamic>"
+
           default_header_values_map:
             - header_name: "X-Entitlements-Token"
               default_value: "X-Entitlements-Token"
             - header_name: "X-Cus"
               default_value: "X-Cus"
+
           default_values_map:
             - type_name: String
               default_value: ""

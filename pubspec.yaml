@@ -29,19 +29,20 @@ dev_dependencies:
 
   flutter_lints: ^6.0.0
 
-  widgetbook: ^3.17.0
+  widgetbook: ^3.16.0
   widgetbook_annotation: ^3.0.0
-  widgetbook_generator: ^3.0.0
-
-
+  widgetbook_generator: ^3.16.0
 
   swagger_dart_code_generator: ^4.0.0
+
   chopper_generator: ^8.4.0
 
-  build_runner: ^2.7.1
+  build_runner: 2.7.1
+
+  # Поки не користуєшся FlutterGen — тримай вимкненим
+#  flutter_gen_runner: ^5.6.0
 
   json_serializable: ^6.11.1
-
 
 
 
@@ -50,7 +51,7 @@ flutter:
   generate: true
   assets:
     - assets/icons/
-    - assets/images/
+#    - assets/images/
 #    - assets/translations/
 #    - assets/videos/
 #
@@ -67,3 +68,6 @@ flutter:
 #        - asset: assets/fonts/lato/Lato-Heavy.ttf
 #          weight: 900
 
+#flutter_gen:
+#  output: lib/gen/
+#  line_length: 120

@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_base_architecture/widgets/buttons/custom_button_profile_widget.dart';
 import 'package:flutter_base_architecture/widgets/buttons/custom_circle_radio_button_widget.dart';
+import 'package:flutter_base_architecture/widgets/buttons/custom_circle_second_radio_button_widget.dart';
 import 'package:flutter_base_architecture/widgets/buttons/custom_square_radio_button_widget.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:widgetbook/widgetbook.dart';
 
+import '../../../gen/assets.gen.dart';
 import '../../../widgets/buttons/custom_button_widget.dart';
 
 final customButtonComponent = WidgetbookComponent(
@@ -70,6 +74,42 @@ final customButtonComponent = WidgetbookComponent(
 
         return Center(
           child: CustomCircleRadioButtonWidget(isSelected: isSelected),
+        );
+      },
+    ),
+
+    WidgetbookUseCase(
+      name: 'CircleSecondRadioButton',
+      builder: (context) {
+        final bool isSelected = context.knobs.boolean(
+          label: 'Is Selected',
+          initialValue: true,
+        );
+
+        return Center(
+          child: CustomCircleSecondRadioButtonWidget(isSelected: isSelected),
+        );
+      },
+    ),
+    WidgetbookUseCase(
+      name: 'ButtonProfile',
+      builder: (context) {
+        final String label = context.knobs.string(
+          label: 'Label',
+          initialValue: 'Account Info',
+        );
+
+        final bool isLogout = context.knobs.boolean(
+          label: 'IsLogout',
+          initialValue: true,
+        );
+
+        return Center(
+          child: CustomButtonProfileWidget(
+            icon: SvgPicture.asset(Assets.icons.email),
+            label: label,
+            isLogout: isLogout,
+          ),
         );
       },
     ),
