@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_base_architecture/resources/app_colors.dart';
 
-class CustomCircleSecondRadioButtonWidget extends StatelessWidget {
-  const CustomCircleSecondRadioButtonWidget({
-    super.key,
-    this.isSelected = true,
-  });
+class CustomCircleCheckBoxWidget extends StatelessWidget {
+  const CustomCircleCheckBoxWidget({super.key, this.isSelected = true});
 
   final bool isSelected;
 

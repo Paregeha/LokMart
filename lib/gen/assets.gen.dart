@@ -14,8 +14,20 @@ import 'package:flutter/widgets.dart';
 class $AssetsIconsGen {
   const $AssetsIconsGen();
 
+  /// File path: assets/icons/add_box_black.svg
+  String get addBoxBlack => 'assets/icons/add_box_black.svg';
+
   /// File path: assets/icons/buy.svg
   String get buy => 'assets/icons/buy.svg';
+
+  /// File path: assets/icons/cashon_icon.svg
+  String get cashonIcon => 'assets/icons/cashon_icon.svg';
+
+  /// File path: assets/icons/chat.svg
+  String get chat => 'assets/icons/chat.svg';
+
+  /// File path: assets/icons/chevron.svg
+  String get chevron => 'assets/icons/chevron.svg';
 
   /// File path: assets/icons/delivery.svg
   String get delivery => 'assets/icons/delivery.svg';
@@ -44,6 +56,9 @@ class $AssetsIconsGen {
   /// File path: assets/icons/ic_close.svg
   String get icClose => 'assets/icons/ic_close.svg';
 
+  /// File path: assets/icons/ic_edit.svg
+  String get icEdit => 'assets/icons/ic_edit.svg';
+
   /// File path: assets/icons/ic_filter.svg
   String get icFilter => 'assets/icons/ic_filter.svg';
 
@@ -59,18 +74,34 @@ class $AssetsIconsGen {
   /// File path: assets/icons/minus.svg
   String get minus => 'assets/icons/minus.svg';
 
+  /// File path: assets/icons/order.svg
+  String get order => 'assets/icons/order.svg';
+
+  /// File path: assets/icons/paypal.svg
+  String get paypal => 'assets/icons/paypal.svg';
+
+  /// File path: assets/icons/phone_call.svg
+  String get phoneCall => 'assets/icons/phone_call.svg';
+
   /// File path: assets/icons/pluss.svg
   String get pluss => 'assets/icons/pluss.svg';
 
   /// File path: assets/icons/star.svg
   String get star => 'assets/icons/star.svg';
 
+  /// File path: assets/icons/status.svg
+  String get status => 'assets/icons/status.svg';
+
   /// File path: assets/icons/user.svg
   String get user => 'assets/icons/user.svg';
 
   /// List of all assets
   List<String> get values => [
+    addBoxBlack,
     buy,
+    cashonIcon,
+    chat,
+    chevron,
     delivery,
     email,
     eyeFalse,
@@ -80,13 +111,18 @@ class $AssetsIconsGen {
     icArrowNext,
     icBack,
     icClose,
+    icEdit,
     icFilter,
     icNotification,
     icSearch,
     lock,
     minus,
+    order,
+    paypal,
+    phoneCall,
     pluss,
     star,
+    status,
     user,
   ];
 }

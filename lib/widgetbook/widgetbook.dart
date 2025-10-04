@@ -3,8 +3,11 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_base_architecture/widgetbook/components/Sliders/custom_slider_case.dart';
 import 'package:flutter_base_architecture/widgetbook/components/TextFields/custom_text_field_case.dart';
 import 'package:flutter_base_architecture/widgetbook/components/buttons/custom_cards_buttons_case.dart';
+import 'package:flutter_base_architecture/widgetbook/components/carts/custom_cart_case.dart';
 import 'package:flutter_base_architecture/widgetbook/components/checkout/custom_checkout_case.dart';
 import 'package:flutter_base_architecture/widgetbook/components/credit_card/custom_creadit_card_case.dart';
+import 'package:flutter_base_architecture/widgetbook/components/order/custom_order_cart_case.dart';
+import 'package:flutter_base_architecture/widgets/order_cart/custom_order_cart_widget.dart';
 import 'package:widgetbook/widgetbook.dart';
 
 import 'components/buttons/custom_button_case.dart';
@@ -48,6 +51,8 @@ class MyWidgetbook extends StatelessWidget {
             customCardsButtonsComponent,
             customCheckoutComponent,
             customCreditCardCase,
+            customOrderCartCase,
+            customCartCase,
           ],
         ),
       ],

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_base_architecture/resources/app_colors.dart';
 
-class CustomRadioButtonWidget extends StatelessWidget {
-  const CustomRadioButtonWidget({
+class CustomCheckBoxWidget extends StatelessWidget {
+  const CustomCheckBoxWidget({
     super.key,
     this.isSelected = true,
     this.onPressed,

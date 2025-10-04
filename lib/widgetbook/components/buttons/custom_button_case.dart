@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_base_architecture/widgets/buttons/custom_button_count_widget.dart';
 import 'package:flutter_base_architecture/widgets/buttons/custom_button_profile_widget.dart';
 import 'package:flutter_base_architecture/widgets/buttons/custom_circle_radio_button_widget.dart';
-import 'package:flutter_base_architecture/widgets/buttons/custom_circle_second_radio_button_widget.dart';
-import 'package:flutter_base_architecture/widgets/buttons/custom_square_radio_button_widget.dart';
+import 'package:flutter_base_architecture/widgets/buttons/custom_circle_check_box_widget.dart';
+import 'package:flutter_base_architecture/widgets/buttons/custom_square_check_box_widget.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:widgetbook/widgetbook.dart';
 
@@ -48,14 +48,14 @@ final customButtonComponent = WidgetbookComponent(
     ),
 
     WidgetbookUseCase(
-      name: 'SquareRadioButton',
+      name: 'SquareCheckBox',
       builder: (context) {
         var isSelected = context.knobs.boolean(
           label: 'Is Selected?',
           initialValue: true,
         );
         return Center(
-          child: CustomRadioButtonWidget(
+          child: CustomCheckBoxWidget(
             isSelected: isSelected,
             onPressed: () {
               isSelected = !isSelected;
@@ -80,7 +80,7 @@ final customButtonComponent = WidgetbookComponent(
     ),
 
     WidgetbookUseCase(
-      name: 'CircleSecondRadioButton',
+      name: 'CircleCheckBox',
       builder: (context) {
         final bool isSelected = context.knobs.boolean(
           label: 'Is Selected',
@@ -88,7 +88,7 @@ final customButtonComponent = WidgetbookComponent(
         );
 
         return Center(
-          child: CustomCircleSecondRadioButtonWidget(isSelected: isSelected),
+          child: CustomCircleCheckBoxWidget(isSelected: isSelected),
         );
       },
     ),
