@@ -4,6 +4,7 @@ import 'package:flutter_svg/svg.dart';
 
 import '../../gen/assets.gen.dart';
 import '../../resources/app_colors.dart';
+import '../../resources/app_fonts.dart';
 
 class CustomTextFieldWidget extends StatefulWidget {
   const CustomTextFieldWidget({
@@ -109,9 +110,18 @@ class _CustomTextFieldWidgetState extends State<CustomTextFieldWidget> {
           onSubmitted: widget.onSubmitted,
           inputFormatters: widget.inputFormatters,
           style: widget.textStyle,
+          cursorColor: AppColors.orange,
+          cursorWidth: 2.0,
           decoration: InputDecoration(
             hintText: widget.hintText,
-            hintStyle: widget.hintStyle,
+            hintStyle: TextStyle(
+              color: AppColors.softGray,
+              fontSize: 16.0,
+              height: 1,
+              fontWeight: AppFonts.w500medium,
+              fontFamily: AppFonts.fontFamily,
+              letterSpacing: 0,
+            ),
             filled: true,
             fillColor: AppColors.gray1,
             contentPadding: widget.contentPadding,
@@ -131,7 +141,7 @@ class _CustomTextFieldWidgetState extends State<CustomTextFieldWidget> {
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(widget.borderRadius),
-              borderSide: BorderSide(color: AppColors.gray1),
+              borderSide: BorderSide(color: AppColors.orange),
             ),
             disabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(widget.borderRadius),

@@ -11,11 +11,17 @@ import 'package:go_router/go_router.dart';
 
 import '../../../gen/assets.gen.dart';
 
-class SignInPage extends StatelessWidget {
+class SignInPage extends StatefulWidget {
   const SignInPage({super.key});
 
   @override
+  State<SignInPage> createState() => _SignInPageState();
+}
+
+class _SignInPageState extends State<SignInPage> {
+  @override
   Widget build(BuildContext context) {
+    bool isSelected = false;
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: const SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
@@ -41,7 +47,7 @@ class SignInPage extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Spacer(flex: 12),
+                    Spacer(flex: 10),
                     Text(
                       'Welcome back',
                       style: TextStyle(
@@ -67,14 +73,36 @@ class SignInPage extends StatelessWidget {
                     ),
                     Spacer(flex: 1),
                     CustomTextFieldWidget(
-                      hintStyle: TextStyle(),
-                      prefix: SvgPicture.asset(Assets.icons.user),
+                      hintStyle: TextStyle(
+                        color: AppColors.softGray,
+                        fontSize: 16.0,
+                        height: 1,
+                        fontWeight: AppFonts.w500medium,
+                        fontFamily: AppFonts.fontFamily,
+                        letterSpacing: 0,
+                      ),
+                      prefix: Padding(
+                        padding: const EdgeInsets.only(top: 18.0, bottom: 18.0),
+                        child: SvgPicture.asset(
+                          Assets.icons.user,
+                          width: 24.0,
+                          height: 24.0,
+                        ),
+                      ),
                       hintText: 'Enter your login',
                     ),
                     Spacer(flex: 1),
                     CustomTextFieldWidget(
-                      prefix: SvgPicture.asset(Assets.icons.lock),
+                      prefix: Padding(
+                        padding: const EdgeInsets.only(top: 18.0, bottom: 18.0),
+                        child: SvgPicture.asset(
+                          Assets.icons.lock,
+                          width: 24.0,
+                          height: 24.0,
+                        ),
+                      ),
                       hintText: 'Enter your password',
+                      isPassword: true,
                       suffix: Padding(
                         padding: const EdgeInsets.only(
                           right: 23.0,
@@ -96,7 +124,14 @@ class SignInPage extends StatelessWidget {
                       children: [
                         Row(
                           children: [
-                            CustomCheckBoxWidget(),
+                            CustomCheckBoxWidget(
+                              isSelected: isSelected,
+                              onPressed: () {
+                                setState(() {
+                                  isSelected = !isSelected;
+                                });
+                              },
+                            ),
                             SizedBox(width: 4.0),
                             Text(
                               'Keep Sign In',

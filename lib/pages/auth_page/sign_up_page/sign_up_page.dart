@@ -50,7 +50,7 @@ class SignUpPage extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Spacer(flex: 10),
+                    Spacer(flex: 8),
                     Text(
                       'Create your account',
                       style: TextStyle(
@@ -63,18 +63,40 @@ class SignUpPage extends StatelessWidget {
                     ),
                     Spacer(flex: 1),
                     CustomTextFieldWidget(
-                      prefix: SvgPicture.asset(Assets.icons.user),
+                      prefix: Padding(
+                        padding: const EdgeInsets.only(top: 18.0, bottom: 18.0),
+                        child: SvgPicture.asset(
+                          Assets.icons.user,
+                          width: 24.0,
+                          height: 24.0,
+                        ),
+                      ),
                       hintText: 'Enter your login',
                     ),
                     Spacer(flex: 1),
                     CustomTextFieldWidget(
-                      prefix: SvgPicture.asset(Assets.icons.email),
+                      prefix: Padding(
+                        padding: const EdgeInsets.only(top: 18.0, bottom: 18.0),
+                        child: SvgPicture.asset(
+                          Assets.icons.email,
+                          width: 24.0,
+                          height: 24.0,
+                        ),
+                      ),
                       hintText: 'Enter your email',
                     ),
                     Spacer(flex: 1),
                     CustomTextFieldWidget(
                       hintText: 'Enter your password',
-                      prefix: SvgPicture.asset(Assets.icons.lock),
+                      prefix: Padding(
+                        padding: const EdgeInsets.only(top: 18.0, bottom: 18.0),
+                        child: SvgPicture.asset(
+                          Assets.icons.lock,
+                          width: 24.0,
+                          height: 24.0,
+                        ),
+                      ),
+                      isPassword: true,
                       suffix: Padding(
                         padding: const EdgeInsets.only(
                           right: 23.0,
