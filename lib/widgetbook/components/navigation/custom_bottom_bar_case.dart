@@ -14,7 +14,7 @@ final customBottomBarWidget = WidgetbookComponent(
           alignment: Alignment.bottomCenter,
           child: SizedBox(
             width: double.infinity,
-            height: 120, // висота області превʼю
+            height: 120,
             child: StatefulBuilder(
               builder: (ctx, setStateSB) {
                 return CustomBottomBarWidget(

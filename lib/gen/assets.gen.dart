@@ -74,17 +74,26 @@ class $AssetsIconsGen {
   /// File path: assets/icons/ic_myorder.svg
   String get icMyorder => 'assets/icons/ic_myorder.svg';
 
+  /// File path: assets/icons/ic_myorder_active.svg
+  String get icMyorderActive => 'assets/icons/ic_myorder_active.svg';
+
   /// File path: assets/icons/ic_notification.svg
   String get icNotification => 'assets/icons/ic_notification.svg';
 
   /// File path: assets/icons/ic_profile.svg
   String get icProfile => 'assets/icons/ic_profile.svg';
 
+  /// File path: assets/icons/ic_profile_active.svg
+  String get icProfileActive => 'assets/icons/ic_profile_active.svg';
+
   /// File path: assets/icons/ic_search.svg
   String get icSearch => 'assets/icons/ic_search.svg';
 
   /// File path: assets/icons/ic_wishlist.svg
   String get icWishlist => 'assets/icons/ic_wishlist.svg';
+
+  /// File path: assets/icons/ic_wishlist_active.svg
+  String get icWishlistActive => 'assets/icons/ic_wishlist_active.svg';
 
   /// File path: assets/icons/lock.svg
   String get lock => 'assets/icons/lock.svg';
@@ -141,10 +150,13 @@ class $AssetsIconsGen {
     icFilter,
     icHome,
     icMyorder,
+    icMyorderActive,
     icNotification,
     icProfile,
+    icProfileActive,
     icSearch,
     icWishlist,
+    icWishlistActive,
     lock,
     minus,
     order,
