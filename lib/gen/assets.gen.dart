@@ -184,6 +184,10 @@ class $AssetsImagesGen {
   AssetGenImage get dogBiscuit =>
       const AssetGenImage('assets/images/dog_biscuit.png');
 
+  /// File path: assets/images/download.png
+  AssetGenImage get download =>
+      const AssetGenImage('assets/images/download.png');
+
   /// File path: assets/images/fresh_chicken.png
   AssetGenImage get freshChicken =>
       const AssetGenImage('assets/images/fresh_chicken.png');
@@ -256,6 +260,7 @@ class $AssetsImagesGen {
     apple,
     banana,
     dogBiscuit,
+    download,
     freshChicken,
     freshSalad,
     icCabbage,

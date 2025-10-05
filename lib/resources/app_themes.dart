@@ -1,19 +1,26 @@
-// import 'package:file_structure_flutter/resources/app_colors.dart';
-// import 'package:file_structure_flutter/resources/app_fonts.dart';
-// import 'package:flutter/material.dart';
-//
-// class AppThemes {
-//   const AppThemes._();
-//
-//   static ThemeData light() {
-//     //! Тут можно указать один шрифт на все страницы
-//     return ThemeData(
-//       fontFamily: AppFonts.fontFamily,
-//       scaffoldBackgroundColor: AppColors.scaffold,
-//       colorScheme: const ColorScheme.light().copyWith(
-//         primary: AppColors.primary,
-//         secondary: AppColors.secondary,
-//       ),
-//     );
-//   }
-// }
+import 'package:flutter/material.dart';
+
+import 'app_colors.dart';
+import 'app_fonts.dart';
+
+class AppThemes {
+  const AppThemes._();
+
+  static ThemeData light() {
+    return ThemeData(
+      fontFamily: AppFonts.fontFamily,
+      scaffoldBackgroundColor: AppColors.white,
+      colorScheme: const ColorScheme.light().copyWith(
+        primary: AppColors.dark,
+        secondary: AppColors.yellowStar,
+      ),
+      textTheme: TextTheme(
+        displayLarge: TextStyle(fontSize: 57, fontWeight: FontWeight.w400),
+        headlineMedium: TextStyle(fontSize: 28, fontWeight: FontWeight.w600),
+        titleMedium: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+        bodyMedium: TextStyle(fontSize: 14, height: 1.4),
+        labelLarge: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+      ),
+    );
+  }
+}
