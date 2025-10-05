@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_base_architecture/resources/app_colors.dart';
+import 'package:flutter_base_architecture/resources/app_fonts.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -51,7 +52,8 @@ class CustomButtonsWidget extends StatelessWidget {
                     label,
                     style: TextStyle(
                       color: Colors.white,
-                      fontWeight: FontWeight.w800,
+                      fontWeight: AppFonts.w800extraBold,
+                      fontFamily: AppFonts.fontFamily,
                       fontSize: 16.0,
                       letterSpacing: 0,
                       height: 1,

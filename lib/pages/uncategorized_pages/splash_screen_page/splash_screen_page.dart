@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_base_architecture/routes/app_router.dart';
+import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../gen/assets.gen.dart';
@@ -24,11 +24,18 @@ class _SplashScreenPageState extends State<SplashScreenPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: Assets.images.download.image(
-          fit: BoxFit.cover,
-          height: double.infinity,
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: const SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: Brightness.light,
+        statusBarBrightness: Brightness.dark,
+      ),
+      child: Scaffold(
+        body: Center(
+          child: Assets.images.download.image(
+            fit: BoxFit.cover,
+            height: double.infinity,
+          ),
         ),
       ),
     );

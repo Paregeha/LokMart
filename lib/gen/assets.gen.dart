@@ -196,6 +196,10 @@ class $AssetsImagesGen {
   AssetGenImage get freshSalad =>
       const AssetGenImage('assets/images/fresh_salad.png');
 
+  /// File path: assets/images/header_background.png
+  AssetGenImage get headerBackground =>
+      const AssetGenImage('assets/images/header_background.png');
+
   /// File path: assets/images/ic_cabbage.png
   AssetGenImage get icCabbage =>
       const AssetGenImage('assets/images/ic_cabbage.png');
@@ -213,6 +217,10 @@ class $AssetsImagesGen {
   /// File path: assets/images/ic_lemon.png
   AssetGenImage get icLemon =>
       const AssetGenImage('assets/images/ic_lemon.png');
+
+  /// File path: assets/images/illustration_background.png
+  AssetGenImage get illustrationBackground =>
+      const AssetGenImage('assets/images/illustration_background.png');
 
   /// File path: assets/images/logo.png
   AssetGenImage get logo => const AssetGenImage('assets/images/logo.png');
@@ -263,11 +271,13 @@ class $AssetsImagesGen {
     download,
     freshChicken,
     freshSalad,
+    headerBackground,
     icCabbage,
     icCake,
     icChicken,
     icFish,
     icLemon,
+    illustrationBackground,
     logo,
     mainBanner,
     mastercard,

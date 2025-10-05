@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_base_architecture/resources/app_themes.dart';
 import 'package:flutter_base_architecture/routes/app_router.dart';
 
 void main() {
