@@ -12,9 +12,15 @@ import 'package:go_router/go_router.dart';
 
 import '../../../gen/assets.gen.dart';
 
-class SignUpPage extends StatelessWidget {
+class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});
 
+  @override
+  State<SignUpPage> createState() => _SignUpPageState();
+}
+
+class _SignUpPageState extends State<SignUpPage> {
+  bool isSelected = false;
   @override
   Widget build(BuildContext context) {
     return AnnotatedRegion<SystemUiOverlayStyle>(
@@ -111,12 +117,19 @@ class SignUpPage extends StatelessWidget {
                       ),
                     ),
                     Spacer(flex: 1),
-                    CustomButtonsWidget(label: 'SIGN UP'),
+                    CustomButtonsWidget(label: 'SIGN UP', onPressed: () {}),
                     Spacer(flex: 1),
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        CustomCheckBoxWidget(),
+                        CustomCheckBoxWidget(
+                          isSelected: isSelected,
+                          onPressed: () {
+                            setState(() {
+                              isSelected = !isSelected;
+                            });
+                          },
+                        ),
                         SizedBox(width: 14.0),
                         Expanded(
                           child: Wrap(

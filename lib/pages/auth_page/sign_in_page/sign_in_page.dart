@@ -19,9 +19,9 @@ class SignInPage extends StatefulWidget {
 }
 
 class _SignInPageState extends State<SignInPage> {
+  bool isSelected = false;
   @override
   Widget build(BuildContext context) {
-    bool isSelected = false;
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: const SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
@@ -30,6 +30,7 @@ class _SignInPageState extends State<SignInPage> {
       ),
       child: Scaffold(
         backgroundColor: AppColors.white,
+        // resizeToAvoidBottomInset: true,
         body: Stack(
           children: [
             Assets.images.headerBackground.image(fit: BoxFit.cover),
@@ -117,7 +118,7 @@ class _SignInPageState extends State<SignInPage> {
                       ),
                     ),
                     Spacer(flex: 1),
-                    CustomButtonsWidget(label: 'SIGN IN'),
+                    CustomButtonsWidget(label: 'SIGN IN', onPressed: () {}),
                     Spacer(flex: 1),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -146,7 +147,9 @@ class _SignInPageState extends State<SignInPage> {
                           ],
                         ),
                         TextButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            context.go(AppRoutes.test);
+                          },
                           style: TextButton.styleFrom(
                             padding: EdgeInsets.zero,
                             minimumSize: Size.zero,

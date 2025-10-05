@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_base_architecture/pages/auth_page/sign_in_page/sign_in_page.dart';
 import 'package:flutter_base_architecture/pages/auth_page/sign_up_page/sign_up_page.dart';
 import 'package:flutter_base_architecture/pages/on_boarding_page/OnBoardingPage.dart';
+import 'package:flutter_base_architecture/pages/test_adapt.dart';
 import 'package:flutter_base_architecture/pages/uncategorized_pages/splash_screen_page/splash_screen_page.dart';
 import 'package:go_router/go_router.dart';
 
@@ -67,6 +68,23 @@ class AppRouter {
                 return FadeTransition(opacity: animation, child: child);
               },
             ),
+      ),
+      GoRoute(
+        path: AppRoutes.test,
+        name: 'Test',
+        pageBuilder: (BuildContext context, GoRouterState state) {
+          return CustomTransitionPage(
+            child: TestAdapt(),
+            transitionsBuilder: (
+              context,
+              animation,
+              secondaryAnimation,
+              child,
+            ) {
+              return FadeTransition(opacity: animation, child: child);
+            },
+          );
+        },
       ),
     ],
   );
