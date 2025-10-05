@@ -92,7 +92,7 @@ class _CustomTextFieldWidgetState extends State<CustomTextFieldWidget> {
         height: 60.0,
         width: double.infinity,
         decoration: BoxDecoration(
-          color: AppColors.grey1,
+          color: AppColors.gray1,
           borderRadius: BorderRadius.circular(widget.borderRadius),
         ),
         alignment: Alignment.center,
@@ -113,7 +113,7 @@ class _CustomTextFieldWidgetState extends State<CustomTextFieldWidget> {
             hintText: widget.hintText,
             hintStyle: widget.hintStyle,
             filled: true,
-            fillColor: AppColors.grey1,
+            fillColor: AppColors.gray1,
             contentPadding: widget.contentPadding,
             prefixIconConstraints: BoxConstraints(
               minHeight: 0.0,
@@ -127,11 +127,11 @@ class _CustomTextFieldWidgetState extends State<CustomTextFieldWidget> {
             counterText: '',
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(widget.borderRadius),
-              borderSide: BorderSide(color: AppColors.grey1),
+              borderSide: BorderSide(color: AppColors.gray1),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(widget.borderRadius),
-              borderSide: BorderSide(color: AppColors.grey1),
+              borderSide: BorderSide(color: AppColors.gray1),
             ),
             disabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(widget.borderRadius),

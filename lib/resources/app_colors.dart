@@ -18,11 +18,13 @@ class AppColors {
   static const Color cardTwoGradientOne = Color(0xFF0FC4A9);
   static const Color cardTwoGradientTwo = Color(0xFF1089DE);
 
+  static const Color blackColor = Color(0xFF021713);
   static const Color disable = Color(0xFF2D2D2D);
   static const Color dark = Color(0xFF303733);
   static const Color softGray = Color(0xFF7D8FAB);
-  static const Color grey = Color(0xFFBFC9DA);
-  static const Color grey1 = Color(0xFFE8ECF2);
+  static const Color gray = Color(0xFFBFC9DA);
+  static const Color gray1 = Color(0xFFE8ECF2);
+  static const Color gray2 = Color(0xFFB8BBC6);
   static const Color white = Color(0xFFFFFFFF);
 
   static const Color orange = Color(0xFFFA662E);

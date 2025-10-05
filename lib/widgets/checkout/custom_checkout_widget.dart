@@ -158,7 +158,7 @@ class _EnableCheckout extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: AppColors.grey,
+        color: AppColors.gray,
         borderRadius: BorderRadius.circular(14.0),
       ),
       width: 40.0,
@@ -170,6 +170,6 @@ class _EnableCheckout extends StatelessWidget {
 class _LineCheckout extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Expanded(child: Container(height: 2.0, color: AppColors.grey));
+    return Expanded(child: Container(height: 2.0, color: AppColors.gray));
   }
 }

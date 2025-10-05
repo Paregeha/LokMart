@@ -17,6 +17,9 @@ class $AssetsIconsGen {
   /// File path: assets/icons/add_box_black.svg
   String get addBoxBlack => 'assets/icons/add_box_black.svg';
 
+  /// File path: assets/icons/bag.svg
+  String get bag => 'assets/icons/bag.svg';
+
   /// File path: assets/icons/buy.svg
   String get buy => 'assets/icons/buy.svg';
 
@@ -47,6 +50,9 @@ class $AssetsIconsGen {
   /// File path: assets/icons/heart_red.svg
   String get heartRed => 'assets/icons/heart_red.svg';
 
+  /// File path: assets/icons/home.svg
+  String get home => 'assets/icons/home.svg';
+
   /// File path: assets/icons/ic_arrow_next.svg
   String get icArrowNext => 'assets/icons/ic_arrow_next.svg';
 
@@ -62,11 +68,23 @@ class $AssetsIconsGen {
   /// File path: assets/icons/ic_filter.svg
   String get icFilter => 'assets/icons/ic_filter.svg';
 
+  /// File path: assets/icons/ic_home.svg
+  String get icHome => 'assets/icons/ic_home.svg';
+
+  /// File path: assets/icons/ic_myorder.svg
+  String get icMyorder => 'assets/icons/ic_myorder.svg';
+
   /// File path: assets/icons/ic_notification.svg
   String get icNotification => 'assets/icons/ic_notification.svg';
 
+  /// File path: assets/icons/ic_profile.svg
+  String get icProfile => 'assets/icons/ic_profile.svg';
+
   /// File path: assets/icons/ic_search.svg
   String get icSearch => 'assets/icons/ic_search.svg';
+
+  /// File path: assets/icons/ic_wishlist.svg
+  String get icWishlist => 'assets/icons/ic_wishlist.svg';
 
   /// File path: assets/icons/lock.svg
   String get lock => 'assets/icons/lock.svg';
@@ -86,6 +104,9 @@ class $AssetsIconsGen {
   /// File path: assets/icons/pluss.svg
   String get pluss => 'assets/icons/pluss.svg';
 
+  /// File path: assets/icons/profile.svg
+  String get profile => 'assets/icons/profile.svg';
+
   /// File path: assets/icons/star.svg
   String get star => 'assets/icons/star.svg';
 
@@ -95,9 +116,13 @@ class $AssetsIconsGen {
   /// File path: assets/icons/user.svg
   String get user => 'assets/icons/user.svg';
 
+  /// File path: assets/icons/wishlist.svg
+  String get wishlist => 'assets/icons/wishlist.svg';
+
   /// List of all assets
   List<String> get values => [
     addBoxBlack,
+    bag,
     buy,
     cashonIcon,
     chat,
@@ -108,22 +133,29 @@ class $AssetsIconsGen {
     eyeTrue,
     heart,
     heartRed,
+    home,
     icArrowNext,
     icBack,
     icClose,
     icEdit,
     icFilter,
+    icHome,
+    icMyorder,
     icNotification,
+    icProfile,
     icSearch,
+    icWishlist,
     lock,
     minus,
     order,
     paypal,
     phoneCall,
     pluss,
+    profile,
     star,
     status,
     user,
+    wishlist,
   ];
 }
 

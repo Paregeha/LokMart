@@ -41,7 +41,7 @@ class _CustomButtonCountWidgetState extends State<CustomButtonCountWidget> {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(8.0),
                   color: AppColors.white,
-                  border: Border.all(color: AppColors.grey1),
+                  border: Border.all(color: AppColors.gray1),
                 ),
                 // height: double.infinity,
                 child: Center(
@@ -68,7 +68,7 @@ class _CustomButtonCountWidgetState extends State<CustomButtonCountWidget> {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(8.0),
                   color: AppColors.white,
-                  border: Border.all(color: AppColors.grey1),
+                  border: Border.all(color: AppColors.gray1),
                 ),
                 // height: double.infinity,
                 child: Center(

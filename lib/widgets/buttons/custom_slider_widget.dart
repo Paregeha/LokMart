@@ -28,7 +28,7 @@ class _CustomSliderWidgetState extends State<CustomSliderWidget> {
   @override
   Widget build(BuildContext context) {
     const active = AppColors.orange;
-    const inactive = AppColors.grey1;
+    const inactive = AppColors.gray1;
 
     const labelHeight = 24.0;
     const labelGap = 6.0;

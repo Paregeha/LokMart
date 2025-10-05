@@ -20,7 +20,7 @@ class CustomShoppingCartWidget extends StatelessWidget {
           decoration: BoxDecoration(
             color: AppColors.white,
             borderRadius: BorderRadius.circular(14.0),
-            border: Border.all(color: AppColors.grey1, width: 1.0),
+            border: Border.all(color: AppColors.gray1, width: 1.0),
           ),
           child: Padding(
             padding: const EdgeInsets.all(18.0),
