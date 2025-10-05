@@ -196,6 +196,9 @@ class $AssetsImagesGen {
   AssetGenImage get freshSalad =>
       const AssetGenImage('assets/images/fresh_salad.png');
 
+  /// File path: assets/images/header.png
+  AssetGenImage get header => const AssetGenImage('assets/images/header.png');
+
   /// File path: assets/images/header_background.png
   AssetGenImage get headerBackground =>
       const AssetGenImage('assets/images/header_background.png');
@@ -271,6 +274,7 @@ class $AssetsImagesGen {
     download,
     freshChicken,
     freshSalad,
+    header,
     headerBackground,
     icCabbage,
     icCake,

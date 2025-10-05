@@ -59,10 +59,11 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: const SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
-        statusBarIconBrightness: Brightness.light, // ANDROID
-        statusBarBrightness: Brightness.dark, // iOS
+        statusBarIconBrightness: Brightness.light,
+        statusBarBrightness: Brightness.dark,
       ),
       child: Scaffold(
+        backgroundColor: AppColors.white,
         body: Stack(
           children: [
             Assets.images.illustrationBackground.image(

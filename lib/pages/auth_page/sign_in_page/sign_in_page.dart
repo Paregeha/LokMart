@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_base_architecture/resources/app_colors.dart';
 import 'package:flutter_base_architecture/resources/app_fonts.dart';
+import 'package:flutter_base_architecture/routes/app_routes.dart';
 import 'package:flutter_base_architecture/widgets/buttons/custom_button_widget.dart';
 import 'package:flutter_base_architecture/widgets/buttons/custom_square_check_box_widget.dart';
 import 'package:flutter_base_architecture/widgets/text_fields/custom_text_field_widget.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../gen/assets.gen.dart';
 
@@ -17,8 +19,8 @@ class SignInPage extends StatelessWidget {
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: const SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
-        statusBarIconBrightness: Brightness.light, // ANDROID
-        statusBarBrightness: Brightness.dark, // iOS
+        statusBarIconBrightness: Brightness.light,
+        statusBarBrightness: Brightness.dark,
       ),
       child: Scaffold(
         backgroundColor: AppColors.white,
@@ -33,7 +35,7 @@ class SignInPage extends StatelessWidget {
               ],
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 26.0),
+              padding: const EdgeInsets.symmetric(horizontal: 32.0),
               child: SizedBox(
                 width: double.infinity,
                 child: Column(
@@ -65,6 +67,7 @@ class SignInPage extends StatelessWidget {
                     ),
                     Spacer(flex: 1),
                     CustomTextFieldWidget(
+                      hintStyle: TextStyle(),
                       prefix: SvgPicture.asset(Assets.icons.user),
                       hintText: 'Enter your login',
                     ),
@@ -109,6 +112,11 @@ class SignInPage extends StatelessWidget {
                         ),
                         TextButton(
                           onPressed: () {},
+                          style: TextButton.styleFrom(
+                            padding: EdgeInsets.zero,
+                            minimumSize: Size.zero,
+                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                          ),
                           child: Text(
                             'Forgot Password?',
                             style: TextStyle(
@@ -130,7 +138,7 @@ class SignInPage extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          'Don’t have an account?',
+                          'Don’t have an account? ',
                           style: TextStyle(
                             fontSize: 16.0,
                             fontWeight: AppFonts.w400regular,
@@ -141,7 +149,14 @@ class SignInPage extends StatelessWidget {
                           ),
                         ),
                         TextButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            context.go(AppRoutes.signUp);
+                          },
+                          style: TextButton.styleFrom(
+                            padding: EdgeInsets.zero,
+                            minimumSize: Size.zero,
+                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                          ),
                           child: Text(
                             'Sign Up',
                             style: TextStyle(
