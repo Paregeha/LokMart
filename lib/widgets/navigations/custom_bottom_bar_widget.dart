@@ -21,104 +21,91 @@ class _CustomBottomBarWidgetState extends State<CustomBottomBarWidget> {
   Widget build(BuildContext context) {
     return Material(
       color: AppColors.white,
-      child: Padding(
-        padding: const EdgeInsets.only(top: 30.0),
-        child: Container(
-          width: double.infinity,
-          height: 88.0,
-          decoration: BoxDecoration(
-            color: AppColors.white,
-            boxShadow: [
-              BoxShadow(color: AppColors.gray1, offset: Offset(0, -0.5)),
-            ],
-          ),
-          padding: const EdgeInsets.symmetric(horizontal: 41.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              _NavItem(
-                isActive: widget.activeIndex == 0,
-                onTap: () {
-                  setState(() {
-                    widget.onTap(0);
-                  });
-                },
-                icon: SvgPicture.asset(
-                  widget.activeIndex == 0
-                      ? Assets.icons.home
-                      : Assets.icons.icHome,
-                  width: 24,
-                  height: 24,
-                ),
+      child: Container(
+        width: double.infinity,
+        height: 88.0,
+        decoration: BoxDecoration(
+          color: AppColors.white,
+          boxShadow: [
+            BoxShadow(color: AppColors.gray1, offset: Offset(0, -0.5)),
+          ],
+        ),
+        padding: const EdgeInsets.symmetric(horizontal: 41.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            _NavItem(
+              isActive: widget.activeIndex == 0,
+              onTap: () {
+                widget.onTap(0);
+              },
+              icon: SvgPicture.asset(
+                widget.activeIndex == 0
+                    ? Assets.icons.home
+                    : Assets.icons.icHome,
+                width: 24,
+                height: 24,
               ),
-              _NavItem(
-                isActive: widget.activeIndex == 1,
-                onTap: () {
-                  setState(() {
-                    widget.onTap(1);
-                  });
-                },
-                icon: SvgPicture.asset(
-                  widget.activeIndex == 1
-                      ? Assets.icons.icMyorderActive
-                      : Assets.icons.icMyorder,
-                  width: 24,
-                  height: 24,
-                ),
+            ),
+            _NavItem(
+              isActive: widget.activeIndex == 1,
+              onTap: () {
+                widget.onTap(1);
+              },
+              icon: SvgPicture.asset(
+                widget.activeIndex == 1
+                    ? Assets.icons.icMyorderActive
+                    : Assets.icons.icMyorder,
+                width: 24,
+                height: 24,
               ),
-              _NavItem(
-                isActive: widget.activeIndex == 2,
-                onTap: () {
-                  setState(() {
-                    widget.onTap(2);
-                  });
-                },
-                icon: Container(
-                  width: 40,
-                  height: 40,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12),
-                    gradient: LinearGradient(
-                      colors: [AppColors.gradientOne, AppColors.gradientTwo],
-                      begin: Alignment.centerLeft,
-                      end: Alignment.centerRight,
-                    ),
+            ),
+            _NavItem(
+              isActive: widget.activeIndex == 2,
+              onTap: () {
+                widget.onTap(2);
+              },
+              icon: Container(
+                width: 40,
+                height: 40,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12),
+                  gradient: LinearGradient(
+                    colors: [AppColors.gradientOne, AppColors.gradientTwo],
+                    begin: Alignment.centerLeft,
+                    end: Alignment.centerRight,
                   ),
-                  child: Center(child: SvgPicture.asset(Assets.icons.buy)),
                 ),
+                child: Center(child: SvgPicture.asset(Assets.icons.buy)),
               ),
-              _NavItem(
-                isActive: widget.activeIndex == 3,
-                onTap: () {
-                  setState(() {
-                    widget.onTap(3);
-                  });
-                },
-                icon: SvgPicture.asset(
-                  widget.activeIndex == 3
-                      ? Assets.icons.icWishlistActive
-                      : Assets.icons.icWishlist,
-                  width: 24,
-                  height: 24,
-                ),
+            ),
+            _NavItem(
+              isActive: widget.activeIndex == 3,
+              onTap: () {
+                widget.onTap(3);
+              },
+              icon: SvgPicture.asset(
+                widget.activeIndex == 3
+                    ? Assets.icons.icWishlistActive
+                    : Assets.icons.icWishlist,
+                width: 24,
+                height: 24,
               ),
-              _NavItem(
-                isActive: widget.activeIndex == 4,
-                onTap: () {
-                  setState(() {
-                    widget.onTap(4);
-                  });
-                },
-                icon: SvgPicture.asset(
-                  widget.activeIndex == 4
-                      ? Assets.icons.icProfileActive
-                      : Assets.icons.icProfile,
-                  width: 24,
-                  height: 24,
-                ),
+            ),
+            _NavItem(
+              isActive: widget.activeIndex == 4,
+              onTap: () {
+                widget.onTap(4);
+              },
+              icon: SvgPicture.asset(
+                widget.activeIndex == 4
+                    ? Assets.icons.icProfileActive
+                    : Assets.icons.icProfile,
+                width: 24,
+                height: 24,
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

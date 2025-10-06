@@ -86,6 +86,9 @@ class $AssetsIconsGen {
   /// File path: assets/icons/ic_profile_active.svg
   String get icProfileActive => 'assets/icons/ic_profile_active.svg';
 
+  /// File path: assets/icons/ic_right_arrow.svg
+  String get icRightArrow => 'assets/icons/ic_right_arrow.svg';
+
   /// File path: assets/icons/ic_search.svg
   String get icSearch => 'assets/icons/ic_search.svg';
 
@@ -154,6 +157,7 @@ class $AssetsIconsGen {
     icNotification,
     icProfile,
     icProfileActive,
+    icRightArrow,
     icSearch,
     icWishlist,
     icWishlistActive,
@@ -232,6 +236,9 @@ class $AssetsImagesGen {
   AssetGenImage get mainBanner =>
       const AssetGenImage('assets/images/main_banner.png');
 
+  /// File path: assets/images/man.png
+  AssetGenImage get man => const AssetGenImage('assets/images/man.png');
+
   /// File path: assets/images/mastercard.png
   AssetGenImage get mastercard =>
       const AssetGenImage('assets/images/mastercard.png');
@@ -284,6 +291,7 @@ class $AssetsImagesGen {
     illustrationBackground,
     logo,
     mainBanner,
+    man,
     mastercard,
     onBoardingFour,
     onBoardingOne,

@@ -128,7 +128,12 @@ class _SignInPageState extends State<SignInPage> {
                           ),
                         ),
                         SizedBox(height: heightLayout * 0.03),
-                        CustomButtonsWidget(label: 'SIGN IN', onPressed: () {}),
+                        CustomButtonsWidget(
+                          label: 'SIGN IN',
+                          onPressed: () {
+                            context.go(AppRoutes.home);
+                          },
+                        ),
                         SizedBox(height: heightLayout * 0.03),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,

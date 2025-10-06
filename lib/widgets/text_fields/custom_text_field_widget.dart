@@ -31,6 +31,7 @@ class CustomTextFieldWidget extends StatefulWidget {
     this.textStyle,
     this.hintStyle,
     this.padding = 0.0,
+    this.color = AppColors.gray1,
   });
 
   final TextEditingController? controller;
@@ -61,6 +62,8 @@ class CustomTextFieldWidget extends StatefulWidget {
 
   final TextStyle? textStyle;
   final TextStyle? hintStyle;
+
+  final Color color;
 
   @override
   State<CustomTextFieldWidget> createState() => _CustomTextFieldWidgetState();
@@ -93,11 +96,13 @@ class _CustomTextFieldWidgetState extends State<CustomTextFieldWidget> {
         height: 60.0,
         width: double.infinity,
         decoration: BoxDecoration(
-          color: AppColors.gray1,
+          color: widget.color,
+          border: Border.all(color: AppColors.gray1),
           borderRadius: BorderRadius.circular(widget.borderRadius),
         ),
         alignment: Alignment.center,
         child: TextField(
+          // textAlignVertical: TextAlignVertical.center,
           controller: widget.controller,
           focusNode: widget.focusNode,
           enabled: widget.enabled,
@@ -113,6 +118,8 @@ class _CustomTextFieldWidgetState extends State<CustomTextFieldWidget> {
           cursorColor: AppColors.orange,
           cursorWidth: 2.0,
           decoration: InputDecoration(
+            // isDense: true,
+            // isCollapsed: true,
             hintText: widget.hintText,
             hintStyle: TextStyle(
               color: AppColors.softGray,
@@ -123,16 +130,13 @@ class _CustomTextFieldWidgetState extends State<CustomTextFieldWidget> {
               letterSpacing: 0,
             ),
             filled: true,
-            fillColor: AppColors.gray1,
+            fillColor: widget.color,
             contentPadding: widget.contentPadding,
             prefixIconConstraints: BoxConstraints(
               minHeight: 0.0,
               minWidth: 0.0,
             ),
-            prefixIcon: Padding(
-              padding: const EdgeInsets.only(left: 12.0, right: 20.0),
-              child: widget.prefix,
-            ),
+            prefixIcon: widget.prefix,
             suffixIcon: effectiveSuffix,
             counterText: '',
             enabledBorder: OutlineInputBorder(
