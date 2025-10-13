@@ -1,7 +1,8 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_base_architecture/pages/auth_page/sign_in_page/sign_in_page.dart';
 import 'package:flutter_base_architecture/pages/auth_page/sign_up_page/sign_up_page.dart';
+import 'package:flutter_base_architecture/pages/categories_page/categories_page.dart';
+import 'package:flutter_base_architecture/pages/categories_page/categoriy_items_page.dart';
 import 'package:flutter_base_architecture/pages/home_page/home_page.dart';
 import 'package:flutter_base_architecture/pages/on_boarding_page/OnBoardingPage.dart';
 import 'package:flutter_base_architecture/pages/order_page/OrderPage.dart';
@@ -93,23 +94,41 @@ class AppRouter {
           );
         },
       ),
-      // GoRoute(
-      //   path: AppRoutes.home,
-      //   name: 'HomePage',
-      //   pageBuilder: (BuildContext context, GoRouterState state) {
-      //     return CustomTransitionPage(
-      //       child: HomePage(),
-      //       transitionsBuilder: (
-      //         context,
-      //         animation,
-      //         secondaryAnimation,
-      //         child,
-      //       ) {
-      //         return FadeTransition(opacity: animation, child: child);
-      //       },
-      //     );
-      //   },
-      // ),
+      GoRoute(
+        path: AppRoutes.categories,
+        name: 'Categories',
+        pageBuilder: (BuildContext context, GoRouterState state) {
+          return CustomTransitionPage(
+            child: CategoriesPage(),
+            transitionsBuilder: (
+              context,
+              animation,
+              secondaryAnimation,
+              child,
+            ) {
+              return FadeTransition(opacity: animation, child: child);
+            },
+          );
+        },
+      ),
+
+      GoRoute(
+        path: AppRoutes.categoryItems,
+        name: 'CategoryItems',
+        pageBuilder: (BuildContext context, GoRouterState state) {
+          return CustomTransitionPage(
+            child: CategoryItemsPage(),
+            transitionsBuilder: (
+              context,
+              animation,
+              secondaryAnimation,
+              child,
+            ) {
+              return FadeTransition(opacity: animation, child: child);
+            },
+          );
+        },
+      ),
       StatefulShellRoute.indexedStack(
         builder: (context, state, navigationShell) {
           final idx = navigationShell.currentIndex;

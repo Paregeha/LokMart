@@ -128,13 +128,16 @@ class _PriceLabel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text(
-      text,
-      textAlign: TextAlign.center,
-      style: const TextStyle(
-        fontSize: 12,
-        color: AppColors.softGray,
-        fontWeight: FontWeight.w600,
+    return Material(
+      color: Colors.transparent,
+      child: Text(
+        text,
+        textAlign: TextAlign.center,
+        style: const TextStyle(
+          fontSize: 12,
+          color: AppColors.softGray,
+          fontWeight: FontWeight.w600,
+        ),
       ),
     );
   }

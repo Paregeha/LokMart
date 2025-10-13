@@ -1,8 +1,8 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_base_architecture/resources/app_colors.dart';
 
 class TestAdapt extends StatelessWidget {
+  const TestAdapt({super.key});
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -15,7 +15,7 @@ class TestAdapt extends StatelessWidget {
               return Row(
                 children: [
                   Expanded(
-                    child: Container(
+                    child: SizedBox(
                       width: 100,
                       height: 100,
                       child: const Placeholder(),

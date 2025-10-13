@@ -58,7 +58,6 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        final widthLayout = constraints.maxWidth;
         final heightLayout = constraints.maxHeight;
         return AnnotatedRegion<SystemUiOverlayStyle>(
           value: const SystemUiOverlayStyle(
@@ -70,9 +69,13 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
             backgroundColor: AppColors.white,
             body: Stack(
               children: [
-                Assets.images.illustrationBackground.image(
-                  fit: BoxFit.cover,
-                  width: double.infinity,
+                Positioned(
+                  left: 0.0,
+                  right: 0.0,
+                  child: Assets.images.illustrationBackground.image(
+                    fit: BoxFit.contain,
+                    width: double.infinity,
+                  ),
                 ),
                 Column(
                   children: [
@@ -181,8 +184,7 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
 
 class _OnBoardingList extends StatelessWidget {
   const _OnBoardingList({
-    super.key,
-    this.heightLayout,
+    required this.heightLayout,
     required this.label,
     required this.text,
     required this.photo,
@@ -198,11 +200,7 @@ class _OnBoardingList extends StatelessWidget {
     return Column(
       children: [
         Padding(
-          padding: EdgeInsets.only(
-            left: 46.0,
-            right: 46.0,
-            top: heightLayout * 0.07,
-          ),
+          padding: EdgeInsets.only(left: 46.0, right: 46.0, top: 65.0),
           child: photo,
         ),
         SizedBox(height: heightLayout * 0.13),
@@ -220,7 +218,7 @@ class _OnBoardingList extends StatelessWidget {
             ),
           ),
         ),
-        SizedBox(height: heightLayout * 0.05),
+        // SizedBox(height: heightLayout * 0.05),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 64.0),
           child: Text(
@@ -235,7 +233,7 @@ class _OnBoardingList extends StatelessWidget {
             textAlign: TextAlign.center,
           ),
         ),
-        SizedBox(height: heightLayout * 0.05),
+        // SizedBox(height: heightLayout * 0.05),
       ],
     );
   }

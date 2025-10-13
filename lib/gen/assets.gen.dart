@@ -184,6 +184,14 @@ class $AssetsImagesGen {
   /// File path: assets/images/banana.png
   AssetGenImage get banana => const AssetGenImage('assets/images/banana.png');
 
+  /// File path: assets/images/banner_fish.png
+  AssetGenImage get bannerFish =>
+      const AssetGenImage('assets/images/banner_fish.png');
+
+  /// File path: assets/images/banner_meat.png
+  AssetGenImage get bannerMeat =>
+      const AssetGenImage('assets/images/banner_meat.png');
+
   /// File path: assets/images/dog_biscuit.png
   AssetGenImage get dogBiscuit =>
       const AssetGenImage('assets/images/dog_biscuit.png');
@@ -277,6 +285,8 @@ class $AssetsImagesGen {
   List<AssetGenImage> get values => [
     apple,
     banana,
+    bannerFish,
+    bannerMeat,
     dogBiscuit,
     download,
     freshChicken,

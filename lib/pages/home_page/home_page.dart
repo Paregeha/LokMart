@@ -1,12 +1,13 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_base_architecture/gen/assets.gen.dart';
 import 'package:flutter_base_architecture/resources/app_colors.dart';
+import 'package:flutter_base_architecture/routes/app_routes.dart';
 import 'package:flutter_base_architecture/widgets/buttons/custom_filter_widget.dart';
-import 'package:flutter_base_architecture/widgets/navigations/custom_bottom_bar_widget.dart';
+import 'package:flutter_base_architecture/widgets/cart/custom_item_cart_widget.dart';
 import 'package:flutter_base_architecture/widgets/text_fields/custom_text_field_widget.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 import '../../resources/app_fonts.dart';
@@ -25,9 +26,9 @@ class _HomePageState extends State<HomePage> {
   int indexAdvertising = 0;
 
   final List<Widget> _banners = [
+    Assets.images.bannerFish.image(),
     Assets.images.mainBanner.image(),
-    Assets.images.mainBanner.image(),
-    Assets.images.mainBanner.image(),
+    Assets.images.bannerMeat.image(),
   ];
 
   @override
@@ -47,8 +48,8 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        final widthLayout = constraints.maxWidth;
-        final heightLayout = constraints.maxHeight;
+        // final widthLayout = constraints.maxWidth;
+        // final heightLayout = constraints.maxHeight;
 
         return AnnotatedRegion<SystemUiOverlayStyle>(
           value: const SystemUiOverlayStyle(
@@ -60,9 +61,10 @@ class _HomePageState extends State<HomePage> {
             backgroundColor: AppColors.white,
             appBar: AppBar(
               backgroundColor: AppColors.white,
+              scrolledUnderElevation: 0,
               // elevation: 0,
               centerTitle: false,
-              toolbarHeight: heightLayout * 0.08,
+              toolbarHeight: 50.0,
               titleSpacing: 30.0,
               title: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -100,7 +102,7 @@ class _HomePageState extends State<HomePage> {
                     onTap: () {},
                     child: Stack(
                       children: [
-                        Container(
+                        SizedBox(
                           width: 30.0,
                           height: 30.0,
                           child: Center(
@@ -155,7 +157,8 @@ class _HomePageState extends State<HomePage> {
               child: SingleChildScrollView(
                 child: Column(
                   children: [
-                    SizedBox(height: heightLayout * 0.02, child: Placeholder()),
+                    // SizedBox(height: heightLayout * 0.02),
+                    SizedBox(height: 19.0),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 32.0),
                       child: Row(
@@ -184,7 +187,8 @@ class _HomePageState extends State<HomePage> {
                         ],
                       ),
                     ),
-                    SizedBox(height: heightLayout * 0.02, child: Placeholder()),
+                    // SizedBox(height: heightLayout * 0.02),
+                    SizedBox(height: 3.0),
                     AspectRatio(
                       aspectRatio: 18 / 7,
                       child: PageView.builder(
@@ -245,8 +249,7 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ),
 
-                    SizedBox(height: heightLayout * 0.04, child: Placeholder()),
-
+                    SizedBox(height: 39.0),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 32.0),
                       child: Row(
@@ -263,7 +266,9 @@ class _HomePageState extends State<HomePage> {
                             ),
                           ),
                           TextButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              context.push(AppRoutes.categories);
+                            },
                             child: Row(
                               children: [
                                 Text(
@@ -285,27 +290,32 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ),
                     SizedBox(
-                      height: 140, // під себе
+                      height: 140,
                       child: ListView.separated(
                         scrollDirection: Axis.horizontal,
                         padding: const EdgeInsets.symmetric(horizontal: 32.0),
-                        separatorBuilder:
-                            (_, __) => const SizedBox(width: 15.0),
+                        separatorBuilder: (_, _) => const SizedBox(width: 15.0),
                         itemCount: 5,
                         itemBuilder: (_, i) {
                           return Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Container(
-                                width: 88,
-                                height: 88,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(14),
-                                  border: Border.all(color: AppColors.gray1),
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(18.0),
-                                  child: Assets.images.icLemon.image(),
+                              InkWell(
+                                borderRadius: BorderRadius.circular(14.0),
+                                onTap: () {
+                                  context.push(AppRoutes.categoryItems);
+                                },
+                                child: Container(
+                                  width: 88,
+                                  height: 88,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(14),
+                                    border: Border.all(color: AppColors.gray1),
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(18.0),
+                                    child: Assets.images.icLemon.image(),
+                                  ),
                                 ),
                               ),
                               const SizedBox(height: 6),
@@ -334,7 +344,7 @@ class _HomePageState extends State<HomePage> {
                         },
                       ),
                     ),
-                    SizedBox(height: heightLayout * 0.01, child: Placeholder()),
+                    SizedBox(height: 39.0),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 32.0),
                       child: Row(
@@ -373,7 +383,7 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ),
                     SizedBox(
-                      height: 350,
+                      height: 267.0,
                       child: ListView.separated(
                         scrollDirection: Axis.horizontal,
                         padding: const EdgeInsets.symmetric(horizontal: 32.0),
@@ -467,6 +477,35 @@ class _HomePageState extends State<HomePage> {
                           );
                         },
                       ),
+                    ),
+                    SizedBox(height: 39.0),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 32.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Text(
+                            'All Grocery',
+                            style: TextStyle(
+                              color: AppColors.dark,
+                              fontFamily: AppFonts.fontFamily,
+                              fontWeight: AppFonts.w700bold,
+                              fontSize: 22.0,
+                              letterSpacing: -0.08,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: 25.0),
+                    ListView.separated(
+                      separatorBuilder: (_, _) => SizedBox(height: 25.0),
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      itemCount: 3,
+                      itemBuilder: (_, i) {
+                        return CustomItemCartWidget();
+                      },
                     ),
                   ],
                 ),

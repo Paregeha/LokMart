@@ -24,3 +24,13 @@ class AppThemes {
     );
   }
 }
+
+// В main
+//
+// final materialLightTheme = ThemeData.light().copyWith(
+//   scaffoldBackgroundColor: AppColors.bgHighContrastLight,
+//   extensions: [
+//     //GLOBAL
+//     const TypographyTheme(color: AppColors.highContrastLight),
+//   ] ,
+// )

@@ -36,3 +36,11 @@ class AppColors {
   static const Color completedOrder = Color(0xFF1CAF5E);
   static const Color canceledOrder = Color(0xFFFF2525);
 }
+
+// static const List<Color> lightPatternGradient = [
+//   Color.fromARGB(255, 202, 211, 139),
+//   Color.fromARGB(255, 138, 185, 133),
+//   Color.fromARGB(255, 138, 185, 133),
+//   Color.fromARGB(255, 202, 211, 139),
+// ];
+//todo замінити на градієнт

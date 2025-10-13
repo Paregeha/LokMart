@@ -13,4 +13,7 @@ class AppRoutes {
   static const shoppingCart = '/shopping_cart_page';
   static const wishlist = '/wishlist_page';
   static const profile = '/profile_page';
+
+  static const categories = '/categories_page';
+  static const categoryItems = '/category_items_page';
 }
