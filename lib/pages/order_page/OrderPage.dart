@@ -20,27 +20,69 @@ class _OrderPageState extends State<OrderPage> {
         titleSpacing: 32.0,
         actionsPadding: EdgeInsets.only(right: 32.0),
         actions: [
-          SvgPicture.asset(
-            Assets.icons.icSearch,
-            width: 24.0,
-            height: 24.0,
-            colorFilter: ColorFilter.mode(AppColors.dark, BlendMode.srcIn),
+          IconButton(
+            padding: EdgeInsets.zero,
+            onPressed: () {},
+            icon: SvgPicture.asset(
+              Assets.icons.icSearch,
+              width: 24.0,
+              height: 24.0,
+              colorFilter: ColorFilter.mode(AppColors.dark, BlendMode.srcIn),
+            ),
           ),
         ],
         title: Text('My Order'),
         backgroundColor: AppColors.white,
         centerTitle: false,
       ),
-      body: Column(
-        children: [
-          ListView.separated(
-            separatorBuilder: (_, _) => const SizedBox(width: 19.0),
-            itemCount: 3,
-            itemBuilder: (context, index) {
-              return Container(height: 56.0, child: Text('All'));
-            },
-          ),
-        ],
+      body: SizedBox(
+        // height: 80,
+        child: ListView.separated(
+          clipBehavior: Clip.none,
+          scrollDirection: Axis.horizontal,
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          itemCount: 3,
+          separatorBuilder: (_, _) => const SizedBox(width: 19),
+          itemBuilder: (_, index) {
+            return Column(
+              children: [
+                Expanded(
+                  child: Container(
+                    // width: 140.0,
+                    // height: 70.0,
+                    decoration: BoxDecoration(
+                      // color: Colors.black,
+                      borderRadius: BorderRadius.circular(7),
+                      // border: Border.all(color: AppColors.gray1),
+                      border: Border(
+                        // top: BorderSide(color: Colors.black12, width: 1),
+                        // left: BorderSide(color: Colors.black12, width: 1),
+                        // right: BorderSide(color: Colors.black12, width: 1),
+                        bottom: BorderSide(color: Colors.orange, width: 7),
+                      ),
+                    ),
+                    alignment: Alignment.center,
+                    child: Padding(
+                      padding: const EdgeInsets.only(
+                        left: 41.0,
+                        right: 41.0,
+                        top: 14.0,
+                        bottom: 18.0,
+                      ),
+
+                      child: Text('All $index'),
+                    ),
+                  ),
+                ),
+                Container(
+                  height: 20,
+                  width: double.infinity,
+                  color: AppColors.orange,
+                ),
+              ],
+            );
+          },
+        ),
       ),
     );
   }
