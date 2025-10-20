@@ -6,7 +6,14 @@ import '../../gen/assets.gen.dart';
 import '../../resources/app_colors.dart';
 
 class CustomOrderCartWidget extends StatelessWidget {
-  const CustomOrderCartWidget({super.key});
+  const CustomOrderCartWidget({
+    super.key,
+    this.colorTheme = AppColors.deliveryOrder,
+    this.color = AppColors.deliveryOrderIcon,
+  });
+
+  final Color color;
+  final Color colorTheme;
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +23,7 @@ class CustomOrderCartWidget extends StatelessWidget {
         width: 49.0,
         height: 49.0,
         decoration: BoxDecoration(
-          color: AppColors.deliveryOrder,
+          color: colorTheme,
           borderRadius: BorderRadius.circular(12.0),
         ),
         child: Center(
@@ -24,10 +31,7 @@ class CustomOrderCartWidget extends StatelessWidget {
             Assets.icons.order,
             width: 24.0,
             height: 24.0,
-            colorFilter: ColorFilter.mode(
-              AppColors.deliveryOrderIcon,
-              BlendMode.srcIn,
-            ),
+            colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
           ),
         ),
       ),

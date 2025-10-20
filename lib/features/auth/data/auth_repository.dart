@@ -1,5 +1,8 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:pretty_dio_logger/pretty_dio_logger.dart';
+import 'package:flutter/foundation.dart'; // kDebugMode, debugPrint
 import '../../../core/env.dart';
 import '../models/strapi_auth_response.dart';
 
@@ -26,17 +29,91 @@ class AuthRepository {
                   (code) => code != null && code >= 200 && code < 600,
             ),
           ) {
-    _dio.interceptors.add(
-      InterceptorsWrapper(
-        onRequest: (options, handler) async {
+    final Interceptor authInterceptor = InterceptorsWrapper(
+      onRequest: (options, handler) async {
+        // Можна вимкнути токен пер-запитно:
+        // dio.post('/public', options: Options(extra: {'noAuth': true}))
+        final noAuth = options.extra['noAuth'] == true;
+
+        // Витягнемо тільки шлях (на випадок повного URL)
+        String pathOnly;
+        try {
+          final uri = Uri.parse(options.path);
+          pathOnly = uri.hasEmptyPath ? options.path : uri.path; // /api/...
+        } catch (_) {
+          pathOnly = options.path;
+        }
+
+        // Якщо baseUrl має /api, інколи шлях приходить як /api/auth/...
+        final normalizedPath =
+            pathOnly.startsWith('/api/')
+                ? pathOnly.substring(4) // прибираємо префікс /api
+                : pathOnly;
+
+        // Роути Strapi, де токен НЕ потрібен
+        const skipAuthPaths = <String>{
+          '/auth/local',
+          '/auth/local/register',
+          '/auth/forgot-password',
+          '/auth/reset-password',
+          '/auth/send-email-confirmation',
+        };
+
+        final shouldSkip = skipAuthPaths.any(
+          (p) => normalizedPath.startsWith(p),
+        );
+
+        if (!noAuth && !shouldSkip) {
           final token = _jwtCache ?? await _safeGetJwt();
           if (token != null && token.isNotEmpty) {
             options.headers['Authorization'] = 'Bearer $token';
           }
-          handler.next(options);
-        },
-      ),
+        }
+
+        handler.next(options);
+      },
     );
+    final prettyLogger = PrettyDioLogger(
+      requestHeader: true,
+      requestBody: true,
+      responseHeader: false,
+      responseBody: true,
+      compact: true,
+      maxWidth: 120,
+      logPrint: (obj) {
+        var line = obj.toString();
+
+        line = line.replaceAll(
+          RegExp(
+            r'(Authorization:\s*Bearer\s+)[A-Za-z0-9\-\._~\+\/]+=*',
+            caseSensitive: false,
+          ),
+          r'$1***',
+        );
+
+        line = line.replaceAll(
+          RegExp(r'("jwt"\s*:\s*")([^"]+)(")', caseSensitive: false),
+          r'$1***$3',
+        );
+
+        line = line.replaceAll(
+          RegExp(r'("password"\s*:\s*")([^"]+)(")', caseSensitive: false),
+          r'$1***$3',
+        );
+
+        line = line.replaceAllMapped(
+          RegExp(
+            r'("identifier"\s*:\s*")([^"@]+)@([^"]+)(")',
+            caseSensitive: false,
+          ),
+          (m) => '${m[1]}***@${m[3]}${m[4]}',
+        );
+
+        debugPrint(line);
+      },
+    );
+
+    _dio.interceptors.addAll([authInterceptor, if (kDebugMode) prettyLogger]);
   }
 
   final Dio _dio;

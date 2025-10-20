@@ -6,10 +6,16 @@ import 'package:flutter_base_architecture/routes/app_routes.dart';
 import 'package:flutter_base_architecture/widgets/buttons/custom_filter_widget.dart';
 import 'package:flutter_base_architecture/widgets/cart/custom_item_cart_widget.dart';
 import 'package:flutter_base_architecture/widgets/text_fields/custom_text_field_widget.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
+import '../../core/env.dart';
+import '../../features/category/blocs/category_bloc.dart';
+import '../../features/category/blocs/category_event.dart';
+import '../../features/category/blocs/category_state.dart';
+import '../../features/category/models/category.dart';
 import '../../resources/app_fonts.dart';
 
 class HomePage extends StatefulWidget {
@@ -266,9 +272,7 @@ class _HomePageState extends State<HomePage> {
                             ),
                           ),
                           TextButton(
-                            onPressed: () {
-                              context.push(AppRoutes.categories);
-                            },
+                            onPressed: () => context.push(AppRoutes.categories),
                             child: Row(
                               children: [
                                 Text(
@@ -281,7 +285,7 @@ class _HomePageState extends State<HomePage> {
                                     letterSpacing: -0.15,
                                   ),
                                 ),
-                                SizedBox(width: 6.0),
+                                const SizedBox(width: 6.0),
                                 SvgPicture.asset(Assets.icons.icRightArrow),
                               ],
                             ),
@@ -289,57 +293,87 @@ class _HomePageState extends State<HomePage> {
                         ],
                       ),
                     ),
+
+                    const SizedBox(height: 12),
+
                     SizedBox(
                       height: 140,
-                      child: ListView.separated(
-                        scrollDirection: Axis.horizontal,
-                        padding: const EdgeInsets.symmetric(horizontal: 32.0),
-                        separatorBuilder: (_, _) => const SizedBox(width: 15.0),
-                        itemCount: 5,
-                        itemBuilder: (_, i) {
-                          return Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              InkWell(
-                                borderRadius: BorderRadius.circular(14.0),
-                                onTap: () {
-                                  context.push(AppRoutes.categoryItems);
-                                },
-                                child: Container(
-                                  width: 88,
-                                  height: 88,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(14),
-                                    border: Border.all(color: AppColors.gray1),
+                      child: BlocBuilder<CategoryBloc, CategoryState>(
+                        builder: (context, state) {
+                          // 1) Loading
+                          if (state is CategoryLoading) {
+                            return ListView.separated(
+                              scrollDirection: Axis.horizontal,
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 32.0,
+                              ),
+                              separatorBuilder:
+                                  (_, __) => const SizedBox(width: 15.0),
+                              itemCount: 5,
+                              itemBuilder:
+                                  (_, __) => const _CategoryChip.skeleton(),
+                            );
+                          }
+
+                          // 2) Error
+                          if (state is CategoryFailure) {
+                            return Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 32.0,
+                              ),
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    child: Text(
+                                      'Failed to load categories.\n${state.message}',
+                                      style: const TextStyle(
+                                        color: AppColors.softGray,
+                                      ),
+                                      maxLines: 2,
+                                    ),
                                   ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(18.0),
-                                    child: Assets.images.icLemon.image(),
+                                  TextButton(
+                                    onPressed:
+                                        () => context.read<CategoryBloc>().add(
+                                          CategoryFetchRequested(
+                                            forceRefresh: true,
+                                          ),
+                                        ),
+                                    child: const Text('Retry'),
                                   ),
+                                ],
+                              ),
+                            );
+                          }
+
+                          // 3) Success / Initial as empty
+                          final items =
+                              (state is CategorySuccess)
+                                  ? state.items
+                                  : <Category>[];
+                          if (items.isEmpty) {
+                            return const Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 32.0),
+                              child: Align(
+                                alignment: Alignment.centerLeft,
+                                child: Text(
+                                  'No categories yet',
+                                  style: TextStyle(color: AppColors.softGray),
                                 ),
                               ),
-                              const SizedBox(height: 6),
-                              const Text(
-                                'Fruits',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: AppFonts.w600semiBold,
-                                  fontFamily: AppFonts.fontFamily,
-                                  letterSpacing: -0.41,
-                                  color: AppColors.dark,
-                                ),
-                              ),
-                              const Text(
-                                '1126 Items',
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  fontWeight: AppFonts.w400regular,
-                                  fontFamily: AppFonts.fontFamily,
-                                  letterSpacing: -0.08,
-                                  color: AppColors.softGray,
-                                ),
-                              ),
-                            ],
+                            );
+                          }
+
+                          return ListView.separated(
+                            scrollDirection: Axis.horizontal,
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 32.0,
+                            ),
+                            separatorBuilder:
+                                (_, _) => const SizedBox(width: 15.0),
+                            itemCount: items.length,
+                            itemBuilder:
+                                (_, i) => _CategoryChip(item: items[i]),
                           );
                         },
                       ),
@@ -515,5 +549,129 @@ class _HomePageState extends State<HomePage> {
         );
       },
     );
+  }
+}
+
+class _CategoryChip extends StatelessWidget {
+  const _CategoryChip({required this.item});
+  final Category item;
+
+  const _CategoryChip.skeleton()
+    : item = const Category(
+        id: 0,
+        title: ' ',
+        photoUrl: null,
+        itemCount: null,
+        slug: null,
+        description: null,
+      );
+
+  @override
+  Widget build(BuildContext context) {
+    final isSkeleton = item.id == 0;
+
+    return SizedBox(
+      width: 88 + 2,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          InkWell(
+            borderRadius: BorderRadius.circular(14.0),
+            onTap:
+                isSkeleton
+                    ? null
+                    : () {
+                      context.push(AppRoutes.categoryItems, extra: item);
+                    },
+            child: Container(
+              width: 88,
+              height: 88,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(14),
+                border: Border.all(color: AppColors.gray1),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(18.0),
+                child: _buildIcon(item, isSkeleton),
+              ),
+            ),
+          ),
+          const SizedBox(height: 6),
+          _buildTitle(item, isSkeleton),
+          _buildCount(item, isSkeleton),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildIcon(Category c, bool isSkeleton) {
+    if (isSkeleton) {
+      return ColoredBox(color: AppColors.gray1.withOpacity(0.2));
+    }
+    if (c.photoUrl != null && c.photoUrl!.isNotEmpty) {
+      return Image.network(
+        c.photoUrl!.startsWith('http')
+            ? c.photoUrl!
+            : '${Env.baseUrl}${c.photoUrl}',
+        fit: BoxFit.contain,
+      );
+    }
+    return Assets.images.icLemon.image();
+  }
+
+  Widget _buildTitle(Category c, bool isSkeleton) {
+    if (isSkeleton) {
+      return Container(
+        width: 64,
+        height: 16,
+        decoration: BoxDecoration(
+          color: AppColors.gray1.withOpacity(0.2),
+          borderRadius: BorderRadius.circular(4),
+        ),
+      );
+    }
+    return Text(
+      c.title,
+      maxLines: 1,
+      overflow: TextOverflow.ellipsis,
+      style: const TextStyle(
+        fontSize: 16,
+        fontWeight: AppFonts.w600semiBold,
+        fontFamily: AppFonts.fontFamily,
+        letterSpacing: -0.41,
+        color: AppColors.dark,
+      ),
+    );
+  }
+
+  Widget _buildCount(Category c, bool isSkeleton) {
+    if (isSkeleton) {
+      return Padding(
+        padding: const EdgeInsets.only(top: 4),
+        child: Container(
+          width: 54,
+          height: 12,
+          decoration: BoxDecoration(
+            color: AppColors.gray1.withOpacity(0.2),
+            borderRadius: BorderRadius.circular(4),
+          ),
+        ),
+      );
+    }
+    final count = c.itemCount ?? 0;
+    return Text(
+      _formatItems(count),
+      style: const TextStyle(
+        fontSize: 12,
+        fontWeight: AppFonts.w400regular,
+        fontFamily: AppFonts.fontFamily,
+        letterSpacing: -0.08,
+        color: AppColors.softGray,
+      ),
+    );
+  }
+
+  String _formatItems(int n) {
+    return '$n Items';
   }
 }

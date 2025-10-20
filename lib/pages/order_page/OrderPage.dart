@@ -1,4 +1,8 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
+import 'package:flutter_base_architecture/widgets/buttons/custom_drop_down_order_widget.dart';
+import 'package:flutter_base_architecture/widgets/order_cart/custom_order_cart_widget.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../gen/assets.gen.dart';
@@ -17,6 +21,7 @@ class _OrderPageState extends State<OrderPage> {
     return Scaffold(
       backgroundColor: AppColors.white,
       appBar: AppBar(
+        scrolledUnderElevation: 0,
         titleSpacing: 32.0,
         actionsPadding: EdgeInsets.only(right: 32.0),
         actions: [
@@ -35,54 +40,73 @@ class _OrderPageState extends State<OrderPage> {
         backgroundColor: AppColors.white,
         centerTitle: false,
       ),
-      body: SizedBox(
-        // height: 80,
-        child: ListView.separated(
-          clipBehavior: Clip.none,
-          scrollDirection: Axis.horizontal,
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          itemCount: 3,
-          separatorBuilder: (_, _) => const SizedBox(width: 19),
-          itemBuilder: (_, index) {
-            return Column(
-              children: [
-                Expanded(
-                  child: Container(
-                    // width: 140.0,
-                    // height: 70.0,
-                    decoration: BoxDecoration(
-                      // color: Colors.black,
-                      borderRadius: BorderRadius.circular(7),
-                      // border: Border.all(color: AppColors.gray1),
-                      border: Border(
-                        // top: BorderSide(color: Colors.black12, width: 1),
-                        // left: BorderSide(color: Colors.black12, width: 1),
-                        // right: BorderSide(color: Colors.black12, width: 1),
-                        bottom: BorderSide(color: Colors.orange, width: 7),
+      body: Column(
+        children: [
+          SizedBox(
+            height: 56,
+            child: ListView.separated(
+              scrollDirection: Axis.horizontal,
+              padding: const EdgeInsets.symmetric(horizontal: 32),
+              itemCount: 3,
+              separatorBuilder: (_, _) => const SizedBox(width: 19),
+              itemBuilder: (_, index) {
+                return SizedBox(
+                  child: Stack(
+                    children: [
+                      Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(7),
+                          border: Border.all(color: AppColors.gray1, width: 1),
+                        ),
+                        alignment: Alignment.center,
+                        padding: const EdgeInsets.fromLTRB(41, 14, 41, 18),
+                        child: Text('All $index'),
                       ),
-                    ),
-                    alignment: Alignment.center,
-                    child: Padding(
-                      padding: const EdgeInsets.only(
-                        left: 41.0,
-                        right: 41.0,
-                        top: 14.0,
-                        bottom: 18.0,
+                      Positioned.fill(
+                        child: Align(
+                          alignment: Alignment.bottomCenter,
+                          child: Container(
+                            height: 7,
+                            decoration: const BoxDecoration(
+                              color: AppColors.orange,
+                              borderRadius: BorderRadius.vertical(
+                                bottom: Radius.circular(7),
+                              ),
+                            ),
+                          ),
+                        ),
                       ),
-
-                      child: Text('All $index'),
-                    ),
+                    ],
                   ),
-                ),
-                Container(
-                  height: 20,
-                  width: double.infinity,
-                  color: AppColors.orange,
-                ),
-              ],
-            );
-          },
-        ),
+                );
+              },
+            ),
+          ),
+          SizedBox(height: 30.0),
+          Expanded(
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  CustomDropDownOrderWidget(),
+                  Divider(height: 1.0),
+                  SizedBox(height: 20.0),
+                  CustomDropDownOrderWidget(
+                    color: AppColors.white,
+                    colorTheme: AppColors.completedOrder,
+                  ),
+                  Divider(height: 1.0),
+                  SizedBox(height: 20.0),
+                  CustomDropDownOrderWidget(
+                    color: AppColors.white,
+                    colorTheme: AppColors.completedOrder,
+                  ),
+                  Divider(height: 1.0),
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
