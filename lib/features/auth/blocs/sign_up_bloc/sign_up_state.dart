@@ -12,6 +12,7 @@ class SignUpState extends Equatable {
     this.error,
     this.response,
   });
+
   final String username;
   final String email;
   final String password;
@@ -19,8 +20,15 @@ class SignUpState extends Equatable {
   final String? error;
   final StrapiAuthResponse? response;
 
-  bool get isValid =>
-      username.trim().isNotEmpty && email.contains('@') && password.length >= 6;
+  bool get isUsernameValid => username.trim().length >= 3;
+  bool get isEmailValid {
+    final r = RegExp(r'^[^\s@]+@[^\s@]+\.[^\s@]+$');
+    return r.hasMatch(email.trim());
+  }
+
+  bool get isPasswordValid => password.length >= 6;
+
+  bool get isValid => isUsernameValid && isEmailValid && isPasswordValid;
 
   SignUpState copyWith({
     String? username,

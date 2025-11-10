@@ -20,7 +20,12 @@ class SignInState extends Equatable {
   final String? error;
   final StrapiAuthResponse? response;
 
-  bool get isValid => identifier.trim().isNotEmpty && password.isNotEmpty;
+  // Детальні геттери валідації
+  bool get isIdentifierValid => identifier.trim().isNotEmpty;
+  bool get isPasswordValid => password.length >= 6;
+
+  // Загальна валідність
+  bool get isValid => isIdentifierValid && isPasswordValid;
 
   SignInState copyWith({
     String? identifier,

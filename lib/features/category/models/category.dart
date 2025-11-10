@@ -1,42 +1,25 @@
-class Category {
-  final int id;
-  final String title;
-  final String? slug;
-  final List<Map<String, dynamic>>? description;
-  final String? photoUrl;
-  final int? itemCount;
-  final String? documentId;
+import 'package:freezed_annotation/freezed_annotation.dart';
+import 'strapi_media.dart';
 
-  const Category({
-    required this.id,
-    required this.title,
-    this.slug,
-    this.description,
-    this.photoUrl,
-    this.itemCount,
-    this.documentId,
-  });
+part 'category.freezed.dart';
+part 'category.g.dart';
 
-  Category copyWith({
-    int? id,
-    String? title,
+@freezed
+class Category with _$Category {
+  const factory Category({
+    required int id,
+    required String title,
     String? slug,
     List<Map<String, dynamic>>? description,
     String? photoUrl,
     int? itemCount,
     String? documentId,
-  }) {
-    return Category(
-      id: id ?? this.id,
-      title: title ?? this.title,
-      slug: slug ?? this.slug,
-      description: description ?? this.description,
-      photoUrl: photoUrl ?? this.photoUrl,
-      itemCount: itemCount ?? this.itemCount,
-      documentId: documentId ?? this.documentId,
-    );
-  }
+  }) = _Category;
 
+  factory Category.fromJson(Map<String, dynamic> json) =>
+      _$CategoryFromJson(json);
+
+  /// Конвертація саме з формату Strapi
   factory Category.fromStrapi(Map<String, dynamic> json) {
     final hasAttrs = json['attributes'] is Map<String, dynamic>;
     final src = hasAttrs ? (json['attributes'] as Map<String, dynamic>) : json;

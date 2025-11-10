@@ -43,17 +43,7 @@ class CustomButtonProfileWidget extends StatelessWidget {
                       gradient: gradient,
                       borderRadius: BorderRadius.circular(7.0),
                     ),
-                    child: Center(
-                      child: SvgPicture.asset(
-                        Assets.icons.user,
-                        width: 24.0,
-                        height: 24.0,
-                        colorFilter: ColorFilter.mode(
-                          Colors.white,
-                          BlendMode.srcIn,
-                        ),
-                      ),
-                    ),
+                    child: Center(child: icon),
                   ),
                   SizedBox(width: 20.0),
                   Text(label),

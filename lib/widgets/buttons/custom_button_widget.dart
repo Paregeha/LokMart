@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_base_architecture/resources/app_colors.dart';
 import 'package:flutter_base_architecture/resources/app_fonts.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:flutter_svg/svg.dart';
 
 import '../../gen/assets.gen.dart';
 
@@ -13,6 +12,8 @@ class CustomButtonsWidget extends StatelessWidget {
     this.onPressed,
     this.icon,
     this.enable = false,
+    this.enabledGradient,
+    this.disabledColor,
   });
 
   final String label;
@@ -20,22 +21,35 @@ class CustomButtonsWidget extends StatelessWidget {
   final VoidCallback? onPressed;
   final bool enable;
 
+  final Gradient? enabledGradient;
+
+  final Color? disabledColor;
+
   @override
   Widget build(BuildContext context) {
+    final bool isEnabled = onPressed != null;
+
+    final Gradient activeGradient =
+        enabledGradient ??
+        LinearGradient(
+          colors: [AppColors.gradientOne, AppColors.gradientTwo],
+          begin: Alignment.centerLeft,
+          end: Alignment.centerRight,
+        );
+
+    final Color inactiveColor = disabledColor ?? AppColors.gray1;
+
     return Material(
       borderRadius: BorderRadius.circular(12.0),
       child: Ink(
         decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [AppColors.gradientOne, AppColors.gradientTwo],
-            begin: Alignment.centerLeft,
-            end: Alignment.centerRight,
-          ),
+          gradient: isEnabled ? activeGradient : null,
+          color: isEnabled ? null : inactiveColor,
           borderRadius: BorderRadius.circular(12.0),
         ),
         child: InkWell(
           borderRadius: BorderRadius.circular(12.0),
-          onTap: onPressed,
+          onTap: isEnabled ? onPressed : null,
           child: SizedBox(
             height: 60.0,
             width: double.infinity,
@@ -46,11 +60,11 @@ class CustomButtonsWidget extends StatelessWidget {
                 children: [
                   if (enable) ...[
                     SvgPicture.asset(Assets.icons.buy, width: 18, height: 18),
-                    SizedBox(width: 12.19),
+                    const SizedBox(width: 12.19),
                   ],
                   Text(
                     label,
-                    style: TextStyle(
+                    style: const TextStyle(
                       color: Colors.white,
                       fontWeight: AppFonts.w800extraBold,
                       fontFamily: AppFonts.fontFamily,

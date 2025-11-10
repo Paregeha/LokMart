@@ -1,9 +1,7 @@
 import 'package:dio/dio.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:pretty_dio_logger/pretty_dio_logger.dart';
-import 'package:flutter/foundation.dart'; // kDebugMode, debugPrint
-import '../../../core/env.dart';
+
+import '../../../services/dio_service.dart';
 import '../models/strapi_auth_response.dart';
 
 class AuthException implements Exception {
@@ -17,103 +15,9 @@ class AuthException implements Exception {
 class AuthRepository {
   AuthRepository({Dio? dio, FlutterSecureStorage? storage})
     : _storage = storage ?? const FlutterSecureStorage(),
-      _dio =
-          dio ??
-          Dio(
-            BaseOptions(
-              baseUrl: '${Env.baseUrl}/api',
-              connectTimeout: const Duration(seconds: 8),
-              receiveTimeout: const Duration(seconds: 12),
-              sendTimeout: const Duration(seconds: 8),
-              validateStatus:
-                  (code) => code != null && code >= 200 && code < 600,
-            ),
-          ) {
-    final Interceptor authInterceptor = InterceptorsWrapper(
-      onRequest: (options, handler) async {
-        // Можна вимкнути токен пер-запитно:
-        // dio.post('/public', options: Options(extra: {'noAuth': true}))
-        final noAuth = options.extra['noAuth'] == true;
-
-        // Витягнемо тільки шлях (на випадок повного URL)
-        String pathOnly;
-        try {
-          final uri = Uri.parse(options.path);
-          pathOnly = uri.hasEmptyPath ? options.path : uri.path; // /api/...
-        } catch (_) {
-          pathOnly = options.path;
-        }
-
-        // Якщо baseUrl має /api, інколи шлях приходить як /api/auth/...
-        final normalizedPath =
-            pathOnly.startsWith('/api/')
-                ? pathOnly.substring(4) // прибираємо префікс /api
-                : pathOnly;
-
-        // Роути Strapi, де токен НЕ потрібен
-        const skipAuthPaths = <String>{
-          '/auth/local',
-          '/auth/local/register',
-          '/auth/forgot-password',
-          '/auth/reset-password',
-          '/auth/send-email-confirmation',
-        };
-
-        final shouldSkip = skipAuthPaths.any(
-          (p) => normalizedPath.startsWith(p),
-        );
-
-        if (!noAuth && !shouldSkip) {
-          final token = _jwtCache ?? await _safeGetJwt();
-          if (token != null && token.isNotEmpty) {
-            options.headers['Authorization'] = 'Bearer $token';
-          }
-        }
-
-        handler.next(options);
-      },
-    );
-    final prettyLogger = PrettyDioLogger(
-      requestHeader: true,
-      requestBody: true,
-      responseHeader: false,
-      responseBody: true,
-      compact: true,
-      maxWidth: 120,
-      logPrint: (obj) {
-        var line = obj.toString();
-
-        line = line.replaceAll(
-          RegExp(
-            r'(Authorization:\s*Bearer\s+)[A-Za-z0-9\-\._~\+\/]+=*',
-            caseSensitive: false,
-          ),
-          r'$1***',
-        );
-
-        line = line.replaceAll(
-          RegExp(r'("jwt"\s*:\s*")([^"]+)(")', caseSensitive: false),
-          r'$1***$3',
-        );
-
-        line = line.replaceAll(
-          RegExp(r'("password"\s*:\s*")([^"]+)(")', caseSensitive: false),
-          r'$1***$3',
-        );
-
-        line = line.replaceAllMapped(
-          RegExp(
-            r'("identifier"\s*:\s*")([^"@]+)@([^"]+)(")',
-            caseSensitive: false,
-          ),
-          (m) => '${m[1]}***@${m[3]}${m[4]}',
-        );
-
-        debugPrint(line);
-      },
-    );
-
-    _dio.interceptors.addAll([authInterceptor, if (kDebugMode) prettyLogger]);
+      _dio = dio ?? DioService.instance {
+    _dio.interceptors.remove(_authInterceptor);
+    _dio.interceptors.add(_authInterceptor);
   }
 
   final Dio _dio;
@@ -123,70 +27,80 @@ class AuthRepository {
   static const _kUserEmailKey = 'user_email';
   static const _kUserNameKey = 'user_name';
 
-  String? _jwtCache;
+  static String? _jwtCache;
+
+  static final _authInterceptor = InterceptorsWrapper(
+    onRequest: (options, handler) async {
+      final noAuth = options.extra['noAuth'] == true;
+
+      String path = options.path;
+      try {
+        final uri = Uri.parse(options.path);
+        path = uri.hasEmptyPath ? options.path : uri.path;
+      } catch (_) {}
+      if (path.startsWith('/api/')) path = path.substring(4);
+
+      const skipAuthPaths = <String>{
+        '/auth/local',
+        '/auth/local/register',
+        '/auth/forgot-password',
+        '/auth/reset-password',
+        '/auth/send-email-confirmation',
+      };
+
+      final shouldSkip = noAuth || skipAuthPaths.any((p) => path.startsWith(p));
+
+      if (!shouldSkip) {
+        final token = _jwtCache ?? await _safeGetJwt();
+        if (token != null && token.isNotEmpty) {
+          options.headers['Authorization'] = 'Bearer $token';
+        }
+      }
+
+      handler.next(options);
+    },
+  );
 
   Future<StrapiAuthResponse> register({
     required String username,
     required String email,
     required String password,
   }) async {
-    try {
-      final res = await _dio.post(
-        '/auth/local/register',
-        data: {'username': username, 'email': email, 'password': password},
-      );
-      _throwIfError(res);
-      final data = StrapiAuthResponse.fromMap(res.data as Map<String, dynamic>);
-      await _persistAuth(data);
-      return data;
-    } on DioException catch (e) {
-      throw _mapDioToAuthException(e);
-    } catch (_) {
-      throw const AuthException('Unexpected error');
-    }
+    final res = await _dio.post(
+      '/auth/local/register',
+      data: {'username': username, 'email': email, 'password': password},
+    );
+    _throwIfError(res);
+    final data = StrapiAuthResponse.fromMap(res.data as Map<String, dynamic>);
+    await _persistAuth(data);
+    return data;
   }
 
   Future<StrapiAuthResponse> login({
     required String identifier,
     required String password,
   }) async {
-    try {
-      final res = await _dio.post(
-        '/auth/local',
-        data: {'identifier': identifier, 'password': password},
-      );
-      _throwIfError(res);
-      final data = StrapiAuthResponse.fromMap(res.data as Map<String, dynamic>);
-      await _persistAuth(data);
-      return data;
-    } on DioException catch (e) {
-      throw _mapDioToAuthException(e);
-    } catch (_) {
-      throw const AuthException('Unexpected error');
-    }
+    final res = await _dio.post(
+      '/auth/local',
+      data: {'identifier': identifier, 'password': password},
+    );
+    _throwIfError(res);
+    final data = StrapiAuthResponse.fromMap(res.data as Map<String, dynamic>);
+    await _persistAuth(data);
+    return data;
   }
 
   Future<StrapiUser> me() async {
-    try {
-      final res = await _dio.get('/users/me');
-      _throwIfError(res);
-      return StrapiUser.fromMap(res.data as Map<String, dynamic>);
-    } on DioException catch (e) {
-      throw _mapDioToAuthException(e, fallback: 'Failed to load profile');
-    } catch (_) {
-      throw const AuthException('Unexpected error');
-    }
+    final res = await _dio.get('/users/me');
+    _throwIfError(res);
+    return StrapiUser.fromMap(res.data as Map<String, dynamic>);
   }
 
   Future<void> logout() async {
     _jwtCache = null;
     try {
       await _storage.delete(key: _kJwtKey);
-    } catch (_) {}
-    try {
       await _storage.delete(key: _kUserEmailKey);
-    } catch (_) {}
-    try {
       await _storage.delete(key: _kUserNameKey);
     } catch (_) {}
   }
@@ -194,7 +108,7 @@ class AuthRepository {
   Future<void> _persistAuth(StrapiAuthResponse data) async {
     _jwtCache = data.jwt;
     try {
-      if (data.jwt != null) {
+      if (data.jwt != null && data.jwt!.isNotEmpty) {
         await _storage.write(key: _kJwtKey, value: data.jwt);
       }
       await _storage.write(key: _kUserEmailKey, value: data.user.email);
@@ -202,9 +116,10 @@ class AuthRepository {
     } catch (_) {}
   }
 
-  Future<String?> _safeGetJwt() async {
+  static Future<String?> _safeGetJwt() async {
     try {
-      final v = await _storage.read(key: _kJwtKey);
+      final storage = const FlutterSecureStorage();
+      final v = await storage.read(key: _kJwtKey);
       _jwtCache ??= v;
       return v;
     } catch (_) {
@@ -215,38 +130,21 @@ class AuthRepository {
   void _throwIfError(Response res) {
     final code = res.statusCode ?? 0;
     if (code >= 200 && code < 300) return;
-    final msg = _extractErrorMessage(res.data) ?? 'Request failed';
-    throw AuthException(msg, status: code);
-  }
-
-  AuthException _mapDioToAuthException(
-    DioException e, {
-    String fallback = 'Request failed',
-  }) {
-    final code = e.response?.statusCode;
-    final msg = _extractErrorMessage(e.response?.data) ?? e.message ?? fallback;
-    return AuthException(msg, status: code);
+    throw AuthException(
+      _extractErrorMessage(res.data) ?? 'Request failed',
+      status: code,
+    );
   }
 
   String? _extractErrorMessage(dynamic body) {
-    if (body == null) return null;
     if (body is String) return body;
-    if (body is Map) {
-      final err = body['error'];
-      if (err is Map && err['message'] is String) {
-        return err['message'] as String;
-      }
-      if (body['message'] is String) return body['message'] as String;
-      if (body['message'] is List && body['message'].isNotEmpty) {
-        final first = body['message'][0];
-        if (first is String) return first;
-        if (first is Map &&
-            first['messages'] is List &&
-            first['messages'].isNotEmpty) {
-          final m = first['messages'][0];
-          if (m is Map && m['message'] is String) return m['message'] as String;
-        }
-      }
+    if (body is Map &&
+        body['error'] is Map &&
+        (body['error'] as Map)['message'] is String) {
+      return (body['error'] as Map)['message'] as String;
+    }
+    if (body is Map && body['message'] is String) {
+      return body['message'] as String;
     }
     return null;
   }

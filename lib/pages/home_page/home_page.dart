@@ -1,9 +1,12 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_base_architecture/gen/assets.gen.dart';
 import 'package:flutter_base_architecture/resources/app_colors.dart';
 import 'package:flutter_base_architecture/routes/app_routes.dart';
 import 'package:flutter_base_architecture/widgets/buttons/custom_filter_widget.dart';
+import 'package:flutter_base_architecture/widgets/cart/custom_deals_cart_widget.dart';
 import 'package:flutter_base_architecture/widgets/cart/custom_item_cart_widget.dart';
 import 'package:flutter_base_architecture/widgets/text_fields/custom_text_field_widget.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -16,7 +19,13 @@ import '../../features/category/blocs/category_bloc.dart';
 import '../../features/category/blocs/category_event.dart';
 import '../../features/category/blocs/category_state.dart';
 import '../../features/category/models/category.dart';
+import '../../features/products/blocs/products_bloc.dart';
+import '../../features/products/blocs/products_event.dart';
+import '../../features/products/blocs/products_state.dart';
+import '../../features/products/models/products.dart';
 import '../../resources/app_fonts.dart';
+
+// імпорти залишай як є
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -54,9 +63,6 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        // final widthLayout = constraints.maxWidth;
-        // final heightLayout = constraints.maxHeight;
-
         return AnnotatedRegion<SystemUiOverlayStyle>(
           value: const SystemUiOverlayStyle(
             statusBarColor: Colors.transparent,
@@ -68,7 +74,6 @@ class _HomePageState extends State<HomePage> {
             appBar: AppBar(
               backgroundColor: AppColors.white,
               scrolledUnderElevation: 0,
-              // elevation: 0,
               centerTitle: false,
               toolbarHeight: 50.0,
               titleSpacing: 30.0,
@@ -124,7 +129,7 @@ class _HomePageState extends State<HomePage> {
                           child: Container(
                             width: 13.0,
                             height: 13.0,
-                            decoration: BoxDecoration(
+                            decoration: const BoxDecoration(
                               color: AppColors.orange,
                               shape: BoxShape.circle,
                             ),
@@ -163,8 +168,7 @@ class _HomePageState extends State<HomePage> {
               child: SingleChildScrollView(
                 child: Column(
                   children: [
-                    // SizedBox(height: heightLayout * 0.02),
-                    SizedBox(height: 19.0),
+                    const SizedBox(height: 19.0),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 32.0),
                       child: Row(
@@ -188,13 +192,12 @@ class _HomePageState extends State<HomePage> {
                               ),
                             ),
                           ),
-                          SizedBox(width: 18.0),
+                          const SizedBox(width: 18.0),
                           CustomFilterWidget(onPressed: () {}),
                         ],
                       ),
                     ),
-                    // SizedBox(height: heightLayout * 0.02),
-                    SizedBox(height: 3.0),
+                    const SizedBox(height: 3.0),
                     AspectRatio(
                       aspectRatio: 18 / 7,
                       child: PageView.builder(
@@ -207,25 +210,20 @@ class _HomePageState extends State<HomePage> {
                           return AnimatedBuilder(
                             animation: _bannerCtrl,
                             builder: (context, child) {
-                              final double currentPage =
+                              final currentPage =
                                   _bannerCtrl.hasClients
                                       ? (_bannerCtrl.page ??
                                           _bannerCtrl.initialPage.toDouble())
                                       : _bannerCtrl.initialPage.toDouble();
-
-                              final double distanceFromCurrent =
-                                  (i - currentPage).abs();
-
-                              final double proximity = (1 - distanceFromCurrent)
-                                  .clamp(0.0, 1.0);
-
-                              const double minScale = 0.80;
-                              const double maxScale = 1.00;
-                              final double scaleFactor =
+                              final distance = (i - currentPage).abs();
+                              final proximity = (1 - distance).clamp(0.0, 1.0);
+                              const minScale = 0.80;
+                              const maxScale = 1.00;
+                              final scale =
                                   minScale + (maxScale - minScale) * proximity;
 
                               return Transform.scale(
-                                scale: scaleFactor,
+                                scale: scale,
                                 alignment: Alignment.center,
                                 child: ClipRRect(
                                   borderRadius: BorderRadius.circular(28),
@@ -255,7 +253,7 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ),
 
-                    SizedBox(height: 39.0),
+                    const SizedBox(height: 39.0),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 32.0),
                       child: Row(
@@ -293,92 +291,61 @@ class _HomePageState extends State<HomePage> {
                         ],
                       ),
                     ),
-
                     const SizedBox(height: 12),
 
                     SizedBox(
                       height: 140,
                       child: BlocBuilder<CategoryBloc, CategoryState>(
                         builder: (context, state) {
-                          // 1) Loading
-                          if (state is CategoryLoading) {
-                            return ListView.separated(
-                              scrollDirection: Axis.horizontal,
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 32.0,
-                              ),
-                              separatorBuilder:
-                                  (_, __) => const SizedBox(width: 15.0),
-                              itemCount: 5,
-                              itemBuilder:
-                                  (_, __) => const _CategoryChip.skeleton(),
-                            );
-                          }
-
-                          // 2) Error
-                          if (state is CategoryFailure) {
-                            return Padding(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 32.0,
-                              ),
-                              child: Row(
-                                children: [
-                                  Expanded(
+                          return state.when(
+                            initial: () => const _CategoriesSkeleton(),
+                            loading: (silent) => const _CategoriesSkeleton(),
+                            failure:
+                                (message) => _CategoriesError(
+                                  message: message,
+                                  onRetry:
+                                      () => context.read<CategoryBloc>().add(
+                                        const CategoryEvent.fetch(
+                                          forceRefresh: true,
+                                        ),
+                                      ),
+                                ),
+                            success: (items) {
+                              if (items.isEmpty) {
+                                return const Padding(
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 32.0,
+                                  ),
+                                  child: Align(
+                                    alignment: Alignment.centerLeft,
                                     child: Text(
-                                      'Failed to load categories.\n${state.message}',
-                                      style: const TextStyle(
+                                      'No categories yet',
+                                      style: TextStyle(
                                         color: AppColors.softGray,
                                       ),
-                                      maxLines: 2,
                                     ),
                                   ),
-                                  TextButton(
-                                    onPressed:
-                                        () => context.read<CategoryBloc>().add(
-                                          CategoryFetchRequested(
-                                            forceRefresh: true,
-                                          ),
-                                        ),
-                                    child: const Text('Retry'),
-                                  ),
-                                ],
-                              ),
-                            );
-                          }
-
-                          // 3) Success / Initial as empty
-                          final items =
-                              (state is CategorySuccess)
-                                  ? state.items
-                                  : <Category>[];
-                          if (items.isEmpty) {
-                            return const Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 32.0),
-                              child: Align(
-                                alignment: Alignment.centerLeft,
-                                child: Text(
-                                  'No categories yet',
-                                  style: TextStyle(color: AppColors.softGray),
+                                );
+                              }
+                              return ListView.separated(
+                                scrollDirection: Axis.horizontal,
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 32.0,
                                 ),
-                              ),
-                            );
-                          }
-
-                          return ListView.separated(
-                            scrollDirection: Axis.horizontal,
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 32.0,
-                            ),
-                            separatorBuilder:
-                                (_, _) => const SizedBox(width: 15.0),
-                            itemCount: items.length,
-                            itemBuilder:
-                                (_, i) => _CategoryChip(item: items[i]),
+                                separatorBuilder:
+                                    (_, __) => const SizedBox(width: 15.0),
+                                itemCount: items.length,
+                                itemBuilder:
+                                    (_, i) => _CategoryChip(item: items[i]),
+                              );
+                            },
                           );
                         },
                       ),
                     ),
-                    SizedBox(height: 39.0),
+
+                    const SizedBox(height: 39.0),
+                    // --- решта твоєї сторінки без змін ---
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 32.0),
                       child: Row(
@@ -408,7 +375,7 @@ class _HomePageState extends State<HomePage> {
                                     letterSpacing: -0.15,
                                   ),
                                 ),
-                                SizedBox(width: 6.0),
+                                const SizedBox(width: 6.0),
                                 SvgPicture.asset(Assets.icons.icRightArrow),
                               ],
                             ),
@@ -418,101 +385,75 @@ class _HomePageState extends State<HomePage> {
                     ),
                     SizedBox(
                       height: 267.0,
-                      child: ListView.separated(
-                        scrollDirection: Axis.horizontal,
-                        padding: const EdgeInsets.symmetric(horizontal: 32.0),
-                        separatorBuilder: (_, _) => const SizedBox(width: 15.0),
-                        itemCount: 5,
-                        itemBuilder: (_, i) {
-                          return Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Assets.images.banana.image(fit: BoxFit.fill),
-                              const Text(
-                                'Banana',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: AppFonts.w600semiBold,
-                                  fontFamily: AppFonts.fontFamily,
-                                  letterSpacing: -0.41,
-                                  color: AppColors.dark,
+                      child: BlocBuilder<ProductsBloc, ProductsState>(
+                        builder: (context, state) {
+                          return state.maybeWhen(
+                            success: (products) {
+                              // Беремо тільки товари з рейтингом і сортуємо за спаданням
+                              final rated =
+                                  products
+                                      .where((p) => p.raiting != null)
+                                      .toList()
+                                    ..sort(
+                                      (a, b) => (b.raiting ?? 0).compareTo(
+                                        a.raiting ?? 0,
+                                      ),
+                                    );
+
+                              final count = math.min(5, rated.length);
+                              if (count == 0) {
+                                return const Center(
+                                  child: Text(
+                                    'No rated products yet',
+                                    style: TextStyle(color: AppColors.softGray),
+                                  ),
+                                );
+                              }
+
+                              return ListView.separated(
+                                scrollDirection: Axis.horizontal,
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 32.0,
                                 ),
-                              ),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Row(
-                                    children: [
-                                      Container(
-                                        decoration: BoxDecoration(
-                                          border: Border.all(
-                                            color: AppColors.softGray
-                                                .withValues(alpha: 0.2),
-                                          ),
-                                          borderRadius: BorderRadius.circular(
-                                            11.0,
-                                          ),
-                                        ),
-                                        child: Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                            horizontal: 7.0,
-                                            vertical: 5.0,
-                                          ),
-                                          child: Row(
-                                            children: [
-                                              SvgPicture.asset(
-                                                Assets.icons.star,
-                                              ),
-                                              SizedBox(width: 4.0),
-                                              Text(
-                                                '4.5',
-                                                style: TextStyle(
-                                                  fontFamily:
-                                                      AppFonts.fontFamily,
-                                                  fontWeight:
-                                                      AppFonts.w600semiBold,
-                                                  fontSize: 10.0,
-                                                  letterSpacing: -0.08,
-                                                  color: AppColors.dark,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                      SizedBox(width: 7.0),
-                                      Text(
-                                        '97 Ratings',
-                                        style: TextStyle(
-                                          fontFamily: AppFonts.fontFamily,
-                                          fontWeight: AppFonts.w500medium,
-                                          fontSize: 12.0,
-                                          letterSpacing: -0.08,
-                                          color: AppColors.orange,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(width: 100),
-                                  Text(
-                                    '\$15.00',
-                                    style: TextStyle(
-                                      fontFamily: AppFonts.fontFamily,
-                                      fontWeight: AppFonts.w600semiBold,
-                                      fontSize: 16.0,
-                                      letterSpacing: -0.08,
-                                      color: AppColors.dark,
+                                separatorBuilder:
+                                    (_, __) => const SizedBox(width: 15.0),
+                                itemCount: count,
+                                itemBuilder:
+                                    (_, i) => CustomDealsCartWidget(
+                                      product: rated[i],
+                                      onPressed: () {},
                                     ),
+                              );
+                            },
+                            orElse:
+                                () => ListView.separated(
+                                  scrollDirection: Axis.horizontal,
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 32.0,
                                   ),
-                                ],
-                              ),
-                            ],
+                                  separatorBuilder:
+                                      (_, __) => const SizedBox(width: 15.0),
+                                  itemCount: 5,
+                                  itemBuilder:
+                                      (_, __) => const SizedBox(
+                                        width: 208,
+                                        child: Opacity(
+                                          opacity: 0.3,
+                                          child: Padding(
+                                            padding: EdgeInsets.symmetric(
+                                              vertical: 6,
+                                            ),
+                                            child:
+                                                _DealsSkeleton(), // маленький локальний скелетон
+                                          ),
+                                        ),
+                                      ),
+                                ),
                           );
                         },
                       ),
                     ),
-                    SizedBox(height: 39.0),
+                    const SizedBox(height: 39.0),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 32.0),
                       child: Row(
@@ -531,14 +472,41 @@ class _HomePageState extends State<HomePage> {
                         ],
                       ),
                     ),
-                    SizedBox(height: 25.0),
-                    ListView.separated(
-                      separatorBuilder: (_, _) => SizedBox(height: 25.0),
-                      shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
-                      itemCount: 3,
-                      itemBuilder: (_, i) {
-                        return CustomItemCartWidget();
+                    const SizedBox(height: 25.0),
+                    BlocBuilder<ProductsBloc, ProductsState>(
+                      builder: (context, state) {
+                        return state.when(
+                          initial: () => const _ProductsSkeleton(),
+                          loading: (_) => const _ProductsSkeleton(),
+                          failure:
+                              (message) => Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 32.0,
+                                ),
+                                child: Row(
+                                  children: [
+                                    Expanded(
+                                      child: Text(
+                                        'Failed to load products.\n$message',
+                                        style: const TextStyle(
+                                          color: AppColors.softGray,
+                                        ),
+                                        maxLines: 2,
+                                      ),
+                                    ),
+                                    TextButton(
+                                      onPressed:
+                                          () => context.read<ProductsBloc>().add(
+                                            const ProductsEvent.fetchFirst(),
+                                          ),
+                                      child: const Text('Retry'),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                          success: (products) => _ProductsList(products),
+                          loadingMore: (products, _) => _ProductsList(products),
+                        );
                       },
                     ),
                   ],
@@ -552,8 +520,89 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
+class _ProductsSkeleton extends StatelessWidget {
+  const _ProductsSkeleton();
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 32.0),
+      child: ListView.separated(
+        separatorBuilder: (_, __) => const SizedBox(height: 25.0),
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
+        itemCount: 3,
+        itemBuilder:
+            (_, __) => Opacity(
+              opacity: 0.3,
+              child: Assets.images.apple.image(
+                width: double.infinity,
+                height: 138,
+                fit: BoxFit.cover,
+              ),
+            ),
+      ),
+    );
+  }
+}
+
+Widget _ProductsList(List<Products> products) {
+  return Padding(
+    padding: const EdgeInsets.symmetric(horizontal: 32.0),
+    child: ListView.separated(
+      separatorBuilder: (_, __) => const SizedBox(height: 25.0),
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      itemCount: products.length,
+      itemBuilder: (_, i) => CustomItemCartWidget(products: products[i]),
+    ),
+  );
+}
+
+class _CategoriesSkeleton extends StatelessWidget {
+  const _CategoriesSkeleton();
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.separated(
+      scrollDirection: Axis.horizontal,
+      padding: const EdgeInsets.symmetric(horizontal: 32.0),
+      separatorBuilder: (_, __) => const SizedBox(width: 15.0),
+      itemCount: 5,
+      itemBuilder: (_, __) => const _CategoryChip.skeleton(),
+    );
+  }
+}
+
+class _CategoriesError extends StatelessWidget {
+  const _CategoriesError({required this.message, required this.onRetry});
+
+  final String message;
+  final VoidCallback onRetry;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 32.0),
+      child: Row(
+        children: [
+          Expanded(
+            child: Text(
+              'Failed to load categories.\n$message',
+              style: const TextStyle(color: AppColors.softGray),
+              maxLines: 2,
+            ),
+          ),
+          TextButton(onPressed: onRetry, child: const Text('Retry')),
+        ],
+      ),
+    );
+  }
+}
+
 class _CategoryChip extends StatelessWidget {
   const _CategoryChip({required this.item});
+
   final Category item;
 
   const _CategoryChip.skeleton()
@@ -571,7 +620,7 @@ class _CategoryChip extends StatelessWidget {
     final isSkeleton = item.id == 0;
 
     return SizedBox(
-      width: 88 + 2,
+      width: 90,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -580,9 +629,7 @@ class _CategoryChip extends StatelessWidget {
             onTap:
                 isSkeleton
                     ? null
-                    : () {
-                      context.push(AppRoutes.categoryItems, extra: item);
-                    },
+                    : () => context.push(AppRoutes.categoryItems, extra: item),
             child: Container(
               width: 88,
               height: 88,
@@ -660,7 +707,7 @@ class _CategoryChip extends StatelessWidget {
     }
     final count = c.itemCount ?? 0;
     return Text(
-      _formatItems(count),
+      '$count Items',
       style: const TextStyle(
         fontSize: 12,
         fontWeight: AppFonts.w400regular,
@@ -670,8 +717,51 @@ class _CategoryChip extends StatelessWidget {
       ),
     );
   }
+}
 
-  String _formatItems(int n) {
-    return '$n Items';
+class _DealsSkeleton extends StatelessWidget {
+  const _DealsSkeleton();
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Assets.images.banana.image(width: 208, height: 156, fit: BoxFit.cover),
+        const SizedBox(height: 8),
+        Container(
+          width: 120,
+          height: 16,
+          color: AppColors.gray1.withOpacity(0.2),
+        ),
+        const SizedBox(height: 8),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Row(
+              children: [
+                Container(
+                  width: 50,
+                  height: 22,
+                  color: AppColors.gray1.withOpacity(0.2),
+                ),
+                const SizedBox(width: 7),
+                Container(
+                  width: 70,
+                  height: 14,
+                  color: AppColors.gray1.withOpacity(0.2),
+                ),
+              ],
+            ),
+            const SizedBox(width: 100),
+            Container(
+              width: 60,
+              height: 16,
+              color: AppColors.gray1.withOpacity(0.2),
+            ),
+          ],
+        ),
+      ],
+    );
   }
 }

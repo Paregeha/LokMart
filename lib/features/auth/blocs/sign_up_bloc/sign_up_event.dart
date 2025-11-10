@@ -28,7 +28,7 @@ class SignUpPasswordChanged extends SignUpEvent {
   final String value;
 
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [value];
 }
 
 class SignUpSubmitted extends SignUpEvent {

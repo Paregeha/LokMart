@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../features/auth/blocs/sign_up_bloc/sign_up_bloc.dart';
@@ -95,7 +95,7 @@ class _SignUpBody extends StatelessWidget {
                             state.error != null) {
                           ScaffoldMessenger.of(
                             context,
-                          ).showSnackBar(SnackBar(content: Text('Помилка')));
+                          ).showSnackBar(SnackBar(content: Text(state.error!)));
                         }
                         if (state.status == SignUpStatus.invalid) {
                           ScaffoldMessenger.of(context).showSnackBar(
@@ -114,6 +114,20 @@ class _SignUpBody extends StatelessWidget {
                         final canSubmit =
                             isSelected && state.isValid && !isLoading;
 
+                        // Підготовка текстів помилок
+                        final usernameError =
+                            state.username.isEmpty || state.isUsernameValid
+                                ? null
+                                : 'Мінімум 3 символи';
+                        final emailError =
+                            state.email.isEmpty || state.isEmailValid
+                                ? null
+                                : 'Невірний email';
+                        final passError =
+                            state.password.isEmpty || state.isPasswordValid
+                                ? null
+                                : 'Мінімум 6 символів';
+
                         return SingleChildScrollView(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -131,64 +145,124 @@ class _SignUpBody extends StatelessWidget {
                               ),
                               SizedBox(height: heightLayout * 0.05),
 
-                              CustomTextFieldWidget(
-                                prefix: Padding(
-                                  padding: const EdgeInsets.only(
-                                    top: 18,
-                                    bottom: 18,
-                                    left: 12,
+                              // USERNAME
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  CustomTextFieldWidget(
+                                    prefix: Padding(
+                                      padding: const EdgeInsets.only(
+                                        top: 18,
+                                        bottom: 18,
+                                        left: 12,
+                                      ),
+                                      child: SvgPicture.asset(
+                                        Assets.icons.user,
+                                        width: 24,
+                                        height: 24,
+                                      ),
+                                    ),
+                                    hintText: 'Enter your login',
+                                    textInputAction: TextInputAction.next,
+                                    onChanged:
+                                        (v) =>
+                                            bloc.add(SignUpUsernameChanged(v)),
                                   ),
-                                  child: SvgPicture.asset(
-                                    Assets.icons.user,
-                                    width: 24,
-                                    height: 24,
-                                  ),
-                                ),
-                                hintText: 'Enter your login',
-                                onChanged:
-                                    (v) => bloc.add(SignUpUsernameChanged(v)),
+                                  if (usernameError != null) ...[
+                                    const SizedBox(height: 6),
+                                    const SizedBox(height: 2),
+                                    Text(
+                                      usernameError,
+                                      style: const TextStyle(
+                                        color: Colors.red,
+                                        fontSize: 12,
+                                      ),
+                                    ),
+                                  ],
+                                ],
                               ),
 
                               SizedBox(height: heightLayout * 0.04),
 
-                              CustomTextFieldWidget(
-                                prefix: Padding(
-                                  padding: const EdgeInsets.only(
-                                    top: 18,
-                                    bottom: 18,
-                                    left: 12,
+                              // EMAIL
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  CustomTextFieldWidget(
+                                    prefix: Padding(
+                                      padding: const EdgeInsets.only(
+                                        top: 18,
+                                        bottom: 18,
+                                        left: 12,
+                                      ),
+                                      child: SvgPicture.asset(
+                                        Assets.icons.email,
+                                        width: 24,
+                                        height: 24,
+                                      ),
+                                    ),
+                                    hintText: 'Enter your email',
+                                    keyboardType: TextInputType.emailAddress,
+                                    textInputAction: TextInputAction.next,
+                                    onChanged:
+                                        (v) => bloc.add(SignUpEmailChanged(v)),
                                   ),
-                                  child: SvgPicture.asset(
-                                    Assets.icons.email,
-                                    width: 24,
-                                    height: 24,
-                                  ),
-                                ),
-                                hintText: 'Enter your email',
-                                keyboardType: TextInputType.emailAddress,
-                                onChanged:
-                                    (v) => bloc.add(SignUpEmailChanged(v)),
+                                  if (emailError != null) ...[
+                                    const SizedBox(height: 6),
+                                    const SizedBox(height: 2),
+                                    Text(
+                                      emailError,
+                                      style: const TextStyle(
+                                        color: Colors.red,
+                                        fontSize: 12,
+                                      ),
+                                    ),
+                                  ],
+                                ],
                               ),
 
                               SizedBox(height: heightLayout * 0.04),
 
-                              CustomTextFieldWidget(
-                                hintText: 'Enter your password',
-                                prefix: Padding(
-                                  padding: const EdgeInsets.only(
-                                    top: 18,
-                                    bottom: 18,
-                                    left: 12,
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  CustomTextFieldWidget(
+                                    hintText: 'Enter your password',
+                                    prefix: Padding(
+                                      padding: const EdgeInsets.only(
+                                        top: 18,
+                                        bottom: 18,
+                                        left: 12,
+                                      ),
+                                      child: SvgPicture.asset(
+                                        Assets.icons.lock,
+                                        width: 24,
+                                        height: 24,
+                                      ),
+                                    ),
+                                    isPassword: true,
+                                    textInputAction: TextInputAction.done,
+                                    onSubmitted: (_) {
+                                      if (canSubmit) {
+                                        bloc.add(const SignUpSubmitted());
+                                      }
+                                    },
+                                    onChanged:
+                                        (v) =>
+                                            bloc.add(SignUpPasswordChanged(v)),
                                   ),
-                                  child: SvgPicture.asset(
-                                    Assets.icons.lock,
-                                    width: 24,
-                                    height: 24,
-                                  ),
-                                ),
-                                isPassword: true,
-                                onChanged:
-                                    (v) => bloc.add(SignUpPasswordChanged(v)),
+                                  if (passError != null) ...[
+                                    const SizedBox(height: 6),
+                                    const SizedBox(height: 2),
+                                    Text(
+                                      passError,
+                                      style: const TextStyle(
+                                        color: Colors.red,
+                                        fontSize: 12,
+                                      ),
+                                    ),
+                                  ],
+                                ],
                               ),
 
                               SizedBox(height: heightLayout * 0.04),

@@ -50,6 +50,9 @@ class $AssetsIconsGen {
   /// File path: assets/icons/heart_red.svg
   String get heartRed => 'assets/icons/heart_red.svg';
 
+  /// File path: assets/icons/helper.svg
+  String get helper => 'assets/icons/helper.svg';
+
   /// File path: assets/icons/home.svg
   String get home => 'assets/icons/home.svg';
 
@@ -98,14 +101,26 @@ class $AssetsIconsGen {
   /// File path: assets/icons/ic_wishlist_active.svg
   String get icWishlistActive => 'assets/icons/ic_wishlist_active.svg';
 
+  /// File path: assets/icons/location.svg
+  String get location => 'assets/icons/location.svg';
+
   /// File path: assets/icons/lock.svg
   String get lock => 'assets/icons/lock.svg';
+
+  /// File path: assets/icons/logout.svg
+  String get logout => 'assets/icons/logout.svg';
+
+  /// File path: assets/icons/mail.svg
+  String get mail => 'assets/icons/mail.svg';
 
   /// File path: assets/icons/minus.svg
   String get minus => 'assets/icons/minus.svg';
 
   /// File path: assets/icons/order.svg
   String get order => 'assets/icons/order.svg';
+
+  /// File path: assets/icons/payment.svg
+  String get payment => 'assets/icons/payment.svg';
 
   /// File path: assets/icons/paypal.svg
   String get paypal => 'assets/icons/paypal.svg';
@@ -119,8 +134,17 @@ class $AssetsIconsGen {
   /// File path: assets/icons/profile.svg
   String get profile => 'assets/icons/profile.svg';
 
+  /// File path: assets/icons/setting.svg
+  String get setting => 'assets/icons/setting.svg';
+
+  /// File path: assets/icons/share.svg
+  String get share => 'assets/icons/share.svg';
+
   /// File path: assets/icons/star.svg
   String get star => 'assets/icons/star.svg';
+
+  /// File path: assets/icons/star_profile.svg
+  String get starProfile => 'assets/icons/star_profile.svg';
 
   /// File path: assets/icons/status.svg
   String get status => 'assets/icons/status.svg';
@@ -145,6 +169,7 @@ class $AssetsIconsGen {
     eyeTrue,
     heart,
     heartRed,
+    helper,
     home,
     icArrowNext,
     icBack,
@@ -161,14 +186,21 @@ class $AssetsIconsGen {
     icSearch,
     icWishlist,
     icWishlistActive,
+    location,
     lock,
+    logout,
+    mail,
     minus,
     order,
+    payment,
     paypal,
     phoneCall,
     pluss,
     profile,
+    setting,
+    share,
     star,
+    starProfile,
     status,
     user,
     wishlist,
@@ -192,6 +224,12 @@ class $AssetsImagesGen {
   AssetGenImage get bannerMeat =>
       const AssetGenImage('assets/images/banner_meat.png');
 
+  /// File path: assets/images/brocoli.png
+  AssetGenImage get brocoli => const AssetGenImage('assets/images/brocoli.png');
+
+  /// File path: assets/images/coconut.png
+  AssetGenImage get coconut => const AssetGenImage('assets/images/coconut.png');
+
   /// File path: assets/images/dog_biscuit.png
   AssetGenImage get dogBiscuit =>
       const AssetGenImage('assets/images/dog_biscuit.png');
@@ -200,9 +238,17 @@ class $AssetsImagesGen {
   AssetGenImage get download =>
       const AssetGenImage('assets/images/download.png');
 
+  /// File path: assets/images/frash_cake.png
+  AssetGenImage get frashCake =>
+      const AssetGenImage('assets/images/frash_cake.png');
+
   /// File path: assets/images/fresh_chicken.png
   AssetGenImage get freshChicken =>
       const AssetGenImage('assets/images/fresh_chicken.png');
+
+  /// File path: assets/images/fresh_lemon.png
+  AssetGenImage get freshLemon =>
+      const AssetGenImage('assets/images/fresh_lemon.png');
 
   /// File path: assets/images/fresh_salad.png
   AssetGenImage get freshSalad =>
@@ -237,6 +283,9 @@ class $AssetsImagesGen {
   AssetGenImage get illustrationBackground =>
       const AssetGenImage('assets/images/illustration_background.png');
 
+  /// File path: assets/images/kiwi.png
+  AssetGenImage get kiwi => const AssetGenImage('assets/images/kiwi.png');
+
   /// File path: assets/images/logo.png
   AssetGenImage get logo => const AssetGenImage('assets/images/logo.png');
 
@@ -267,6 +316,12 @@ class $AssetsImagesGen {
   AssetGenImage get onBoardingTwo =>
       const AssetGenImage('assets/images/on_boarding_two.png');
 
+  /// File path: assets/images/orange.png
+  AssetGenImage get orange => const AssetGenImage('assets/images/orange.png');
+
+  /// File path: assets/images/orange2.png
+  AssetGenImage get orange2 => const AssetGenImage('assets/images/orange2.png');
+
   /// File path: assets/images/strawberry.png
   AssetGenImage get strawberry =>
       const AssetGenImage('assets/images/strawberry.png');
@@ -287,9 +342,13 @@ class $AssetsImagesGen {
     banana,
     bannerFish,
     bannerMeat,
+    brocoli,
+    coconut,
     dogBiscuit,
     download,
+    frashCake,
     freshChicken,
+    freshLemon,
     freshSalad,
     header,
     headerBackground,
@@ -299,6 +358,7 @@ class $AssetsImagesGen {
     icFish,
     icLemon,
     illustrationBackground,
+    kiwi,
     logo,
     mainBanner,
     man,
@@ -307,6 +367,8 @@ class $AssetsImagesGen {
     onBoardingOne,
     onBoardingThree,
     onBoardingTwo,
+    orange,
+    orange2,
     strawberry,
     strawberryTwo,
     tomtato,

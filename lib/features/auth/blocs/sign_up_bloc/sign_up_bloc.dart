@@ -1,5 +1,4 @@
 import 'package:bloc/bloc.dart';
-
 import '../../data/auth_repository.dart';
 import 'sign_up_event.dart';
 import 'sign_up_state.dart';
@@ -7,31 +6,40 @@ import 'sign_up_state.dart';
 class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
   SignUpBloc(this._repo) : super(const SignUpState()) {
     on<SignUpUsernameChanged>((e, emit) {
+      final next = state.copyWith(
+        username: e.value,
+        error: null,
+        status: SignUpStatus.initial,
+      );
       emit(
-        state.copyWith(
-          username: e.value,
-          error: null,
-          status: SignUpStatus.initial,
+        next.copyWith(
+          status: next.isValid ? SignUpStatus.initial : SignUpStatus.invalid,
         ),
       );
     });
 
     on<SignUpEmailChanged>((e, emit) {
+      final next = state.copyWith(
+        email: e.value,
+        error: null,
+        status: SignUpStatus.initial,
+      );
       emit(
-        state.copyWith(
-          email: e.value,
-          error: null,
-          status: SignUpStatus.initial,
+        next.copyWith(
+          status: next.isValid ? SignUpStatus.initial : SignUpStatus.invalid,
         ),
       );
     });
 
     on<SignUpPasswordChanged>((e, emit) {
+      final next = state.copyWith(
+        password: e.value,
+        error: null,
+        status: SignUpStatus.initial,
+      );
       emit(
-        state.copyWith(
-          password: e.value,
-          error: null,
-          status: SignUpStatus.initial,
+        next.copyWith(
+          status: next.isValid ? SignUpStatus.initial : SignUpStatus.invalid,
         ),
       );
     });

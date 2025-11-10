@@ -1,9 +1,10 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:dio/dio.dart';
-import 'package:pretty_dio_logger/pretty_dio_logger.dart';
-
-import 'core/env.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_base_architecture/features/products/blocs/products_bloc.dart';
+import 'package:flutter_base_architecture/features/products/blocs/products_event.dart';
+import 'package:flutter_base_architecture/features/products/data/products_repository.dart';
+import 'package:flutter_base_architecture/services/dio_service.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'features/category/blocs/category_bloc.dart';
 import 'features/category/blocs/category_event.dart';
 import 'features/category/data/category_repository.dart';
@@ -12,30 +13,14 @@ import 'routes/app_router.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  final dio = Dio(
-      BaseOptions(
-        baseUrl: '${Env.baseUrl}/api',
-        connectTimeout: const Duration(seconds: 8),
-        receiveTimeout: const Duration(seconds: 12),
-      ),
-    )
-    ..interceptors.add(
-      PrettyDioLogger(
-        requestHeader: true,
-        requestBody: true,
-        responseBody: true,
-        responseHeader: false,
-        compact: true,
-        maxWidth: 120,
-        filter: (options, args) => !args.isResponse || !args.hasUint8ListData,
-      ),
-    );
+  final dio = DioService.instance;
 
   runApp(MyApp(dio: dio));
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key, required this.dio});
+
   final Dio dio;
 
   @override
@@ -45,6 +30,9 @@ class MyApp extends StatelessWidget {
         RepositoryProvider<CategoryRepository>(
           create: (_) => CategoryRepository(dio),
         ),
+        RepositoryProvider<ProductRepository>(
+          create: (_) => ProductRepository(dio),
+        ),
       ],
       child: MultiBlocProvider(
         providers: [
@@ -52,14 +40,19 @@ class MyApp extends StatelessWidget {
             create:
                 (ctx) =>
                     CategoryBloc(ctx.read<CategoryRepository>())
-                      ..add(CategoryFetchRequested()),
+                      ..add(const CategoryEvent.fetch()),
+          ),
+          BlocProvider<ProductsBloc>(
+            create:
+                (ctx) =>
+                    ProductsBloc(ctx.read<ProductRepository>())
+                      ..add(ProductsEvent.fetchFirst()),
           ),
         ],
         child: MaterialApp.router(
           debugShowCheckedModeBanner: false,
           title: 'LokMart',
           routerConfig: AppRouter.instance,
-          // theme: AppThemes.light(),
         ),
       ),
     );

@@ -1,19 +1,21 @@
-class StrapiMedia {
-  final int id;
-  final String url;
-  final String? mime;
-  final int? width;
-  final int? height;
-  final int? size;
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-  const StrapiMedia({
-    required this.id,
-    required this.url,
-    this.mime,
-    this.width,
-    this.height,
-    this.size,
-  });
+part 'strapi_media.freezed.dart';
+part 'strapi_media.g.dart';
+
+@freezed
+class StrapiMedia with _$StrapiMedia {
+  const factory StrapiMedia({
+    required int id,
+    required String url,
+    String? mime,
+    int? width,
+    int? height,
+    int? size,
+  }) = _StrapiMedia;
+
+  factory StrapiMedia.fromJson(Map<String, dynamic> json) =>
+      _$StrapiMediaFromJson(json);
 
   factory StrapiMedia.fromStrapi(Map<String, dynamic> json) {
     final attrs = (json['attributes'] ?? {}) as Map<String, dynamic>;

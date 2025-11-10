@@ -1,8 +1,10 @@
-abstract class CategoryEvent {}
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-class CategoryFetchRequested extends CategoryEvent {
-  CategoryFetchRequested({this.forceRefresh = false});
-  final bool forceRefresh;
+part 'category_event.freezed.dart';
+
+@freezed
+sealed class CategoryEvent with _$CategoryEvent {
+  const factory CategoryEvent.fetch({@Default(false) bool forceRefresh}) =
+      _Fetch;
+  const factory CategoryEvent.refresh() = _Refresh;
 }
-
-class CategoryRefreshed extends CategoryEvent {}

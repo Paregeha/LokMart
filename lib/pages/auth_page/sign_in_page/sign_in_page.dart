@@ -57,7 +57,6 @@ class _SignInPageState extends State<SignInPage> {
                       padding: const EdgeInsets.symmetric(horizontal: 32.0),
                       child: SizedBox(
                         width: double.infinity,
-
                         child: BlocConsumer<SignInBloc, SignInState>(
                           listener: (context, state) {
                             if (state.status == SignInStatus.success) {
@@ -81,6 +80,20 @@ class _SignInPageState extends State<SignInPage> {
                             final bloc = context.read<SignInBloc>();
                             final isLoading =
                                 state.status == SignInStatus.loading;
+
+                            // Чи можна відправити форму
+                            final canSubmit = state.isValid && !isLoading;
+
+                            // Підготовка текстів помилок (показуємо лише, коли щось введено, але невалідно)
+                            final identifierError =
+                                state.identifier.isEmpty ||
+                                        state.isIdentifierValid
+                                    ? null
+                                    : 'Обовʼязкове поле';
+                            final passwordError =
+                                state.password.isEmpty || state.isPasswordValid
+                                    ? null
+                                    : 'Мінімум 6 символів';
 
                             return SingleChildScrollView(
                               child: Column(
@@ -112,66 +125,110 @@ class _SignInPageState extends State<SignInPage> {
                                   ),
                                   SizedBox(height: heightLayout * 0.03),
 
-                                  CustomTextFieldWidget(
-                                    hintStyle: TextStyle(
-                                      color: AppColors.softGray,
-                                      fontSize: 16.0,
-                                      height: 1,
-                                      fontWeight: AppFonts.w500medium,
-                                      fontFamily: AppFonts.fontFamily,
-                                      letterSpacing: 0,
-                                    ),
-                                    prefix: Padding(
-                                      padding: const EdgeInsets.only(
-                                        top: 18.0,
-                                        bottom: 18.0,
-                                        left: 12.0,
+                                  // identifier (логін або email)
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      CustomTextFieldWidget(
+                                        hintStyle: TextStyle(
+                                          color: AppColors.softGray,
+                                          fontSize: 16.0,
+                                          height: 1,
+                                          fontWeight: AppFonts.w500medium,
+                                          fontFamily: AppFonts.fontFamily,
+                                          letterSpacing: 0,
+                                        ),
+                                        prefix: Padding(
+                                          padding: const EdgeInsets.only(
+                                            top: 18.0,
+                                            bottom: 18.0,
+                                            left: 12.0,
+                                          ),
+                                          child: SvgPicture.asset(
+                                            Assets.icons.user,
+                                            width: 24.0,
+                                            height: 24.0,
+                                          ),
+                                        ),
+                                        hintText: 'Enter your login or email',
+                                        textInputAction: TextInputAction.next,
+                                        onChanged:
+                                            (v) => bloc.add(
+                                              LoginIdentifierChanged(v),
+                                            ),
                                       ),
-                                      child: SvgPicture.asset(
-                                        Assets.icons.user,
-                                        width: 24.0,
-                                        height: 24.0,
-                                      ),
-                                    ),
-                                    hintText: 'Enter your login or email',
-                                    onChanged:
-                                        (v) =>
-                                            bloc.add(LoginIdentifierChanged(v)),
+                                      if (identifierError != null) ...[
+                                        const SizedBox(height: 6),
+                                        const SizedBox(height: 2),
+                                        Text(
+                                          identifierError,
+                                          style: const TextStyle(
+                                            color: Colors.red,
+                                            fontSize: 12,
+                                          ),
+                                        ),
+                                      ],
+                                    ],
                                   ),
 
                                   SizedBox(height: heightLayout * 0.03),
 
                                   // password
-                                  CustomTextFieldWidget(
-                                    prefix: Padding(
-                                      padding: const EdgeInsets.only(
-                                        top: 18.0,
-                                        bottom: 18.0,
-                                        left: 12.0,
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      CustomTextFieldWidget(
+                                        prefix: Padding(
+                                          padding: const EdgeInsets.only(
+                                            top: 18.0,
+                                            bottom: 18.0,
+                                            left: 12.0,
+                                          ),
+                                          child: SvgPicture.asset(
+                                            Assets.icons.lock,
+                                            width: 24.0,
+                                            height: 24.0,
+                                          ),
+                                        ),
+                                        hintText: 'Enter your password',
+                                        isPassword: true,
+                                        textInputAction: TextInputAction.done,
+                                        onSubmitted: (_) {
+                                          if (canSubmit) {
+                                            bloc.add(const LoginSubmitted());
+                                          }
+                                        },
+                                        onChanged:
+                                            (v) => bloc.add(
+                                              LoginPasswordChanged(v),
+                                            ),
                                       ),
-                                      child: SvgPicture.asset(
-                                        Assets.icons.lock,
-                                        width: 24.0,
-                                        height: 24.0,
-                                      ),
-                                    ),
-                                    hintText: 'Enter your password',
-                                    isPassword: true,
-                                    onChanged:
-                                        (v) =>
-                                            bloc.add(LoginPasswordChanged(v)),
+                                      if (passwordError != null) ...[
+                                        const SizedBox(height: 6),
+                                        const SizedBox(height: 2),
+                                        Text(
+                                          passwordError,
+                                          style: const TextStyle(
+                                            color: Colors.red,
+                                            fontSize: 12,
+                                          ),
+                                        ),
+                                      ],
+                                    ],
                                   ),
 
                                   SizedBox(height: heightLayout * 0.03),
 
+                                  // Кнопка: активна — градієнт; неактивна — сіра (onPressed: null)
                                   CustomButtonsWidget(
                                     label: isLoading ? 'Loading…' : 'SIGN IN',
                                     onPressed:
-                                        isLoading
-                                            ? null
-                                            : () => bloc.add(
-                                              const LoginSubmitted(),
-                                            ),
+                                        canSubmit
+                                            ? () =>
+                                                bloc.add(const LoginSubmitted())
+                                            : null,
                                   ),
 
                                   SizedBox(height: heightLayout * 0.03),
@@ -188,6 +245,10 @@ class _SignInPageState extends State<SignInPage> {
                                               setState(() {
                                                 isSelected = !isSelected;
                                               });
+                                              // опційно синхронізуємо з bloc-станом
+                                              context.read<SignInBloc>().add(
+                                                const LoginRememberToggled(),
+                                              );
                                             },
                                           ),
                                           const SizedBox(width: 4.0),
