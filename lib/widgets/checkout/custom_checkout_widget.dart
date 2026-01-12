@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_base_architecture/resources/app_colors.dart';
+import 'package:flutter_base_architecture/resources/app_fonts.dart';
 
 class CustomCheckoutWidget extends StatefulWidget {
   const CustomCheckoutWidget({
@@ -99,9 +100,39 @@ class _CustomCheckoutWidgetState extends State<CustomCheckoutWidget> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text('Delivery'),
-                    Text('Address'),
-                    Text('Payment'),
+                    Text(
+                      'Shopping',
+                      style: TextStyle(
+                        fontSize: 14.0,
+                        fontWeight: AppFonts.w600semiBold,
+                        fontFamily: AppFonts.fontFamily,
+                        height: 1,
+                        letterSpacing: 0,
+                        color: AppColors.dark,
+                      ),
+                    ),
+                    Text(
+                      'Address',
+                      style: TextStyle(
+                        fontSize: 14.0,
+                        fontWeight: AppFonts.w600semiBold,
+                        fontFamily: AppFonts.fontFamily,
+                        height: 1,
+                        letterSpacing: 0,
+                        color: AppColors.dark,
+                      ),
+                    ),
+                    Text(
+                      'Payment',
+                      style: TextStyle(
+                        fontSize: 14.0,
+                        fontWeight: AppFonts.w600semiBold,
+                        fontFamily: AppFonts.fontFamily,
+                        height: 1,
+                        letterSpacing: 0,
+                        color: AppColors.dark,
+                      ),
+                    ),
                   ],
                 ),
               ],

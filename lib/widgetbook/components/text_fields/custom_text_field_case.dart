@@ -22,11 +22,7 @@ final customTextFieldWidget = WidgetbookComponent(
           child: CustomTextFieldWidget(
             hintText: 'Login',
             padding: padding,
-            prefix: SvgPicture.asset(
-              Assets.icons.user,
-              width: 24.0,
-              height: 24.0,
-            ),
+            prefix: Assets.icons.user.svg(width: 24.0, height: 24.0),
           ),
         );
       },
@@ -45,11 +41,7 @@ final customTextFieldWidget = WidgetbookComponent(
           child: CustomTextFieldWidget(
             hintText: 'Email',
             padding: padding,
-            prefix: SvgPicture.asset(
-              Assets.icons.email,
-              width: 24.0,
-              height: 24.0,
-            ),
+            prefix: Assets.icons.email.svg(width: 24.0, height: 24.0),
           ),
         );
       },
@@ -69,11 +61,7 @@ final customTextFieldWidget = WidgetbookComponent(
             hintText: 'Password',
             padding: padding,
             isPassword: true,
-            prefix: SvgPicture.asset(
-              Assets.icons.lock,
-              width: 24.0,
-              height: 24.0,
-            ),
+            prefix: Assets.icons.lock.svg(width: 24.0, height: 24.0),
           ),
         );
       },

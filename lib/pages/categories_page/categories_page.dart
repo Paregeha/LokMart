@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_base_architecture/gen/assets.gen.dart';
 import 'package:flutter_base_architecture/resources/app_colors.dart';
 import 'package:flutter_base_architecture/routes/app_routes.dart';
 import 'package:flutter_base_architecture/widgets/buttons/custom_cards_categories_widget.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../features/category/blocs/category_bloc.dart';
 import '../../features/category/blocs/category_event.dart';
 import '../../features/category/blocs/category_state.dart';
 import '../../features/category/models/category.dart';
-import '../../gen/assets.gen.dart';
 
 class CategoriesPage extends StatelessWidget {
   const CategoriesPage({super.key});
@@ -33,7 +33,7 @@ class CategoriesPage extends StatelessWidget {
             padding: EdgeInsets.zero,
             constraints: const BoxConstraints(minWidth: 24.0, minHeight: 24.0),
             icon: SvgPicture.asset(
-              Assets.icons.icBack,
+              Assets.icons.icBack.path,
               width: 24.0,
               height: 24.0,
             ),

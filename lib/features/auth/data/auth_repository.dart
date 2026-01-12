@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:jwt_decode/jwt_decode.dart';
 
 import '../../../services/dio_service.dart';
 import '../models/strapi_auth_response.dart';
@@ -26,9 +27,11 @@ class AuthRepository {
   static const _kJwtKey = 'jwt';
   static const _kUserEmailKey = 'user_email';
   static const _kUserNameKey = 'user_name';
+  static const _kRememberKey = 'remember_me';
 
   static String? _jwtCache;
 
+  /// Інтерсептор: автоматично додає Bearer якщо є токен
   static final _authInterceptor = InterceptorsWrapper(
     onRequest: (options, handler) async {
       final noAuth = options.extra['noAuth'] == true;
@@ -61,10 +64,12 @@ class AuthRepository {
     },
   );
 
+  /// Реєстрація
   Future<StrapiAuthResponse> register({
     required String username,
     required String email,
     required String password,
+    bool rememberMe = false,
   }) async {
     final res = await _dio.post(
       '/auth/local/register',
@@ -72,13 +77,15 @@ class AuthRepository {
     );
     _throwIfError(res);
     final data = StrapiAuthResponse.fromMap(res.data as Map<String, dynamic>);
-    await _persistAuth(data);
+    await _persistAuth(data, remember: rememberMe);
     return data;
   }
 
+  /// Логін із прапорцем rememberMe
   Future<StrapiAuthResponse> login({
     required String identifier,
     required String password,
+    bool rememberMe = false,
   }) async {
     final res = await _dio.post(
       '/auth/local',
@@ -86,7 +93,7 @@ class AuthRepository {
     );
     _throwIfError(res);
     final data = StrapiAuthResponse.fromMap(res.data as Map<String, dynamic>);
-    await _persistAuth(data);
+    await _persistAuth(data, remember: rememberMe);
     return data;
   }
 
@@ -96,23 +103,49 @@ class AuthRepository {
     return StrapiUser.fromMap(res.data as Map<String, dynamic>);
   }
 
+  /// Відновлення сесії зі сховища (викликати на Splash)
+  Future<bool> tryRestoreSession() async {
+    final saved = await _safeGetJwt();
+    if (saved == null || saved.isEmpty) return false;
+
+    if (_isExpired(saved)) {
+      await logout();
+      return false;
+    }
+    _jwtCache = saved;
+    return true;
+  }
+
   Future<void> logout() async {
     _jwtCache = null;
     try {
       await _storage.delete(key: _kJwtKey);
       await _storage.delete(key: _kUserEmailKey);
       await _storage.delete(key: _kUserNameKey);
+      await _storage.delete(key: _kRememberKey);
     } catch (_) {}
   }
 
-  Future<void> _persistAuth(StrapiAuthResponse data) async {
+  /// Персистимо тільки якщо remember=true
+  Future<void> _persistAuth(
+    StrapiAuthResponse data, {
+    required bool remember,
+  }) async {
     _jwtCache = data.jwt;
     try {
-      if (data.jwt != null && data.jwt!.isNotEmpty) {
-        await _storage.write(key: _kJwtKey, value: data.jwt);
+      if (remember) {
+        if (data.jwt != null && data.jwt!.isNotEmpty) {
+          await _storage.write(key: _kJwtKey, value: data.jwt);
+        }
+        await _storage.write(key: _kUserEmailKey, value: data.user.email);
+        await _storage.write(key: _kUserNameKey, value: data.user.username);
+        await _storage.write(key: _kRememberKey, value: '1');
+      } else {
+        await _storage.delete(key: _kJwtKey);
+        await _storage.delete(key: _kUserEmailKey);
+        await _storage.delete(key: _kUserNameKey);
+        await _storage.delete(key: _kRememberKey);
       }
-      await _storage.write(key: _kUserEmailKey, value: data.user.email);
-      await _storage.write(key: _kUserNameKey, value: data.user.username);
     } catch (_) {}
   }
 
@@ -124,6 +157,14 @@ class AuthRepository {
       return v;
     } catch (_) {
       return _jwtCache;
+    }
+  }
+
+  static bool _isExpired(String jwt) {
+    try {
+      return Jwt.isExpired(jwt);
+    } catch (_) {
+      return true;
     }
   }
 

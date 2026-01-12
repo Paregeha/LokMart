@@ -9,155 +9,172 @@
 // ignore_for_file: type=lint
 // ignore_for_file: deprecated_member_use,directives_ordering,implicit_dynamic_list_literal,unnecessary_import
 
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_svg/flutter_svg.dart' as _svg;
+import 'package:vector_graphics/vector_graphics.dart' as _vg;
 
 class $AssetsIconsGen {
   const $AssetsIconsGen();
 
   /// File path: assets/icons/add_box_black.svg
-  String get addBoxBlack => 'assets/icons/add_box_black.svg';
+  SvgGenImage get addBoxBlack =>
+      const SvgGenImage('assets/icons/add_box_black.svg');
+
+  /// File path: assets/icons/arrow.svg
+  SvgGenImage get arrow => const SvgGenImage('assets/icons/arrow.svg');
 
   /// File path: assets/icons/bag.svg
-  String get bag => 'assets/icons/bag.svg';
+  SvgGenImage get bag => const SvgGenImage('assets/icons/bag.svg');
 
   /// File path: assets/icons/buy.svg
-  String get buy => 'assets/icons/buy.svg';
+  SvgGenImage get buy => const SvgGenImage('assets/icons/buy.svg');
 
   /// File path: assets/icons/cashon_icon.svg
-  String get cashonIcon => 'assets/icons/cashon_icon.svg';
+  SvgGenImage get cashonIcon =>
+      const SvgGenImage('assets/icons/cashon_icon.svg');
 
   /// File path: assets/icons/chat.svg
-  String get chat => 'assets/icons/chat.svg';
+  SvgGenImage get chat => const SvgGenImage('assets/icons/chat.svg');
 
   /// File path: assets/icons/chevron.svg
-  String get chevron => 'assets/icons/chevron.svg';
+  SvgGenImage get chevron => const SvgGenImage('assets/icons/chevron.svg');
 
   /// File path: assets/icons/delivery.svg
-  String get delivery => 'assets/icons/delivery.svg';
+  SvgGenImage get delivery => const SvgGenImage('assets/icons/delivery.svg');
 
   /// File path: assets/icons/email.svg
-  String get email => 'assets/icons/email.svg';
+  SvgGenImage get email => const SvgGenImage('assets/icons/email.svg');
 
   /// File path: assets/icons/eye_false.svg
-  String get eyeFalse => 'assets/icons/eye_false.svg';
+  SvgGenImage get eyeFalse => const SvgGenImage('assets/icons/eye_false.svg');
 
   /// File path: assets/icons/eye_true.svg
-  String get eyeTrue => 'assets/icons/eye_true.svg';
+  SvgGenImage get eyeTrue => const SvgGenImage('assets/icons/eye_true.svg');
 
   /// File path: assets/icons/heart.svg
-  String get heart => 'assets/icons/heart.svg';
+  SvgGenImage get heart => const SvgGenImage('assets/icons/heart.svg');
 
   /// File path: assets/icons/heart_red.svg
-  String get heartRed => 'assets/icons/heart_red.svg';
+  SvgGenImage get heartRed => const SvgGenImage('assets/icons/heart_red.svg');
 
   /// File path: assets/icons/helper.svg
-  String get helper => 'assets/icons/helper.svg';
+  SvgGenImage get helper => const SvgGenImage('assets/icons/helper.svg');
 
   /// File path: assets/icons/home.svg
-  String get home => 'assets/icons/home.svg';
+  SvgGenImage get home => const SvgGenImage('assets/icons/home.svg');
 
   /// File path: assets/icons/ic_arrow_next.svg
-  String get icArrowNext => 'assets/icons/ic_arrow_next.svg';
+  SvgGenImage get icArrowNext =>
+      const SvgGenImage('assets/icons/ic_arrow_next.svg');
 
   /// File path: assets/icons/ic_back.svg
-  String get icBack => 'assets/icons/ic_back.svg';
+  SvgGenImage get icBack => const SvgGenImage('assets/icons/ic_back.svg');
 
   /// File path: assets/icons/ic_close.svg
-  String get icClose => 'assets/icons/ic_close.svg';
+  SvgGenImage get icClose => const SvgGenImage('assets/icons/ic_close.svg');
 
   /// File path: assets/icons/ic_edit.svg
-  String get icEdit => 'assets/icons/ic_edit.svg';
+  SvgGenImage get icEdit => const SvgGenImage('assets/icons/ic_edit.svg');
 
   /// File path: assets/icons/ic_filter.svg
-  String get icFilter => 'assets/icons/ic_filter.svg';
+  SvgGenImage get icFilter => const SvgGenImage('assets/icons/ic_filter.svg');
 
   /// File path: assets/icons/ic_home.svg
-  String get icHome => 'assets/icons/ic_home.svg';
+  SvgGenImage get icHome => const SvgGenImage('assets/icons/ic_home.svg');
 
   /// File path: assets/icons/ic_myorder.svg
-  String get icMyorder => 'assets/icons/ic_myorder.svg';
+  SvgGenImage get icMyorder => const SvgGenImage('assets/icons/ic_myorder.svg');
 
   /// File path: assets/icons/ic_myorder_active.svg
-  String get icMyorderActive => 'assets/icons/ic_myorder_active.svg';
+  SvgGenImage get icMyorderActive =>
+      const SvgGenImage('assets/icons/ic_myorder_active.svg');
 
   /// File path: assets/icons/ic_notification.svg
-  String get icNotification => 'assets/icons/ic_notification.svg';
+  SvgGenImage get icNotification =>
+      const SvgGenImage('assets/icons/ic_notification.svg');
 
   /// File path: assets/icons/ic_profile.svg
-  String get icProfile => 'assets/icons/ic_profile.svg';
+  SvgGenImage get icProfile => const SvgGenImage('assets/icons/ic_profile.svg');
 
   /// File path: assets/icons/ic_profile_active.svg
-  String get icProfileActive => 'assets/icons/ic_profile_active.svg';
+  SvgGenImage get icProfileActive =>
+      const SvgGenImage('assets/icons/ic_profile_active.svg');
 
   /// File path: assets/icons/ic_right_arrow.svg
-  String get icRightArrow => 'assets/icons/ic_right_arrow.svg';
+  SvgGenImage get icRightArrow =>
+      const SvgGenImage('assets/icons/ic_right_arrow.svg');
 
   /// File path: assets/icons/ic_search.svg
-  String get icSearch => 'assets/icons/ic_search.svg';
+  SvgGenImage get icSearch => const SvgGenImage('assets/icons/ic_search.svg');
 
   /// File path: assets/icons/ic_wishlist.svg
-  String get icWishlist => 'assets/icons/ic_wishlist.svg';
+  SvgGenImage get icWishlist =>
+      const SvgGenImage('assets/icons/ic_wishlist.svg');
 
   /// File path: assets/icons/ic_wishlist_active.svg
-  String get icWishlistActive => 'assets/icons/ic_wishlist_active.svg';
+  SvgGenImage get icWishlistActive =>
+      const SvgGenImage('assets/icons/ic_wishlist_active.svg');
 
   /// File path: assets/icons/location.svg
-  String get location => 'assets/icons/location.svg';
+  SvgGenImage get location => const SvgGenImage('assets/icons/location.svg');
 
   /// File path: assets/icons/lock.svg
-  String get lock => 'assets/icons/lock.svg';
+  SvgGenImage get lock => const SvgGenImage('assets/icons/lock.svg');
 
   /// File path: assets/icons/logout.svg
-  String get logout => 'assets/icons/logout.svg';
+  SvgGenImage get logout => const SvgGenImage('assets/icons/logout.svg');
 
   /// File path: assets/icons/mail.svg
-  String get mail => 'assets/icons/mail.svg';
+  SvgGenImage get mail => const SvgGenImage('assets/icons/mail.svg');
 
   /// File path: assets/icons/minus.svg
-  String get minus => 'assets/icons/minus.svg';
+  SvgGenImage get minus => const SvgGenImage('assets/icons/minus.svg');
 
   /// File path: assets/icons/order.svg
-  String get order => 'assets/icons/order.svg';
+  SvgGenImage get order => const SvgGenImage('assets/icons/order.svg');
 
   /// File path: assets/icons/payment.svg
-  String get payment => 'assets/icons/payment.svg';
+  SvgGenImage get payment => const SvgGenImage('assets/icons/payment.svg');
 
   /// File path: assets/icons/paypal.svg
-  String get paypal => 'assets/icons/paypal.svg';
+  SvgGenImage get paypal => const SvgGenImage('assets/icons/paypal.svg');
 
   /// File path: assets/icons/phone_call.svg
-  String get phoneCall => 'assets/icons/phone_call.svg';
+  SvgGenImage get phoneCall => const SvgGenImage('assets/icons/phone_call.svg');
 
   /// File path: assets/icons/pluss.svg
-  String get pluss => 'assets/icons/pluss.svg';
+  SvgGenImage get pluss => const SvgGenImage('assets/icons/pluss.svg');
 
   /// File path: assets/icons/profile.svg
-  String get profile => 'assets/icons/profile.svg';
+  SvgGenImage get profile => const SvgGenImage('assets/icons/profile.svg');
 
   /// File path: assets/icons/setting.svg
-  String get setting => 'assets/icons/setting.svg';
+  SvgGenImage get setting => const SvgGenImage('assets/icons/setting.svg');
 
   /// File path: assets/icons/share.svg
-  String get share => 'assets/icons/share.svg';
+  SvgGenImage get share => const SvgGenImage('assets/icons/share.svg');
 
   /// File path: assets/icons/star.svg
-  String get star => 'assets/icons/star.svg';
+  SvgGenImage get star => const SvgGenImage('assets/icons/star.svg');
 
   /// File path: assets/icons/star_profile.svg
-  String get starProfile => 'assets/icons/star_profile.svg';
+  SvgGenImage get starProfile =>
+      const SvgGenImage('assets/icons/star_profile.svg');
 
   /// File path: assets/icons/status.svg
-  String get status => 'assets/icons/status.svg';
+  SvgGenImage get status => const SvgGenImage('assets/icons/status.svg');
 
   /// File path: assets/icons/user.svg
-  String get user => 'assets/icons/user.svg';
+  SvgGenImage get user => const SvgGenImage('assets/icons/user.svg');
 
   /// File path: assets/icons/wishlist.svg
-  String get wishlist => 'assets/icons/wishlist.svg';
+  SvgGenImage get wishlist => const SvgGenImage('assets/icons/wishlist.svg');
 
   /// List of all assets
-  List<String> get values => [
+  List<SvgGenImage> get values => [
     addBoxBlack,
+    arrow,
     bag,
     buy,
     cashonIcon,
@@ -469,4 +486,78 @@ class AssetGenImageAnimation {
   final bool isAnimation;
   final Duration duration;
   final int frames;
+}
+
+class SvgGenImage {
+  const SvgGenImage(this._assetName, {this.size, this.flavors = const {}})
+    : _isVecFormat = false;
+
+  const SvgGenImage.vec(this._assetName, {this.size, this.flavors = const {}})
+    : _isVecFormat = true;
+
+  final String _assetName;
+  final Size? size;
+  final Set<String> flavors;
+  final bool _isVecFormat;
+
+  _svg.SvgPicture svg({
+    Key? key,
+    bool matchTextDirection = false,
+    AssetBundle? bundle,
+    String? package,
+    double? width,
+    double? height,
+    BoxFit fit = BoxFit.contain,
+    AlignmentGeometry alignment = Alignment.center,
+    bool allowDrawingOutsideViewBox = false,
+    WidgetBuilder? placeholderBuilder,
+    String? semanticsLabel,
+    bool excludeFromSemantics = false,
+    _svg.SvgTheme? theme,
+    _svg.ColorMapper? colorMapper,
+    ColorFilter? colorFilter,
+    Clip clipBehavior = Clip.hardEdge,
+    @deprecated Color? color,
+    @deprecated BlendMode colorBlendMode = BlendMode.srcIn,
+    @deprecated bool cacheColorFilter = false,
+  }) {
+    final _svg.BytesLoader loader;
+    if (_isVecFormat) {
+      loader = _vg.AssetBytesLoader(
+        _assetName,
+        assetBundle: bundle,
+        packageName: package,
+      );
+    } else {
+      loader = _svg.SvgAssetLoader(
+        _assetName,
+        assetBundle: bundle,
+        packageName: package,
+        theme: theme,
+        colorMapper: colorMapper,
+      );
+    }
+    return _svg.SvgPicture(
+      loader,
+      key: key,
+      matchTextDirection: matchTextDirection,
+      width: width,
+      height: height,
+      fit: fit,
+      alignment: alignment,
+      allowDrawingOutsideViewBox: allowDrawingOutsideViewBox,
+      placeholderBuilder: placeholderBuilder,
+      semanticsLabel: semanticsLabel,
+      excludeFromSemantics: excludeFromSemantics,
+      colorFilter:
+          colorFilter ??
+          (color == null ? null : ColorFilter.mode(color, colorBlendMode)),
+      clipBehavior: clipBehavior,
+      cacheColorFilter: cacheColorFilter,
+    );
+  }
+
+  String get path => _assetName;
+
+  String get keyName => _assetName;
 }

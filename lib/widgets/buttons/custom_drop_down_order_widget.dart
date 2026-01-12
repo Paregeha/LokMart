@@ -80,7 +80,7 @@ class _CustomDropDownOrderWidgetState extends State<CustomDropDownOrderWidget>
                     AnimatedRotation(
                       duration: const Duration(milliseconds: 220),
                       turns: _expanded ? 0.0 : 0.5, // 0.5 = 180°
-                      child: SvgPicture.asset(Assets.icons.status),
+                      child: Assets.icons.status.svg(),
                     ),
                   ],
                 ),

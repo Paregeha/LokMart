@@ -23,10 +23,12 @@ class CategoryRepository {
         rows.cast<Map<String, dynamic>>().map(Category.fromStrapi).toList();
     if (cats.isEmpty) return cats;
 
+    // Рахуємо кількість ПОЗИЦІЙ (кількість продуктів у категорії),
+    // а не суму значень поля "count"
     final totals = await _mapConcurrent<Category, int>(
       cats,
       maxConcurrent: 4,
-      task: (c) => _sumProductUnitsForCategory(c.id),
+      task: (c) => _countProductsForCategory(c.id),
     );
 
     return [
@@ -35,11 +37,13 @@ class CategoryRepository {
     ];
   }
 
-  Future<int> _sumProductUnitsForCategory(int categoryId) async {
+  /// Рахуємо КІЛЬКІСТЬ ПРОДУКТІВ (позицій) у категорії,
+  /// а не суму поля `count`.
+  Future<int> _countProductsForCategory(int categoryId) async {
     const pageSize = 100;
     var page = 1;
     var totalPages = 1;
-    var sum = 0;
+    var totalItems = 0;
 
     do {
       try {
@@ -49,7 +53,8 @@ class CategoryRepository {
             'filters[category][id][\$eq]': categoryId,
             'pagination[page]': page,
             'pagination[pageSize]': pageSize,
-            'fields[0]': 'count',
+            // поле нам не принципове, нам потрібен лише факт, що продукт існує
+            'fields[0]': 'id',
           },
         );
         _ensureOk(res);
@@ -57,23 +62,20 @@ class CategoryRepository {
         final map = res.data as Map<String, dynamic>;
         final rows = (map['data'] as List?) ?? const [];
 
-        for (final row in rows) {
-          final r = row as Map<String, dynamic>;
-          final attrs = (r['attributes'] as Map?)?.cast<String, dynamic>();
-          final count = (attrs?['count'] ?? r['count']) as num?;
-          sum += (count ?? 0).toInt();
-        }
+        // КОЖЕН рядок = одна позиція
+        totalItems += rows.length;
 
         final meta = (map['meta'] as Map?)?['pagination'] as Map? ?? const {};
         totalPages = (meta['pageCount'] as num?)?.toInt() ?? page;
 
         page++;
       } on DioException {
+        // якщо якась сторінка впала — виходимо з циклу
         break;
       }
     } while (page <= totalPages);
 
-    return sum;
+    return totalItems;
   }
 
   void _ensureOk(Response res) {

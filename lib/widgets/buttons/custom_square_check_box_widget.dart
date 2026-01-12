@@ -13,37 +13,40 @@ class CustomCheckBoxWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final LinearGradient? gradient;
-    if (isSelected) {
-      gradient = LinearGradient(
-        colors: [AppColors.gradientOne, AppColors.gradientTwo],
-        begin: Alignment.centerLeft,
-        end: Alignment.centerRight,
-      );
-    } else {
-      gradient = null;
-    }
+    final LinearGradient? gradient =
+        isSelected
+            ? const LinearGradient(
+              colors: [AppColors.gradientOne, AppColors.gradientTwo],
+              begin: Alignment.centerLeft,
+              end: Alignment.centerRight,
+            )
+            : null;
 
     return Material(
-      type: MaterialType.transparency,
+      color: Colors.transparent,
       child: Ink(
-        width: 20.0,
-        height: 20.0,
+        width: 24.0,
+        height: 24.0,
         decoration: BoxDecoration(
-          color: isSelected ? null : Colors.transparent,
           gradient: gradient,
-          borderRadius: BorderRadius.circular(3.0),
+          color: isSelected ? null : Colors.transparent,
+          borderRadius: BorderRadius.circular(4.0),
           border:
               isSelected
                   ? null
                   : Border.all(color: AppColors.softGray, width: 2.0),
         ),
         child: InkWell(
+          borderRadius: BorderRadius.circular(4.0),
           onTap: onPressed,
           child: Center(
             child:
                 isSelected
-                    ? Icon(Icons.check_rounded, size: 20.0, color: Colors.white)
+                    ? const Icon(
+                      Icons.check_rounded,
+                      size: 18.0,
+                      color: Colors.white,
+                    )
                     : null,
           ),
         ),

@@ -2,9 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_base_architecture/resources/app_colors.dart';
 
 class CustomCircleCheckBoxWidget extends StatelessWidget {
-  const CustomCircleCheckBoxWidget({super.key, this.isSelected = true});
+  const CustomCircleCheckBoxWidget({
+    super.key,
+    this.isSelected = true,
+    this.onPressed,
+  });
 
   final bool isSelected;
+  final VoidCallback? onPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -29,15 +34,15 @@ class CustomCircleCheckBoxWidget extends StatelessWidget {
           ),
         ),
         child: InkWell(
+          onTap: onPressed,
+          customBorder: const CircleBorder(),
           child: Center(
             child:
                 isSelected
-                    ? Center(
-                      child: Icon(
-                        Icons.check_rounded,
-                        size: 20.0,
-                        color: Colors.white,
-                      ),
+                    ? const Icon(
+                      Icons.check_rounded,
+                      size: 20.0,
+                      color: Colors.white,
                     )
                     : null,
           ),

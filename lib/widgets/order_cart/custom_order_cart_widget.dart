@@ -27,8 +27,7 @@ class CustomOrderCartWidget extends StatelessWidget {
           borderRadius: BorderRadius.circular(12.0),
         ),
         child: Center(
-          child: SvgPicture.asset(
-            Assets.icons.order,
+          child: Assets.icons.order.svg(
             width: 24.0,
             height: 24.0,
             colorFilter: ColorFilter.mode(color, BlendMode.srcIn),

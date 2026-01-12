@@ -107,7 +107,7 @@ final customButtonComponent = WidgetbookComponent(
 
         return Center(
           child: CustomButtonProfileWidget(
-            icon: SvgPicture.asset(Assets.icons.email),
+            icon: SvgPicture.asset(Assets.icons.email.path),
             label: label,
             isLogout: isLogout,
           ),
@@ -146,6 +146,7 @@ final customButtonComponent = WidgetbookComponent(
           child: CustomButtonCountWidget(
             heightCount: heightBigCount,
             widthCount: widthBigCount,
+            paddingCount: 10.0,
           ),
         );
       },

@@ -24,8 +24,8 @@ class CustomTextFieldWidget extends StatefulWidget {
     this.enabled = true,
     this.borderRadius = 14.0,
     this.contentPadding = const EdgeInsets.symmetric(
-      horizontal: 0,
-      vertical: 0,
+      horizontal: 20,
+      vertical: 18,
     ),
     this.inputFormatters,
     this.textStyle,
@@ -72,10 +72,31 @@ class CustomTextFieldWidget extends StatefulWidget {
 class _CustomTextFieldWidgetState extends State<CustomTextFieldWidget> {
   late bool _obscure;
 
+  FocusNode? _internalFocusNode;
+
+  FocusNode get _focusNode => widget.focusNode ?? _internalFocusNode!;
+
   @override
   void initState() {
     super.initState();
     _obscure = widget.isPassword ? widget.initialObscure : false;
+
+    if (widget.focusNode == null) {
+      _internalFocusNode = FocusNode();
+    }
+
+    _focusNode.addListener(_onFocusChanged);
+  }
+
+  void _onFocusChanged() {
+    if (mounted) setState(() {});
+  }
+
+  @override
+  void dispose() {
+    _focusNode.removeListener(_onFocusChanged);
+    _internalFocusNode?.dispose();
+    super.dispose();
   }
 
   @override
@@ -84,11 +105,18 @@ class _CustomTextFieldWidgetState extends State<CustomTextFieldWidget> {
         widget.isPassword
             ? IconButton(
               onPressed: () => setState(() => _obscure = !_obscure),
-              icon: SvgPicture.asset(
-                _obscure ? Assets.icons.eyeTrue : Assets.icons.eyeFalse,
-              ),
+              icon:
+                  (_obscure ? Assets.icons.eyeTrue : Assets.icons.eyeFalse)
+                      .svg(),
             )
             : widget.suffix;
+
+    final bool isFocused = _focusNode.hasFocus;
+
+    final Color borderColor =
+        !widget.enabled
+            ? AppColors.gradientTwo
+            : (isFocused ? AppColors.orange : AppColors.gray1);
 
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: widget.padding),
@@ -97,59 +125,60 @@ class _CustomTextFieldWidgetState extends State<CustomTextFieldWidget> {
         width: double.infinity,
         decoration: BoxDecoration(
           color: widget.color,
-          border: Border.all(color: AppColors.gray1),
           borderRadius: BorderRadius.circular(widget.borderRadius),
+          border: Border.all(color: borderColor, width: 1),
         ),
         alignment: Alignment.center,
-        child: TextField(
-          // textAlignVertical: TextAlignVertical.center,
-          controller: widget.controller,
-          focusNode: widget.focusNode,
-          enabled: widget.enabled,
-          obscureText: widget.isPassword ? _obscure : false,
-          maxLength: widget.maxLength,
-          maxLines: 1,
-          keyboardType: widget.keyboardType,
-          textInputAction: widget.textInputAction,
-          onChanged: widget.onChanged,
-          onSubmitted: widget.onSubmitted,
-          inputFormatters: widget.inputFormatters,
-          style: widget.textStyle,
-          cursorColor: AppColors.orange,
-          cursorWidth: 2.0,
-          decoration: InputDecoration(
-            // isDense: true,
-            // isCollapsed: true,
-            hintText: widget.hintText,
-            hintStyle: TextStyle(
-              color: AppColors.softGray,
-              fontSize: 16.0,
-              height: 1,
-              fontWeight: AppFonts.w500medium,
-              fontFamily: AppFonts.fontFamily,
-              letterSpacing: 0,
-            ),
-            filled: true,
-            fillColor: widget.color,
-            contentPadding: widget.contentPadding,
-            prefixIconConstraints: BoxConstraints(
-              minHeight: 0.0,
-              minWidth: 0.0,
-            ),
-            prefixIcon: widget.prefix,
-            suffixIcon: effectiveSuffix,
-            counterText: '',
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(widget.borderRadius),
-              borderSide: BorderSide(color: AppColors.gray1),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(widget.borderRadius),
-              borderSide: BorderSide(color: AppColors.orange),
-            ),
-            disabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(widget.borderRadius),
-              borderSide: BorderSide(color: AppColors.gradientTwo),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(widget.borderRadius),
+          child: TextField(
+            controller: widget.controller,
+            focusNode: _focusNode,
+            enabled: widget.enabled,
+            obscureText: widget.isPassword ? _obscure : false,
+            maxLength: widget.maxLength,
+            maxLines: 1,
+            keyboardType: widget.keyboardType,
+            textInputAction: widget.textInputAction,
+            onChanged: widget.onChanged,
+            onSubmitted: widget.onSubmitted,
+            inputFormatters: widget.inputFormatters,
+            style: widget.textStyle,
+            cursorColor: AppColors.orange,
+            cursorWidth: 2.0,
+            decoration: InputDecoration(
+              // ✅ прибрали OutlineInputBorder щоб НЕ було подвійного бордера
+              border: InputBorder.none,
+              enabledBorder: InputBorder.none,
+              focusedBorder: InputBorder.none,
+              disabledBorder: InputBorder.none,
+
+              hintText: widget.hintText,
+              hintStyle:
+                  widget.hintStyle ??
+                  const TextStyle(
+                    color: AppColors.softGray,
+                    fontSize: 16.0,
+                    height: 1,
+                    fontWeight: AppFonts.w500medium,
+                    fontFamily: AppFonts.fontFamily,
+                    letterSpacing: 0,
+                  ),
+
+              // ✅ фон теж тримаємо тут, але рамка — тільки у Container
+              filled: true,
+              fillColor: widget.color,
+
+              contentPadding: widget.contentPadding,
+
+              prefixIcon: widget.prefix,
+              prefixIconConstraints: const BoxConstraints(
+                minHeight: 0,
+                minWidth: 0,
+              ),
+              suffixIcon: effectiveSuffix,
+
+              counterText: '',
             ),
           ),
         ),

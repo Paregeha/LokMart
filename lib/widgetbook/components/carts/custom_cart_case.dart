@@ -9,14 +9,24 @@ final customCartCase = WidgetbookComponent(
     WidgetbookUseCase(
       name: 'Shopping Carts',
       builder: (context) {
-        return Center(child: CustomShoppingCartWidget());
+        return Center(
+          child: CustomShoppingCartWidget(
+            itemId: 1,
+            title: 'Organic Banana',
+            category: 'Fruit',
+            price: 4.0,
+            oldPrice: 8.0,
+            count: 1,
+            onInc: () {},
+            onDec: () {},
+          ),
+        );
       },
     ),
-
     WidgetbookUseCase(
       name: 'ItemCarts',
       builder: (context) {
-        return Center(child: CustomItemCartWidget());
+        return const Center(child: CustomItemCartWidget());
       },
     ),
   ],

@@ -59,7 +59,11 @@ class CustomButtonsWidget extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   if (enable) ...[
-                    SvgPicture.asset(Assets.icons.buy, width: 18, height: 18),
+                    SvgPicture.asset(
+                      Assets.icons.buy.path,
+                      width: 18,
+                      height: 18,
+                    ),
                     const SizedBox(width: 12.19),
                   ],
                   Text(

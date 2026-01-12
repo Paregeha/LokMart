@@ -16,4 +16,15 @@ class AppRoutes {
 
   static const categories = '/categories_page';
   static const categoryItems = '/category_items_page';
+
+  static const detailInformation = '/detail_information_page';
+  static const checkoutAddress = '/checkout_address_page';
+  static const checkoutPayment = '/checkout_payent_page';
+
+  static const addNewCard = '/add_new_card';
+
+  static const trackOrder = '/track_order';
+
+  static const searchPage = '/search';
+  static const filterOptionsPage = '/filter-options';
 }

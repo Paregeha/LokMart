@@ -74,7 +74,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         children: [
                           CustomButtonProfileWidget(
                             icon: SvgPicture.asset(
-                              Assets.icons.profile,
+                              Assets.icons.profile.path,
                               colorFilter: ColorFilter.mode(
                                 AppColors.white,
                                 BlendMode.srcIn,
@@ -85,7 +85,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           SizedBox(height: 24.0),
                           CustomButtonProfileWidget(
                             icon: SvgPicture.asset(
-                              Assets.icons.order,
+                              Assets.icons.order.path,
                               colorFilter: ColorFilter.mode(
                                 AppColors.white,
                                 BlendMode.srcIn,
@@ -96,7 +96,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           SizedBox(height: 24.0),
                           CustomButtonProfileWidget(
                             icon: SvgPicture.asset(
-                              Assets.icons.payment,
+                              Assets.icons.payment.path,
                               colorFilter: ColorFilter.mode(
                                 AppColors.white,
                                 BlendMode.srcIn,
@@ -107,7 +107,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           SizedBox(height: 24.0),
                           CustomButtonProfileWidget(
                             icon: SvgPicture.asset(
-                              Assets.icons.location,
+                              Assets.icons.location.path,
                               colorFilter: ColorFilter.mode(
                                 AppColors.white,
                                 BlendMode.srcIn,
@@ -133,7 +133,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           children: [
                             CustomButtonProfileWidget(
                               icon: SvgPicture.asset(
-                                Assets.icons.setting,
+                                Assets.icons.setting.path,
                                 colorFilter: ColorFilter.mode(
                                   AppColors.white,
                                   BlendMode.srcIn,
@@ -143,8 +143,7 @@ class _ProfilePageState extends State<ProfilePage> {
                             ),
                             SizedBox(height: 24.0),
                             CustomButtonProfileWidget(
-                              icon: SvgPicture.asset(
-                                Assets.icons.helper,
+                              icon: Assets.icons.helper.svg(
                                 colorFilter: ColorFilter.mode(
                                   AppColors.white,
                                   BlendMode.srcIn,
@@ -155,7 +154,7 @@ class _ProfilePageState extends State<ProfilePage> {
                             SizedBox(height: 24.0),
                             CustomButtonProfileWidget(
                               icon: SvgPicture.asset(
-                                Assets.icons.mail,
+                                Assets.icons.mail.path,
                                 colorFilter: ColorFilter.mode(
                                   AppColors.white,
                                   BlendMode.srcIn,
@@ -166,7 +165,7 @@ class _ProfilePageState extends State<ProfilePage> {
                             SizedBox(height: 24.0),
                             CustomButtonProfileWidget(
                               icon: SvgPicture.asset(
-                                Assets.icons.share,
+                                Assets.icons.share.path,
                                 colorFilter: ColorFilter.mode(
                                   AppColors.white,
                                   BlendMode.srcIn,
@@ -177,7 +176,7 @@ class _ProfilePageState extends State<ProfilePage> {
                             SizedBox(height: 24.0),
                             CustomButtonProfileWidget(
                               icon: SvgPicture.asset(
-                                Assets.icons.starProfile,
+                                Assets.icons.starProfile.path,
                                 colorFilter: ColorFilter.mode(
                                   AppColors.white,
                                   BlendMode.srcIn,
@@ -205,7 +204,7 @@ class _ProfilePageState extends State<ProfilePage> {
                             CustomButtonProfileWidget(
                               isLogout: true,
                               icon: SvgPicture.asset(
-                                Assets.icons.logout,
+                                Assets.icons.logout.path,
                                 colorFilter: ColorFilter.mode(
                                   AppColors.white,
                                   BlendMode.srcIn,

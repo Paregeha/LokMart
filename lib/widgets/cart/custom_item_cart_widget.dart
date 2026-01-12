@@ -4,7 +4,9 @@ import 'package:flutter_base_architecture/features/products/models/products.dart
 import 'package:flutter_base_architecture/resources/app_colors.dart';
 import 'package:flutter_base_architecture/resources/app_fonts.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
 import '../../gen/assets.gen.dart';
+import '../../routes/app_routes.dart';
 
 class CustomItemCartWidget extends StatefulWidget {
   const CustomItemCartWidget({super.key, this.products});
@@ -24,7 +26,26 @@ class _CustomItemCartWidgetState extends State<CustomItemCartWidget> {
 
     return InkWell(
       borderRadius: BorderRadius.circular(16),
-      onTap: () {},
+      onTap: () {
+        final product = widget.products;
+        if (product == null) return;
+
+        if (product.documentId == null || product.documentId!.isEmpty) {
+          debugPrint(
+            'ERROR: product without documentId: id=${product.id}, name=${product.name}',
+          );
+          return;
+        }
+
+        debugPrint(
+          'Open details product: id=${product.id}, name=${product.name}, documentId=${product.documentId}',
+        );
+
+        context.push(
+          AppRoutes.detailInformation,
+          extra: product.documentId, // <-- ТЕПЕР СЮДИ documentId
+        );
+      },
       child: Container(
         decoration: BoxDecoration(
           color: AppColors.white,
@@ -71,16 +92,8 @@ class _CustomItemCartWidgetState extends State<CustomItemCartWidget> {
                     onTap: () => setState(() => enableHeart = !enableHeart),
                     child:
                         enableHeart
-                            ? SvgPicture.asset(
-                              Assets.icons.heartRed,
-                              width: 22,
-                              height: 22,
-                            )
-                            : SvgPicture.asset(
-                              Assets.icons.heart,
-                              width: 22,
-                              height: 22,
-                            ),
+                            ? Assets.icons.heartRed.svg(width: 22, height: 22)
+                            : Assets.icons.heart.svg(width: 22, height: 22),
                   ),
                 ),
               ],
@@ -138,11 +151,7 @@ class _CustomItemCartWidgetState extends State<CustomItemCartWidget> {
                           ),
                           child: Row(
                             children: [
-                              SvgPicture.asset(
-                                Assets.icons.star,
-                                width: 12,
-                                height: 12,
-                              ),
+                              Assets.icons.star.svg(width: 12, height: 12),
                               const SizedBox(width: 4),
                               const Text(
                                 '4.3',

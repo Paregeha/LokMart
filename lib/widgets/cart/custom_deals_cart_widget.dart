@@ -31,31 +31,32 @@ class CustomDealsCartWidget extends StatelessWidget {
             )
             : Assets.images.banana.image(fit: BoxFit.fill);
 
-    return InkWell(
-      borderRadius: BorderRadius.circular(14.0),
-      onTap: onPressed,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(14),
-            child: imageWidget,
-          ),
-          const SizedBox(height: 8),
-          Text(
-            product.name,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: const TextStyle(
-              fontSize: 16,
-              fontWeight: AppFonts.w600semiBold,
-              fontFamily: AppFonts.fontFamily,
-              letterSpacing: -0.41,
-              color: AppColors.dark,
+    return Ink(
+      width: 272.0,
+      child: InkWell(
+        borderRadius: BorderRadius.circular(14.0),
+        onTap: onPressed,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(14),
+              child: imageWidget,
             ),
-          ),
-          Expanded(
-            child: Row(
+            const SizedBox(height: 8),
+            Text(
+              product.name,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(
+                fontSize: 16,
+                fontWeight: AppFonts.w600semiBold,
+                fontFamily: AppFonts.fontFamily,
+                letterSpacing: -0.41,
+                color: AppColors.dark,
+              ),
+            ),
+            Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Row(
@@ -74,7 +75,7 @@ class CustomDealsCartWidget extends StatelessWidget {
                         ),
                         child: Row(
                           children: [
-                            SvgPicture.asset(Assets.icons.star),
+                            SvgPicture.asset(Assets.icons.star.path),
                             const SizedBox(width: 4.0),
                             Text(
                               (4 ?? 0).toStringAsFixed(1),
@@ -116,8 +117,8 @@ class CustomDealsCartWidget extends StatelessWidget {
                 ),
               ],
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

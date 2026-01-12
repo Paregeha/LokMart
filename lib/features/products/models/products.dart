@@ -18,7 +18,7 @@ class Products with _$Products {
     int? categoryId,
     String? categoryName,
     String? documentId,
-
+    String? description,
     double? raiting,
   }) = _Products;
 
@@ -26,16 +26,19 @@ class Products with _$Products {
       _$ProductsFromJson(json);
 
   factory Products.fromStrapi(Map<String, dynamic> row) {
+    // ---------- ATTRIBUTES ----------
     final attrRaw = row['attributes'];
     final attrs =
         (attrRaw is Map ? attrRaw.cast<String, dynamic>() : null) ??
         row.cast<String, dynamic>();
 
-    // --- PHOTO (Multiple) ---
+    // ---------- PHOTO ----------
     String? photoUrl;
     final photo = attrs['photo'];
+
     if (photo is Map<String, dynamic>) {
       final data = photo['data'];
+
       if (data is List && data.isNotEmpty) {
         final first = data.first;
         if (first is Map) {
@@ -54,16 +57,17 @@ class Products with _$Products {
         }
       }
     }
+
     if (photoUrl != null &&
         photoUrl.isNotEmpty &&
         !photoUrl.startsWith('http')) {
       photoUrl = '${Env.baseUrl}$photoUrl';
     }
 
-    // --- CATEGORY (manyToOne) ---
     int? categoryId;
     String? categoryName;
     final category = attrs['category'];
+
     if (category is Map) {
       final catData = category['data'];
       if (catData is Map) {
@@ -72,7 +76,37 @@ class Products with _$Products {
             (catData['attributes'] as Map?)?.cast<String, dynamic>() ??
             const {};
         categoryName = catAttrs['title'] as String?;
+      } else {
+        categoryId = (category['id'] as num?)?.toInt();
+        categoryName = category['title'] as String?;
       }
+    }
+
+    final rawDescription = attrs['description'];
+    String? description;
+
+    String extractText(dynamic node) {
+      if (node is Map<String, dynamic>) {
+        if (node['type'] == 'text' && node['text'] is String) {
+          return node['text'] as String;
+        }
+        final children = node['children'];
+        if (children is List) {
+          return children.map(extractText).join('');
+        }
+        return '';
+      } else if (node is List) {
+        return node.map(extractText).join('\n');
+      }
+      return '';
+    }
+
+    if (rawDescription is String) {
+      description = rawDescription;
+    } else if (rawDescription is List) {
+      description = extractText(rawDescription).trim();
+    } else if (rawDescription != null) {
+      description = rawDescription.toString();
     }
 
     return Products(
@@ -88,7 +122,7 @@ class Products with _$Products {
       categoryName: categoryName,
       documentId:
           attrs['documentId'] as String? ?? row['documentId'] as String?,
-      // NEW: читаємо саме "raiting"
+      description: description,
       raiting: (attrs['raiting'] as num?)?.toDouble(),
     );
   }

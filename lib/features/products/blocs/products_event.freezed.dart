@@ -22,8 +22,8 @@ mixin _$ProductsEvent {
     required TResult Function(
       int pageSize,
       String? sort,
-      int? categoryId,
       String? search,
+      ProductsFilter? filter,
     )
     fetchFirst,
     required TResult Function() loadMore,
@@ -34,8 +34,8 @@ mixin _$ProductsEvent {
     TResult? Function(
       int pageSize,
       String? sort,
-      int? categoryId,
       String? search,
+      ProductsFilter? filter,
     )?
     fetchFirst,
     TResult? Function()? loadMore,
@@ -46,8 +46,8 @@ mixin _$ProductsEvent {
     TResult Function(
       int pageSize,
       String? sort,
-      int? categoryId,
       String? search,
+      ProductsFilter? filter,
     )?
     fetchFirst,
     TResult Function()? loadMore,
@@ -104,7 +104,14 @@ abstract class _$$FetchFirstImplCopyWith<$Res> {
     $Res Function(_$FetchFirstImpl) then,
   ) = __$$FetchFirstImplCopyWithImpl<$Res>;
   @useResult
-  $Res call({int pageSize, String? sort, int? categoryId, String? search});
+  $Res call({
+    int pageSize,
+    String? sort,
+    String? search,
+    ProductsFilter? filter,
+  });
+
+  $ProductsFilterCopyWith<$Res>? get filter;
 }
 
 /// @nodoc
@@ -123,8 +130,8 @@ class __$$FetchFirstImplCopyWithImpl<$Res>
   $Res call({
     Object? pageSize = null,
     Object? sort = freezed,
-    Object? categoryId = freezed,
     Object? search = freezed,
+    Object? filter = freezed,
   }) {
     return _then(
       _$FetchFirstImpl(
@@ -138,18 +145,32 @@ class __$$FetchFirstImplCopyWithImpl<$Res>
                 ? _value.sort
                 : sort // ignore: cast_nullable_to_non_nullable
                     as String?,
-        categoryId:
-            freezed == categoryId
-                ? _value.categoryId
-                : categoryId // ignore: cast_nullable_to_non_nullable
-                    as int?,
         search:
             freezed == search
                 ? _value.search
                 : search // ignore: cast_nullable_to_non_nullable
                     as String?,
+        filter:
+            freezed == filter
+                ? _value.filter
+                : filter // ignore: cast_nullable_to_non_nullable
+                    as ProductsFilter?,
       ),
     );
+  }
+
+  /// Create a copy of ProductsEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $ProductsFilterCopyWith<$Res>? get filter {
+    if (_value.filter == null) {
+      return null;
+    }
+
+    return $ProductsFilterCopyWith<$Res>(_value.filter!, (value) {
+      return _then(_value.copyWith(filter: value));
+    });
   }
 }
 
@@ -159,8 +180,8 @@ class _$FetchFirstImpl implements _FetchFirst {
   const _$FetchFirstImpl({
     this.pageSize = 25,
     this.sort,
-    this.categoryId,
     this.search,
+    this.filter,
   });
 
   @override
@@ -169,13 +190,13 @@ class _$FetchFirstImpl implements _FetchFirst {
   @override
   final String? sort;
   @override
-  final int? categoryId;
-  @override
   final String? search;
+  @override
+  final ProductsFilter? filter;
 
   @override
   String toString() {
-    return 'ProductsEvent.fetchFirst(pageSize: $pageSize, sort: $sort, categoryId: $categoryId, search: $search)';
+    return 'ProductsEvent.fetchFirst(pageSize: $pageSize, sort: $sort, search: $search, filter: $filter)';
   }
 
   @override
@@ -186,14 +207,12 @@ class _$FetchFirstImpl implements _FetchFirst {
             (identical(other.pageSize, pageSize) ||
                 other.pageSize == pageSize) &&
             (identical(other.sort, sort) || other.sort == sort) &&
-            (identical(other.categoryId, categoryId) ||
-                other.categoryId == categoryId) &&
-            (identical(other.search, search) || other.search == search));
+            (identical(other.search, search) || other.search == search) &&
+            (identical(other.filter, filter) || other.filter == filter));
   }
 
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, pageSize, sort, categoryId, search);
+  int get hashCode => Object.hash(runtimeType, pageSize, sort, search, filter);
 
   /// Create a copy of ProductsEvent
   /// with the given fields replaced by the non-null parameter values.
@@ -209,14 +228,14 @@ class _$FetchFirstImpl implements _FetchFirst {
     required TResult Function(
       int pageSize,
       String? sort,
-      int? categoryId,
       String? search,
+      ProductsFilter? filter,
     )
     fetchFirst,
     required TResult Function() loadMore,
     required TResult Function() refresh,
   }) {
-    return fetchFirst(pageSize, sort, categoryId, search);
+    return fetchFirst(pageSize, sort, search, filter);
   }
 
   @override
@@ -225,14 +244,14 @@ class _$FetchFirstImpl implements _FetchFirst {
     TResult? Function(
       int pageSize,
       String? sort,
-      int? categoryId,
       String? search,
+      ProductsFilter? filter,
     )?
     fetchFirst,
     TResult? Function()? loadMore,
     TResult? Function()? refresh,
   }) {
-    return fetchFirst?.call(pageSize, sort, categoryId, search);
+    return fetchFirst?.call(pageSize, sort, search, filter);
   }
 
   @override
@@ -241,8 +260,8 @@ class _$FetchFirstImpl implements _FetchFirst {
     TResult Function(
       int pageSize,
       String? sort,
-      int? categoryId,
       String? search,
+      ProductsFilter? filter,
     )?
     fetchFirst,
     TResult Function()? loadMore,
@@ -250,7 +269,7 @@ class _$FetchFirstImpl implements _FetchFirst {
     required TResult orElse(),
   }) {
     if (fetchFirst != null) {
-      return fetchFirst(pageSize, sort, categoryId, search);
+      return fetchFirst(pageSize, sort, search, filter);
     }
     return orElse();
   }
@@ -294,14 +313,14 @@ abstract class _FetchFirst implements ProductsEvent {
   const factory _FetchFirst({
     final int pageSize,
     final String? sort,
-    final int? categoryId,
     final String? search,
+    final ProductsFilter? filter,
   }) = _$FetchFirstImpl;
 
   int get pageSize;
   String? get sort;
-  int? get categoryId;
   String? get search;
+  ProductsFilter? get filter;
 
   /// Create a copy of ProductsEvent
   /// with the given fields replaced by the non-null parameter values.
@@ -356,8 +375,8 @@ class _$LoadMoreImpl implements _LoadMore {
     required TResult Function(
       int pageSize,
       String? sort,
-      int? categoryId,
       String? search,
+      ProductsFilter? filter,
     )
     fetchFirst,
     required TResult Function() loadMore,
@@ -372,8 +391,8 @@ class _$LoadMoreImpl implements _LoadMore {
     TResult? Function(
       int pageSize,
       String? sort,
-      int? categoryId,
       String? search,
+      ProductsFilter? filter,
     )?
     fetchFirst,
     TResult? Function()? loadMore,
@@ -388,8 +407,8 @@ class _$LoadMoreImpl implements _LoadMore {
     TResult Function(
       int pageSize,
       String? sort,
-      int? categoryId,
       String? search,
+      ProductsFilter? filter,
     )?
     fetchFirst,
     TResult Function()? loadMore,
@@ -487,8 +506,8 @@ class _$RefreshImpl implements _Refresh {
     required TResult Function(
       int pageSize,
       String? sort,
-      int? categoryId,
       String? search,
+      ProductsFilter? filter,
     )
     fetchFirst,
     required TResult Function() loadMore,
@@ -503,8 +522,8 @@ class _$RefreshImpl implements _Refresh {
     TResult? Function(
       int pageSize,
       String? sort,
-      int? categoryId,
       String? search,
+      ProductsFilter? filter,
     )?
     fetchFirst,
     TResult? Function()? loadMore,
@@ -519,8 +538,8 @@ class _$RefreshImpl implements _Refresh {
     TResult Function(
       int pageSize,
       String? sort,
-      int? categoryId,
       String? search,
+      ProductsFilter? filter,
     )?
     fetchFirst,
     TResult Function()? loadMore,

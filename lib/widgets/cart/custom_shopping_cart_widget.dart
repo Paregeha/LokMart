@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_base_architecture/resources/app_colors.dart';
 import 'package:flutter_base_architecture/resources/app_fonts.dart';
@@ -7,7 +6,36 @@ import 'package:flutter_base_architecture/widgets/buttons/custom_button_count_wi
 import '../../gen/assets.gen.dart';
 
 class CustomShoppingCartWidget extends StatelessWidget {
-  const CustomShoppingCartWidget({super.key});
+  /// ✅ Новий конструктор під реальні дані з бекенду
+  const CustomShoppingCartWidget({
+    super.key,
+    required this.itemId,
+    required this.title,
+    required this.category,
+    required this.price,
+    required this.count,
+    required this.onInc,
+    required this.onDec,
+    this.imageUrl,
+    this.oldPrice,
+  });
+
+  final int itemId;
+
+  final String title;
+  final String category;
+
+  /// current price
+  final double price;
+
+  /// old/striked price (optional)
+  final double? oldPrice;
+
+  final String? imageUrl;
+
+  final int count;
+  final VoidCallback onInc;
+  final VoidCallback onDec;
 
   @override
   Widget build(BuildContext context) {
@@ -27,20 +55,16 @@ class CustomShoppingCartWidget extends StatelessWidget {
             children: [
               ClipRRect(
                 borderRadius: BorderRadius.circular(14.0),
-                child: Assets.images.banana.image(
-                  width: 57.0,
-                  height: 57.0,
-                  fit: BoxFit.fill,
-                ),
+                child: _buildImage(),
               ),
-              SizedBox(width: 16.0),
+              const SizedBox(width: 16.0),
               Expanded(
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Organic Banana',
+                      title,
                       style: TextStyle(
                         color: AppColors.dark,
                         fontFamily: AppFonts.fontFamily,
@@ -49,9 +73,9 @@ class CustomShoppingCartWidget extends StatelessWidget {
                         letterSpacing: 0.0,
                       ),
                     ),
-                    SizedBox(height: 4.0),
+                    const SizedBox(height: 4.0),
                     Text(
-                      'Fruit',
+                      category,
                       style: TextStyle(
                         color: AppColors.softGray,
                         fontFamily: AppFonts.fontFamily,
@@ -66,7 +90,7 @@ class CustomShoppingCartWidget extends StatelessWidget {
                         Row(
                           children: [
                             Text(
-                              '\$ 4.0',
+                              '\$ ${price.toStringAsFixed(2)}',
                               style: TextStyle(
                                 color: AppColors.dark,
                                 fontFamily: AppFonts.fontFamily,
@@ -75,25 +99,32 @@ class CustomShoppingCartWidget extends StatelessWidget {
                                 letterSpacing: 0.0,
                               ),
                             ),
-                            SizedBox(width: 3.0),
-                            Text(
-                              '\$ 8.0',
-                              style: TextStyle(
-                                color: AppColors.softGray,
-                                fontFamily: AppFonts.fontFamily,
-                                fontWeight: AppFonts.w400regular,
-                                fontSize: 16.0,
-                                letterSpacing: 0.0,
-                                decoration: TextDecoration.lineThrough,
-                                decorationColor: AppColors.softGray,
-                                decorationThickness: 1.5,
+                            if (oldPrice != null) ...[
+                              const SizedBox(width: 3.0),
+                              Text(
+                                '\$ ${oldPrice!.toStringAsFixed(2)}',
+                                style: TextStyle(
+                                  color: AppColors.softGray,
+                                  fontFamily: AppFonts.fontFamily,
+                                  fontWeight: AppFonts.w400regular,
+                                  fontSize: 16.0,
+                                  letterSpacing: 0.0,
+                                  decoration: TextDecoration.lineThrough,
+                                  decorationColor: AppColors.softGray,
+                                  decorationThickness: 1.5,
+                                ),
                               ),
-                            ),
+                            ],
                           ],
                         ),
                         CustomButtonCountWidget(
                           heightCount: 30.0,
-                          widthCount: 87,
+                          widthCount: 87.0,
+                          paddingCount: 10.0,
+                          value: count, // ✅ controlled
+                          onInc: onInc,
+                          onDec: onDec,
+                          min: 1,
                         ),
                       ],
                     ),
@@ -104,6 +135,29 @@ class CustomShoppingCartWidget extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildImage() {
+    if (imageUrl == null || imageUrl!.isEmpty) {
+      return Assets.images.banana.image(
+        width: 57.0,
+        height: 57.0,
+        fit: BoxFit.fill,
+      );
+    }
+
+    return Image.network(
+      imageUrl!,
+      width: 57.0,
+      height: 57.0,
+      fit: BoxFit.cover,
+      errorBuilder:
+          (_, __, ___) => Assets.images.banana.image(
+            width: 57.0,
+            height: 57.0,
+            fit: BoxFit.fill,
+          ),
     );
   }
 }

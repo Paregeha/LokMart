@@ -25,8 +25,6 @@ import '../../features/products/blocs/products_state.dart';
 import '../../features/products/models/products.dart';
 import '../../resources/app_fonts.dart';
 
-// імпорти залишай як є
-
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
@@ -118,7 +116,7 @@ class _HomePageState extends State<HomePage> {
                           height: 30.0,
                           child: Center(
                             child: SvgPicture.asset(
-                              Assets.icons.icNotification,
+                              Assets.icons.icNotification.path,
                               width: 24.0,
                               height: 24.0,
                             ),
@@ -174,26 +172,34 @@ class _HomePageState extends State<HomePage> {
                       child: Row(
                         children: [
                           Expanded(
-                            child: CustomTextFieldWidget(
-                              color: AppColors.white,
-                              hintText: 'Search...',
-                              prefix: Padding(
-                                padding: const EdgeInsets.only(
-                                  left: 25.0,
-                                  top: 18.0,
-                                  bottom: 18.0,
-                                  right: 16.0,
-                                ),
-                                child: SvgPicture.asset(
-                                  Assets.icons.icSearch,
-                                  width: 24.0,
-                                  height: 24.0,
+                            child: GestureDetector(
+                              onTap: () => context.push(AppRoutes.searchPage),
+                              child: AbsorbPointer(
+                                child: CustomTextFieldWidget(
+                                  color: AppColors.white,
+                                  hintText: 'Search...',
+                                  prefix: Padding(
+                                    padding: const EdgeInsets.only(
+                                      left: 25.0,
+                                      top: 18.0,
+                                      bottom: 18.0,
+                                      right: 16.0,
+                                    ),
+                                    child: SvgPicture.asset(
+                                      Assets.icons.icSearch.path,
+                                      width: 24.0,
+                                      height: 24.0,
+                                    ),
+                                  ),
                                 ),
                               ),
                             ),
                           ),
                           const SizedBox(width: 18.0),
-                          CustomFilterWidget(onPressed: () {}),
+                          CustomFilterWidget(
+                            onPressed:
+                                () => context.push(AppRoutes.filterOptionsPage),
+                          ),
                         ],
                       ),
                     ),
@@ -284,7 +290,9 @@ class _HomePageState extends State<HomePage> {
                                   ),
                                 ),
                                 const SizedBox(width: 6.0),
-                                SvgPicture.asset(Assets.icons.icRightArrow),
+                                SvgPicture.asset(
+                                  Assets.icons.icRightArrow.path,
+                                ),
                               ],
                             ),
                           ),
@@ -345,7 +353,6 @@ class _HomePageState extends State<HomePage> {
                     ),
 
                     const SizedBox(height: 39.0),
-                    // --- решта твоєї сторінки без змін ---
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 32.0),
                       child: Row(
@@ -376,7 +383,9 @@ class _HomePageState extends State<HomePage> {
                                   ),
                                 ),
                                 const SizedBox(width: 6.0),
-                                SvgPicture.asset(Assets.icons.icRightArrow),
+                                SvgPicture.asset(
+                                  Assets.icons.icRightArrow.path,
+                                ),
                               ],
                             ),
                           ),
@@ -389,7 +398,6 @@ class _HomePageState extends State<HomePage> {
                         builder: (context, state) {
                           return state.maybeWhen(
                             success: (products) {
-                              // Беремо тільки товари з рейтингом і сортуємо за спаданням
                               final rated =
                                   products
                                       .where((p) => p.raiting != null)
@@ -416,12 +424,32 @@ class _HomePageState extends State<HomePage> {
                                   horizontal: 32.0,
                                 ),
                                 separatorBuilder:
-                                    (_, __) => const SizedBox(width: 15.0),
+                                    (_, _) => const SizedBox(width: 15.0),
                                 itemCount: count,
                                 itemBuilder:
                                     (_, i) => CustomDealsCartWidget(
                                       product: rated[i],
-                                      onPressed: () {},
+                                      onPressed: () {
+                                        final product = rated[i];
+                                        if (product == null) return;
+
+                                        if (product.documentId == null ||
+                                            product.documentId!.isEmpty) {
+                                          debugPrint(
+                                            'ERROR: product without documentId: id=${product.id}, name=${product.name}',
+                                          );
+                                          return;
+                                        }
+
+                                        debugPrint(
+                                          'Open details product: id=${product.id}, name=${product.name}, documentId=${product.documentId}',
+                                        );
+
+                                        context.push(
+                                          AppRoutes.detailInformation,
+                                          extra: product.documentId,
+                                        );
+                                      },
                                     ),
                               );
                             },
@@ -432,19 +460,18 @@ class _HomePageState extends State<HomePage> {
                                     horizontal: 32.0,
                                   ),
                                   separatorBuilder:
-                                      (_, __) => const SizedBox(width: 15.0),
+                                      (_, _) => const SizedBox(width: 15.0),
                                   itemCount: 5,
                                   itemBuilder:
-                                      (_, __) => const SizedBox(
-                                        width: 208,
+                                      (_, _) => const SizedBox(
+                                        width: 287,
                                         child: Opacity(
                                           opacity: 0.3,
                                           child: Padding(
                                             padding: EdgeInsets.symmetric(
                                               vertical: 6,
                                             ),
-                                            child:
-                                                _DealsSkeleton(), // маленький локальний скелетон
+                                            child: _DealsSkeleton(),
                                           ),
                                         ),
                                       ),
@@ -528,12 +555,12 @@ class _ProductsSkeleton extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 32.0),
       child: ListView.separated(
-        separatorBuilder: (_, __) => const SizedBox(height: 25.0),
+        separatorBuilder: (_, _) => const SizedBox(height: 25.0),
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
         itemCount: 3,
         itemBuilder:
-            (_, __) => Opacity(
+            (_, _) => Opacity(
               opacity: 0.3,
               child: Assets.images.apple.image(
                 width: double.infinity,
@@ -705,9 +732,11 @@ class _CategoryChip extends StatelessWidget {
         ),
       );
     }
+
     final count = c.itemCount ?? 0;
+
     return Text(
-      '$count Items',
+      '$count items',
       style: const TextStyle(
         fontSize: 12,
         fontWeight: AppFonts.w400regular,

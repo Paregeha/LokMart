@@ -50,7 +50,7 @@ class CustomButtonProfileWidget extends StatelessWidget {
                 ],
               ),
 
-              if (!isLogout) SvgPicture.asset(Assets.icons.icArrowNext),
+              if (!isLogout) Assets.icons.icArrowNext.svg(),
             ],
           ),
         ),

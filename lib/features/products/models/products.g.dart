@@ -19,6 +19,7 @@ _$ProductsImpl _$$ProductsImplFromJson(Map<String, dynamic> json) =>
       categoryId: (json['categoryId'] as num?)?.toInt(),
       categoryName: json['categoryName'] as String?,
       documentId: json['documentId'] as String?,
+      description: json['description'] as String?,
       raiting: (json['raiting'] as num?)?.toDouble(),
     );
 
@@ -35,5 +36,6 @@ Map<String, dynamic> _$$ProductsImplToJson(_$ProductsImpl instance) =>
       'categoryId': instance.categoryId,
       'categoryName': instance.categoryName,
       'documentId': instance.documentId,
+      'description': instance.description,
       'raiting': instance.raiting,
     };

@@ -39,13 +39,10 @@ class _CustomBottomBarWidgetState extends State<CustomBottomBarWidget> {
               onTap: () {
                 widget.onTap(0);
               },
-              icon: SvgPicture.asset(
-                widget.activeIndex == 0
-                    ? Assets.icons.home
-                    : Assets.icons.icHome,
-                width: 24,
-                height: 24,
-              ),
+              icon: (widget.activeIndex == 0
+                      ? Assets.icons.home
+                      : Assets.icons.icHome)
+                  .svg(width: 24, height: 24),
             ),
             _NavItem(
               isActive: widget.activeIndex == 1,
@@ -53,9 +50,10 @@ class _CustomBottomBarWidgetState extends State<CustomBottomBarWidget> {
                 widget.onTap(1);
               },
               icon: SvgPicture.asset(
-                widget.activeIndex == 1
-                    ? Assets.icons.icMyorderActive
-                    : Assets.icons.icMyorder,
+                (widget.activeIndex == 1
+                        ? Assets.icons.icMyorderActive
+                        : Assets.icons.icMyorder)
+                    .path,
                 width: 24,
                 height: 24,
               ),
@@ -76,7 +74,7 @@ class _CustomBottomBarWidgetState extends State<CustomBottomBarWidget> {
                     end: Alignment.centerRight,
                   ),
                 ),
-                child: Center(child: SvgPicture.asset(Assets.icons.buy)),
+                child: Center(child: SvgPicture.asset(Assets.icons.buy.path)),
               ),
             ),
             _NavItem(
@@ -85,9 +83,10 @@ class _CustomBottomBarWidgetState extends State<CustomBottomBarWidget> {
                 widget.onTap(3);
               },
               icon: SvgPicture.asset(
-                widget.activeIndex == 3
-                    ? Assets.icons.icWishlistActive
-                    : Assets.icons.icWishlist,
+                (widget.activeIndex == 3
+                        ? Assets.icons.icWishlistActive
+                        : Assets.icons.icWishlist)
+                    .path,
                 width: 24,
                 height: 24,
               ),
@@ -98,9 +97,10 @@ class _CustomBottomBarWidgetState extends State<CustomBottomBarWidget> {
                 widget.onTap(4);
               },
               icon: SvgPicture.asset(
-                widget.activeIndex == 4
-                    ? Assets.icons.icProfileActive
-                    : Assets.icons.icProfile,
+                (widget.activeIndex == 4
+                        ? Assets.icons.icProfileActive
+                        : Assets.icons.icProfile)
+                    .path,
                 width: 24,
                 height: 24,
               ),

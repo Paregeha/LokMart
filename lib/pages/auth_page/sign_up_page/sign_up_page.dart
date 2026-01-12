@@ -157,7 +157,7 @@ class _SignUpBody extends StatelessWidget {
                                         left: 12,
                                       ),
                                       child: SvgPicture.asset(
-                                        Assets.icons.user,
+                                        Assets.icons.user.path,
                                         width: 24,
                                         height: 24,
                                       ),
@@ -196,7 +196,7 @@ class _SignUpBody extends StatelessWidget {
                                         left: 12,
                                       ),
                                       child: SvgPicture.asset(
-                                        Assets.icons.email,
+                                        Assets.icons.email.path,
                                         width: 24,
                                         height: 24,
                                       ),
@@ -235,7 +235,7 @@ class _SignUpBody extends StatelessWidget {
                                         left: 12,
                                       ),
                                       child: SvgPicture.asset(
-                                        Assets.icons.lock,
+                                        Assets.icons.lock.path,
                                         width: 24,
                                         height: 24,
                                       ),

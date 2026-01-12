@@ -1,21 +1,21 @@
-import 'package:flutter_base_architecture/features/products/blocs/products_event.dart';
-import 'package:flutter_base_architecture/features/products/blocs/products_state.dart';
-import 'package:flutter_base_architecture/features/products/data/products_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
+import '../data/products_repository.dart';
 import '../models/products.dart';
+import '../models/products_filter.dart';
+import 'products_event.dart';
+import 'products_state.dart';
 
 class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
   ProductsBloc(this.productsRepository) : super(const ProductsState.initial()) {
     on<ProductsEvent>((event, emit) async {
       await event.when(
         fetchFirst:
-            (pageSize, sort, categoryId, search) => _onFetchFirst(
+            (pageSize, sort, search, filter) => _onFetchFirst(
               emit,
               pageSize: pageSize,
               sort: sort,
-              categoryId: categoryId,
               search: search,
+              filter: filter,
             ),
         loadMore: () => _onLoadMore(emit),
         refresh: () => _onRefresh(emit),
@@ -32,20 +32,20 @@ class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
 
   int _lastPageSize = 25;
   String? _lastSort;
-  int? _lastCategoryId;
   String? _lastSearch;
+  ProductsFilter? _lastFilter;
 
   Future<void> _onFetchFirst(
     Emitter<ProductsState> emit, {
     required int pageSize,
     String? sort,
-    int? categoryId,
     String? search,
+    ProductsFilter? filter,
   }) async {
     _lastPageSize = pageSize;
     _lastSort = sort;
-    _lastCategoryId = categoryId;
     _lastSearch = search;
+    _lastFilter = filter;
 
     emit(const ProductsState.loading());
 
@@ -55,8 +55,8 @@ class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
         pageSize: pageSize,
         withTotal: false,
         sort: sort,
-        categoryId: categoryId,
         search: search,
+        filter: filter,
       );
 
       _cache
@@ -64,7 +64,6 @@ class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
         ..addAll(result);
 
       _page = 1;
-
       _hasMore = result.length == pageSize;
 
       emit(ProductsState.success(products: List.unmodifiable(_cache)));
@@ -88,7 +87,7 @@ class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
         sort: _lastSort,
         withTotal: false,
         search: _lastSearch,
-        categoryId: _lastCategoryId,
+        filter: _lastFilter,
       );
 
       _cache.addAll(result);
@@ -112,7 +111,7 @@ class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
         withTotal: false,
         sort: _lastSort,
         search: _lastSearch,
-        categoryId: _lastCategoryId,
+        filter: _lastFilter,
       );
 
       _cache

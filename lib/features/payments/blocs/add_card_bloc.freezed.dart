@@ -1,0 +1,417 @@
+// coverage:ignore-file
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint
+// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
+
+part of 'add_card_bloc.dart';
+
+// **************************************************************************
+// FreezedGenerator
+// **************************************************************************
+
+T _$identity<T>(T value) => value;
+
+final _privateConstructorUsedError = UnsupportedError(
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
+
+/// @nodoc
+mixin _$AddCardEvent {
+  String get cardholderName => throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(String cardholderName) submit,
+  }) => throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(String cardholderName)? submit,
+  }) => throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(String cardholderName)? submit,
+    required TResult orElse(),
+  }) => throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(_Submit value) submit,
+  }) => throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_Submit value)? submit,
+  }) => throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(_Submit value)? submit,
+    required TResult orElse(),
+  }) => throw _privateConstructorUsedError;
+
+  /// Create a copy of AddCardEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  $AddCardEventCopyWith<AddCardEvent> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $AddCardEventCopyWith<$Res> {
+  factory $AddCardEventCopyWith(
+    AddCardEvent value,
+    $Res Function(AddCardEvent) then,
+  ) = _$AddCardEventCopyWithImpl<$Res, AddCardEvent>;
+  @useResult
+  $Res call({String cardholderName});
+}
+
+/// @nodoc
+class _$AddCardEventCopyWithImpl<$Res, $Val extends AddCardEvent>
+    implements $AddCardEventCopyWith<$Res> {
+  _$AddCardEventCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  /// Create a copy of AddCardEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({Object? cardholderName = null}) {
+    return _then(
+      _value.copyWith(
+            cardholderName:
+                null == cardholderName
+                    ? _value.cardholderName
+                    : cardholderName // ignore: cast_nullable_to_non_nullable
+                        as String,
+          )
+          as $Val,
+    );
+  }
+}
+
+/// @nodoc
+abstract class _$$SubmitImplCopyWith<$Res>
+    implements $AddCardEventCopyWith<$Res> {
+  factory _$$SubmitImplCopyWith(
+    _$SubmitImpl value,
+    $Res Function(_$SubmitImpl) then,
+  ) = __$$SubmitImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({String cardholderName});
+}
+
+/// @nodoc
+class __$$SubmitImplCopyWithImpl<$Res>
+    extends _$AddCardEventCopyWithImpl<$Res, _$SubmitImpl>
+    implements _$$SubmitImplCopyWith<$Res> {
+  __$$SubmitImplCopyWithImpl(
+    _$SubmitImpl _value,
+    $Res Function(_$SubmitImpl) _then,
+  ) : super(_value, _then);
+
+  /// Create a copy of AddCardEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({Object? cardholderName = null}) {
+    return _then(
+      _$SubmitImpl(
+        cardholderName:
+            null == cardholderName
+                ? _value.cardholderName
+                : cardholderName // ignore: cast_nullable_to_non_nullable
+                    as String,
+      ),
+    );
+  }
+}
+
+/// @nodoc
+
+class _$SubmitImpl implements _Submit {
+  const _$SubmitImpl({required this.cardholderName});
+
+  @override
+  final String cardholderName;
+
+  @override
+  String toString() {
+    return 'AddCardEvent.submit(cardholderName: $cardholderName)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$SubmitImpl &&
+            (identical(other.cardholderName, cardholderName) ||
+                other.cardholderName == cardholderName));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, cardholderName);
+
+  /// Create a copy of AddCardEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$SubmitImplCopyWith<_$SubmitImpl> get copyWith =>
+      __$$SubmitImplCopyWithImpl<_$SubmitImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(String cardholderName) submit,
+  }) {
+    return submit(cardholderName);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(String cardholderName)? submit,
+  }) {
+    return submit?.call(cardholderName);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(String cardholderName)? submit,
+    required TResult orElse(),
+  }) {
+    if (submit != null) {
+      return submit(cardholderName);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(_Submit value) submit,
+  }) {
+    return submit(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_Submit value)? submit,
+  }) {
+    return submit?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(_Submit value)? submit,
+    required TResult orElse(),
+  }) {
+    if (submit != null) {
+      return submit(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class _Submit implements AddCardEvent {
+  const factory _Submit({required final String cardholderName}) = _$SubmitImpl;
+
+  @override
+  String get cardholderName;
+
+  /// Create a copy of AddCardEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$SubmitImplCopyWith<_$SubmitImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+mixin _$AddCardState {
+  bool get loading => throw _privateConstructorUsedError;
+  String? get error => throw _privateConstructorUsedError;
+  bool get success => throw _privateConstructorUsedError;
+
+  /// Create a copy of AddCardState
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  $AddCardStateCopyWith<AddCardState> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $AddCardStateCopyWith<$Res> {
+  factory $AddCardStateCopyWith(
+    AddCardState value,
+    $Res Function(AddCardState) then,
+  ) = _$AddCardStateCopyWithImpl<$Res, AddCardState>;
+  @useResult
+  $Res call({bool loading, String? error, bool success});
+}
+
+/// @nodoc
+class _$AddCardStateCopyWithImpl<$Res, $Val extends AddCardState>
+    implements $AddCardStateCopyWith<$Res> {
+  _$AddCardStateCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  /// Create a copy of AddCardState
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? loading = null,
+    Object? error = freezed,
+    Object? success = null,
+  }) {
+    return _then(
+      _value.copyWith(
+            loading:
+                null == loading
+                    ? _value.loading
+                    : loading // ignore: cast_nullable_to_non_nullable
+                        as bool,
+            error:
+                freezed == error
+                    ? _value.error
+                    : error // ignore: cast_nullable_to_non_nullable
+                        as String?,
+            success:
+                null == success
+                    ? _value.success
+                    : success // ignore: cast_nullable_to_non_nullable
+                        as bool,
+          )
+          as $Val,
+    );
+  }
+}
+
+/// @nodoc
+abstract class _$$AddCardStateImplCopyWith<$Res>
+    implements $AddCardStateCopyWith<$Res> {
+  factory _$$AddCardStateImplCopyWith(
+    _$AddCardStateImpl value,
+    $Res Function(_$AddCardStateImpl) then,
+  ) = __$$AddCardStateImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({bool loading, String? error, bool success});
+}
+
+/// @nodoc
+class __$$AddCardStateImplCopyWithImpl<$Res>
+    extends _$AddCardStateCopyWithImpl<$Res, _$AddCardStateImpl>
+    implements _$$AddCardStateImplCopyWith<$Res> {
+  __$$AddCardStateImplCopyWithImpl(
+    _$AddCardStateImpl _value,
+    $Res Function(_$AddCardStateImpl) _then,
+  ) : super(_value, _then);
+
+  /// Create a copy of AddCardState
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? loading = null,
+    Object? error = freezed,
+    Object? success = null,
+  }) {
+    return _then(
+      _$AddCardStateImpl(
+        loading:
+            null == loading
+                ? _value.loading
+                : loading // ignore: cast_nullable_to_non_nullable
+                    as bool,
+        error:
+            freezed == error
+                ? _value.error
+                : error // ignore: cast_nullable_to_non_nullable
+                    as String?,
+        success:
+            null == success
+                ? _value.success
+                : success // ignore: cast_nullable_to_non_nullable
+                    as bool,
+      ),
+    );
+  }
+}
+
+/// @nodoc
+
+class _$AddCardStateImpl implements _AddCardState {
+  const _$AddCardStateImpl({
+    this.loading = false,
+    this.error,
+    this.success = false,
+  });
+
+  @override
+  @JsonKey()
+  final bool loading;
+  @override
+  final String? error;
+  @override
+  @JsonKey()
+  final bool success;
+
+  @override
+  String toString() {
+    return 'AddCardState(loading: $loading, error: $error, success: $success)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$AddCardStateImpl &&
+            (identical(other.loading, loading) || other.loading == loading) &&
+            (identical(other.error, error) || other.error == error) &&
+            (identical(other.success, success) || other.success == success));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, loading, error, success);
+
+  /// Create a copy of AddCardState
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$AddCardStateImplCopyWith<_$AddCardStateImpl> get copyWith =>
+      __$$AddCardStateImplCopyWithImpl<_$AddCardStateImpl>(this, _$identity);
+}
+
+abstract class _AddCardState implements AddCardState {
+  const factory _AddCardState({
+    final bool loading,
+    final String? error,
+    final bool success,
+  }) = _$AddCardStateImpl;
+
+  @override
+  bool get loading;
+  @override
+  String? get error;
+  @override
+  bool get success;
+
+  /// Create a copy of AddCardState
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$AddCardStateImplCopyWith<_$AddCardStateImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}

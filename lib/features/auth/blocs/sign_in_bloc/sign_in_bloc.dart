@@ -46,6 +46,7 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
       final res = await _repo.login(
         identifier: state.identifier.trim(),
         password: state.password,
+        rememberMe: state.rememberMe, // ВАЖЛИВО
       );
       emit(state.copyWith(status: SignInStatus.success, response: res));
     } on AuthException catch (err) {

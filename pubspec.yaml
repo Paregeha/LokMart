@@ -5,7 +5,7 @@ publish_to: 'none'
 version: 1.0.0+1
 
 environment:
-  sdk: ^3.7.2
+  sdk: ">=3.7.2 <4.0.0"
 
 dependencies:
   flutter:
@@ -32,31 +32,38 @@ dependencies:
 
   # Auth & Storage
   flutter_secure_storage: ^9.0.0
+  jwt_decode: ^0.3.1
   formz: ^0.6.1
 
-  # Optional HTTP client (still OK)
+  # Optional HTTP client
   chopper: ^8.4.0
 
-dev_dependencies:
+  flutter_map: ^7.0.0
+  latlong2: ^0.9.0
 
+  shared_preferences: ^2.2.2
+
+  # Payments
+  flutter_stripe: ^11.0.0
+
+dev_dependencies:
   flutter_lints: ^6.0.0
 
-  # ✅ Сумісні версії Widgetbook із build 2.x
+  flutter_gen_runner: ^5.7.0
+
+
+  # ✅ Widgetbook
   widgetbook: ^3.7.0
   widgetbook_annotation: ^3.7.0
   widgetbook_generator: ^3.7.0
 
-  # Code generation (Freezed / JSON)
+  # ✅ Code generation
   build_runner: ^2.4.8
   freezed: ^2.5.4
   json_serializable: ^6.8.0
 
-  # Інші утиліти
+  # Utils
   rename: ^3.1.0
-
-  # ❌ Тимчасово відключено, бо вимагають build 3.x+
-  # swagger_dart_code_generator: ^4.0.0
-  # chopper_generator: ^8.4.0
 
 flutter:
   uses-material-design: true
@@ -87,3 +94,9 @@ flutter:
           weight: 800
         - asset: assets/fonts/poppins/Poppins-Black.ttf
           weight: 900
+
+flutter_gen:
+  output: lib/gen/
+  line_length: 80
+  integrations:
+    flutter_svg: true

@@ -23,11 +23,7 @@ class CustomFilterWidget extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.all(15.0),
           child: Center(
-            child: SvgPicture.asset(
-              Assets.icons.icFilter,
-              width: 24.0,
-              height: 24.0,
-            ),
+            child: Assets.icons.icFilter.svg(width: 24.0, height: 24.0),
           ),
         ),
       ),

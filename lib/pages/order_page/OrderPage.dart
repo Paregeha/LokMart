@@ -28,8 +28,7 @@ class _OrderPageState extends State<OrderPage> {
           IconButton(
             padding: EdgeInsets.zero,
             onPressed: () {},
-            icon: SvgPicture.asset(
-              Assets.icons.icSearch,
+            icon: Assets.icons.icSearch.svg(
               width: 24.0,
               height: 24.0,
               colorFilter: ColorFilter.mode(AppColors.dark, BlendMode.srcIn),

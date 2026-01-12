@@ -32,6 +32,7 @@ mixin _$Products {
   int? get categoryId => throw _privateConstructorUsedError;
   String? get categoryName => throw _privateConstructorUsedError;
   String? get documentId => throw _privateConstructorUsedError;
+  String? get description => throw _privateConstructorUsedError;
   double? get raiting => throw _privateConstructorUsedError;
 
   /// Serializes this Products to a JSON map.
@@ -61,6 +62,7 @@ abstract class $ProductsCopyWith<$Res> {
     int? categoryId,
     String? categoryName,
     String? documentId,
+    String? description,
     double? raiting,
   });
 }
@@ -91,6 +93,7 @@ class _$ProductsCopyWithImpl<$Res, $Val extends Products>
     Object? categoryId = freezed,
     Object? categoryName = freezed,
     Object? documentId = freezed,
+    Object? description = freezed,
     Object? raiting = freezed,
   }) {
     return _then(
@@ -150,6 +153,11 @@ class _$ProductsCopyWithImpl<$Res, $Val extends Products>
                     ? _value.documentId
                     : documentId // ignore: cast_nullable_to_non_nullable
                         as String?,
+            description:
+                freezed == description
+                    ? _value.description
+                    : description // ignore: cast_nullable_to_non_nullable
+                        as String?,
             raiting:
                 freezed == raiting
                     ? _value.raiting
@@ -182,6 +190,7 @@ abstract class _$$ProductsImplCopyWith<$Res>
     int? categoryId,
     String? categoryName,
     String? documentId,
+    String? description,
     double? raiting,
   });
 }
@@ -211,6 +220,7 @@ class __$$ProductsImplCopyWithImpl<$Res>
     Object? categoryId = freezed,
     Object? categoryName = freezed,
     Object? documentId = freezed,
+    Object? description = freezed,
     Object? raiting = freezed,
   }) {
     return _then(
@@ -270,6 +280,11 @@ class __$$ProductsImplCopyWithImpl<$Res>
                 ? _value.documentId
                 : documentId // ignore: cast_nullable_to_non_nullable
                     as String?,
+        description:
+            freezed == description
+                ? _value.description
+                : description // ignore: cast_nullable_to_non_nullable
+                    as String?,
         raiting:
             freezed == raiting
                 ? _value.raiting
@@ -295,6 +310,7 @@ class _$ProductsImpl implements _Products {
     this.categoryId,
     this.categoryName,
     this.documentId,
+    this.description,
     this.raiting,
   });
 
@@ -324,11 +340,13 @@ class _$ProductsImpl implements _Products {
   @override
   final String? documentId;
   @override
+  final String? description;
+  @override
   final double? raiting;
 
   @override
   String toString() {
-    return 'Products(id: $id, name: $name, price: $price, count: $count, priceWithDiscount: $priceWithDiscount, isDiscount: $isDiscount, slug: $slug, photoUrl: $photoUrl, categoryId: $categoryId, categoryName: $categoryName, documentId: $documentId, raiting: $raiting)';
+    return 'Products(id: $id, name: $name, price: $price, count: $count, priceWithDiscount: $priceWithDiscount, isDiscount: $isDiscount, slug: $slug, photoUrl: $photoUrl, categoryId: $categoryId, categoryName: $categoryName, documentId: $documentId, description: $description, raiting: $raiting)';
   }
 
   @override
@@ -353,6 +371,8 @@ class _$ProductsImpl implements _Products {
                 other.categoryName == categoryName) &&
             (identical(other.documentId, documentId) ||
                 other.documentId == documentId) &&
+            (identical(other.description, description) ||
+                other.description == description) &&
             (identical(other.raiting, raiting) || other.raiting == raiting));
   }
 
@@ -371,6 +391,7 @@ class _$ProductsImpl implements _Products {
     categoryId,
     categoryName,
     documentId,
+    description,
     raiting,
   );
 
@@ -401,6 +422,7 @@ abstract class _Products implements Products {
     final int? categoryId,
     final String? categoryName,
     final String? documentId,
+    final String? description,
     final double? raiting,
   }) = _$ProductsImpl;
 
@@ -429,6 +451,8 @@ abstract class _Products implements Products {
   String? get categoryName;
   @override
   String? get documentId;
+  @override
+  String? get description;
   @override
   double? get raiting;
 
