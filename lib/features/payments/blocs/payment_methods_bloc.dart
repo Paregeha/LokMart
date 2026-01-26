@@ -18,9 +18,9 @@ class PaymentMethodsBloc
   ) async {
     await event.map<Future<void>>(
       fetch: (_) => _onFetch(emit),
-      select: (e) => _onSelect(e.id, emit),
-      setDefault: (e) => _onSetDefault(e.id, emit),
-      delete: (e) => _onDelete(e.id, emit),
+      select: (e) async => emit(state.copyWith(selectedId: e.id)),
+      setDefault: (e) => _onSetDefault(e.documentId, emit),
+      delete: (e) => _onDelete(e.documentId, emit),
     );
   }
 
@@ -34,14 +34,19 @@ class PaymentMethodsBloc
               ? cards.firstWhere((c) => c.isDefault)
               : null;
 
+      final selectedStillExists =
+          state.selectedId != null &&
+          cards.any((c) => c.id == state.selectedId);
+
       emit(
         state.copyWith(
           loading: false,
           cards: cards,
           selectedId:
-              state.selectedId ??
-              defaultCard?.id ??
-              (cards.isNotEmpty ? cards.first.id : null),
+              selectedStillExists
+                  ? state.selectedId
+                  : (defaultCard?.id ??
+                      (cards.isNotEmpty ? cards.first.id : null)),
         ),
       );
     } catch (e) {
@@ -49,22 +54,24 @@ class PaymentMethodsBloc
     }
   }
 
-  Future<void> _onSelect(int id, Emitter<PaymentMethodsState> emit) async {
-    emit(state.copyWith(selectedId: id));
-  }
-
-  Future<void> _onSetDefault(int id, Emitter<PaymentMethodsState> emit) async {
+  Future<void> _onSetDefault(
+    String documentId,
+    Emitter<PaymentMethodsState> emit,
+  ) async {
     try {
-      await repo.setDefaultCard(id: id);
+      await repo.setDefaultCard(documentId: documentId);
       add(const PaymentMethodsEvent.fetch());
     } catch (e) {
       emit(state.copyWith(error: e.toString()));
     }
   }
 
-  Future<void> _onDelete(int id, Emitter<PaymentMethodsState> emit) async {
+  Future<void> _onDelete(
+    String documentId,
+    Emitter<PaymentMethodsState> emit,
+  ) async {
     try {
-      await repo.deleteCard(id: id);
+      await repo.deleteCard(documentId: documentId);
       add(const PaymentMethodsEvent.fetch());
     } catch (e) {
       emit(state.copyWith(error: e.toString()));

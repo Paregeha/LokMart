@@ -1,5 +1,4 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'strapi_media.dart';
 
 part 'category.freezed.dart';
 part 'category.g.dart';
@@ -19,7 +18,6 @@ class Category with _$Category {
   factory Category.fromJson(Map<String, dynamic> json) =>
       _$CategoryFromJson(json);
 
-  /// Конвертація саме з формату Strapi
   factory Category.fromStrapi(Map<String, dynamic> json) {
     final hasAttrs = json['attributes'] is Map<String, dynamic>;
     final src = hasAttrs ? (json['attributes'] as Map<String, dynamic>) : json;

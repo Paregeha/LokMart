@@ -1,8 +1,13 @@
+import 'dart:async';
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
-import 'package:latlong2/latlong.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:go_router/go_router.dart';
+import 'package:http/http.dart' as http;
+import 'package:latlong2/latlong.dart';
 
 import '../../gen/assets.gen.dart';
 import '../../resources/app_colors.dart';
@@ -17,15 +22,156 @@ class TrackOrderPage extends StatefulWidget {
 }
 
 class _TrackOrderPageState extends State<TrackOrderPage> {
-  final LatLng start = const LatLng(40.7440, -73.9950);
-  final LatLng mid1 = const LatLng(40.7419, -73.9900);
-  final LatLng mid2 = const LatLng(40.7396, -73.9868);
-  final LatLng end = const LatLng(40.7360, -73.9820);
+  final _mapController = MapController();
+
+  LatLng? _client;
+  LatLng? _courier;
+  List<LatLng> _route = [];
+
+  bool _loading = true;
+  String? _error;
+
+  Timer? _tick;
+  int _routeIndex = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _init();
+  }
+
+  @override
+  void dispose() {
+    _tick?.cancel();
+    super.dispose();
+  }
+
+  Future<void> _init() async {
+    setState(() {
+      _loading = true;
+      _error = null;
+    });
+
+    try {
+      final client = await _getMyLocation();
+      _client = client;
+
+      _courier = LatLng(client.latitude + 0.01, client.longitude - 0.01);
+
+      _route = await _fetchRouteOSRM(from: _courier!, to: _client!);
+
+      _mapController.move(_client!, 14);
+
+      _startCourierSimulation();
+
+      setState(() {
+        _loading = false;
+      });
+    } catch (e) {
+      setState(() {
+        _loading = false;
+        _error = e.toString();
+      });
+    }
+  }
+
+  Future<LatLng> _getMyLocation() async {
+    bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      throw Exception('Location services are disabled');
+    }
+
+    LocationPermission perm = await Geolocator.checkPermission();
+    if (perm == LocationPermission.denied) {
+      perm = await Geolocator.requestPermission();
+    }
+    if (perm == LocationPermission.denied) {
+      throw Exception('Location permission denied');
+    }
+    if (perm == LocationPermission.deniedForever) {
+      throw Exception('Location permission denied forever');
+    }
+
+    final pos = await Geolocator.getCurrentPosition(
+      desiredAccuracy: LocationAccuracy.high,
+    );
+    return LatLng(pos.latitude, pos.longitude);
+  }
+
+  Future<List<LatLng>> _fetchRouteOSRM({
+    required LatLng from,
+    required LatLng to,
+  }) async {
+    final url =
+        'https://router.project-osrm.org/route/v1/driving/'
+        '${from.longitude},${from.latitude};${to.longitude},${to.latitude}'
+        '?overview=full&geometries=geojson';
+
+    final res = await http.get(Uri.parse(url));
+    if (res.statusCode != 200) {
+      throw Exception('OSRM error: ${res.statusCode} ${res.body}');
+    }
+
+    final json = jsonDecode(res.body) as Map<String, dynamic>;
+    final routes = (json['routes'] as List?) ?? [];
+    if (routes.isEmpty) throw Exception('No routes returned');
+
+    final geom = (routes.first as Map<String, dynamic>)['geometry'];
+    final coords = (geom as Map<String, dynamic>)['coordinates'] as List;
+
+    return coords.map((p) {
+      final lon = (p as List)[0] as num;
+      final lat = p[1] as num;
+      return LatLng(lat.toDouble(), lon.toDouble());
+    }).toList();
+  }
+
+  void _startCourierSimulation() {
+    _tick?.cancel();
+    if (_route.length < 2) return;
+
+    _routeIndex = 0;
+
+    _tick = Timer.periodic(const Duration(milliseconds: 700), (_) {
+      if (!mounted) return;
+      if (_routeIndex >= _route.length) {
+        _tick?.cancel();
+        return;
+      }
+
+      setState(() {
+        _courier = _route[_routeIndex];
+        _routeIndex += 1;
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    final routePast = <LatLng>[start, mid1];
-    final routeActive = <LatLng>[mid1, mid2, end];
+    final client = _client;
+    final courier = _courier;
+
+    final markers = <Marker>[];
+    if (client != null) {
+      markers.add(
+        Marker(
+          point: client,
+          width: 44,
+          height: 44,
+          child: _pin(color: const Color(0xFF1CAF5E), icon: Icons.person_pin),
+        ),
+      );
+    }
+    if (courier != null) {
+      markers.add(
+        Marker(
+          point: courier,
+          width: 44,
+          height: 44,
+          child: _pin(color: AppColors.orange, icon: Icons.delivery_dining),
+        ),
+      );
+    }
 
     return Scaffold(
       backgroundColor: AppColors.white,
@@ -38,8 +184,6 @@ class _TrackOrderPageState extends State<TrackOrderPage> {
             fontFamily: AppFonts.fontFamily,
             fontWeight: AppFonts.w600semiBold,
             fontSize: 22.0,
-            height: 1,
-            letterSpacing: 0,
             color: AppColors.dark,
           ),
         ),
@@ -52,34 +196,75 @@ class _TrackOrderPageState extends State<TrackOrderPage> {
             height: 24,
           ),
         ),
+        actions: [
+          IconButton(
+            tooltip: 'Refresh location',
+            onPressed: _init,
+            icon: const Icon(Icons.refresh, color: AppColors.orange, size: 26),
+          ),
+          const SizedBox(width: 8),
+        ],
       ),
       body: Stack(
         children: [
           FlutterMap(
-            options: MapOptions(initialCenter: mid1, initialZoom: 14),
+            mapController: _mapController,
+            options: MapOptions(
+              initialCenter: client ?? const LatLng(40.7419, -73.9900),
+              initialZoom: 14,
+            ),
             children: [
               TileLayer(
                 urlTemplate:
                     'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',
                 subdomains: const ['a', 'b', 'c', 'd'],
                 userAgentPackageName: 'com.example.app',
+                retinaMode: RetinaMode.isHighDensity(context),
               ),
-              MarkerLayer(markers: []),
+
+              if (_route.isNotEmpty)
+                PolylineLayer(
+                  polylines: [
+                    Polyline(
+                      points: _route,
+                      strokeWidth: 5,
+                      color: AppColors.orange.withValues(alpha: 0.75),
+                    ),
+                  ],
+                ),
+
+              MarkerLayer(markers: markers),
             ],
           ),
+
+          if (_loading)
+            const Positioned(
+              top: 16,
+              left: 16,
+              right: 16,
+              child: _TopMessage(text: 'Loading map & route...'),
+            ),
+
+          if (_error != null)
+            Positioned(
+              top: 16,
+              left: 16,
+              right: 16,
+              child: _TopMessage(text: _error!, isError: true),
+            ),
 
           Align(
             alignment: Alignment.bottomCenter,
             child: Container(
               height: 150.0,
               padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(24.0),
                   topRight: Radius.circular(24.0),
                 ),
-                boxShadow: const [
+                boxShadow: [
                   BoxShadow(
                     color: Colors.black12,
                     blurRadius: 24,
@@ -97,19 +282,15 @@ class _TrackOrderPageState extends State<TrackOrderPage> {
                       borderRadius: BorderRadius.circular(6),
                     ),
                   ),
-                  SizedBox(height: 21.0),
+                  const SizedBox(height: 21.0),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Row(
                         children: [
-                          Container(
+                          SizedBox(
                             width: 56.0,
                             height: 56.0,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(12.0),
-                            ),
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(12.0),
                               child: Assets.images.man.image(
@@ -117,11 +298,10 @@ class _TrackOrderPageState extends State<TrackOrderPage> {
                               ),
                             ),
                           ),
-                          SizedBox(width: 21.0),
+                          const SizedBox(width: 21.0),
                           Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
+                            children: const [
                               Text(
                                 'Devin Joseph',
                                 style: TextStyle(
@@ -132,17 +312,8 @@ class _TrackOrderPageState extends State<TrackOrderPage> {
                                   color: AppColors.dark,
                                 ),
                               ),
-                              Row(
-                                children: [
-                                  Icon(
-                                    Icons.check_circle,
-                                    color: Color(0xFF1CAF5E),
-                                    size: 16.0,
-                                  ),
-                                  SizedBox(width: 10.0),
-                                  Text('ID 2445556'),
-                                ],
-                              ),
+                              SizedBox(height: 6),
+                              Text('ID 2445556'),
                             ],
                           ),
                         ],
@@ -150,7 +321,7 @@ class _TrackOrderPageState extends State<TrackOrderPage> {
                       Row(
                         children: [
                           SvgPicture.asset(Assets.icons.phoneCall.path),
-                          SizedBox(width: 23.0),
+                          const SizedBox(width: 23.0),
                           SvgPicture.asset(Assets.icons.chat.path),
                         ],
                       ),
@@ -161,6 +332,44 @@ class _TrackOrderPageState extends State<TrackOrderPage> {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _pin({required Color color, required IconData icon}) {
+    return Container(
+      decoration: BoxDecoration(
+        color: color,
+        shape: BoxShape.circle,
+        boxShadow: const [
+          BoxShadow(
+            color: Colors.black26,
+            blurRadius: 10,
+            offset: Offset(0, 6),
+          ),
+        ],
+      ),
+      child: Icon(icon, color: Colors.white, size: 22),
+    );
+  }
+}
+
+class _TopMessage extends StatelessWidget {
+  const _TopMessage({required this.text, this.isError = false});
+
+  final String text;
+  final bool isError;
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      elevation: 6,
+      borderRadius: BorderRadius.circular(14),
+      color:
+          isError ? Colors.red.shade600 : Colors.black.withValues(alpha: 0.75),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+        child: Text(text, style: const TextStyle(color: Colors.white)),
       ),
     );
   }

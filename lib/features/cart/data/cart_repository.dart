@@ -1,4 +1,3 @@
-// lib/features/cart/data/cart_repository.dart
 import 'package:dio/dio.dart';
 
 import '../../../services/dio_service.dart';
@@ -54,9 +53,10 @@ class CartRepository {
     final qp = <String, dynamic>{
       'filters[$_userField][id][\$eq]': userId,
       'sort': 'createdAt:desc',
-      'fields[0]': 'count',
 
-      // populate product
+      'fields[0]': 'count',
+      'fields[1]': 'documentId',
+
       'populate[product][fields][0]': 'name',
       'populate[product][fields][1]': 'slug',
       'populate[product][fields][2]': 'price',
@@ -85,7 +85,10 @@ class CartRepository {
       queryParameters: <String, dynamic>{
         'filters[$_userField][id][\$eq]': userId,
         'filters[product][id][\$eq]': productId,
+
         'fields[0]': 'count',
+        'fields[1]': 'documentId',
+
         'pagination[pageSize]': 1,
       },
     );
@@ -95,11 +98,11 @@ class CartRepository {
 
     if (rows.isNotEmpty) {
       final first = rows.first as Map<String, dynamic>;
-
-      // ✅ Strapi v5 update by documentId
       final docId = _docIdFromRow(first);
       if (docId.isEmpty) {
-        throw Exception('CartItem documentId is empty.');
+        throw Exception(
+          'CartItem documentId is empty. Add fields[]=documentId.',
+        );
       }
 
       final attrsRaw = first['attributes'];
@@ -132,7 +135,6 @@ class CartRepository {
   }) async {
     final safe = count < 1 ? 1 : count;
 
-    // ✅ Strapi v5: PUT by documentId
     await _dio.put(
       '/cart-items/$cartItemDocumentId',
       data: {
@@ -142,7 +144,33 @@ class CartRepository {
   }
 
   Future<void> removeItem(String cartItemDocumentId) async {
-    // ✅ Strapi v5: DELETE by documentId
     await _dio.delete('/cart-items/$cartItemDocumentId');
+  }
+
+  Future<void> clearMyCart() async {
+    final userId = await _meId();
+
+    final res = await _dio.get(
+      '/cart-items',
+      queryParameters: <String, dynamic>{
+        'filters[$_userField][id][\$eq]': userId,
+        'fields[0]': 'documentId',
+        'pagination[pageSize]': 500,
+      },
+    );
+
+    final body = res.data as Map<String, dynamic>;
+    final rows = (body['data'] as List?) ?? const [];
+
+    for (final r in rows) {
+      if (r is! Map) continue;
+      final row = r.cast<String, dynamic>();
+      final docId = _docIdFromRow(row);
+      if (docId.isEmpty) continue;
+
+      try {
+        await removeItem(docId);
+      } catch (_) {}
+    }
   }
 }

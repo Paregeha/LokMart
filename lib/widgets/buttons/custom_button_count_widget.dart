@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_base_architecture/resources/app_colors.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../gen/assets.gen.dart';
 
@@ -11,15 +10,12 @@ class CustomButtonCountWidget extends StatefulWidget {
     required this.widthCount,
     required this.paddingCount,
 
-    // ✅ controlled value (якщо передав — віджет НЕ тримає стан сам)
     this.value,
 
-    // ✅ callbacks
     this.onChanged,
     this.onInc,
     this.onDec,
 
-    // ✅ limits
     this.min = 1,
     this.max,
   });
@@ -31,7 +27,6 @@ class CustomButtonCountWidget extends StatefulWidget {
   final int? value;
   final ValueChanged<int>? onChanged;
 
-  /// optional: зручно для CartBloc (натиснув + => dispatch inc)
   final VoidCallback? onInc;
   final VoidCallback? onDec;
 
@@ -66,7 +61,6 @@ class _CustomButtonCountWidgetState extends State<CustomButtonCountWidget> {
   void didUpdateWidget(covariant CustomButtonCountWidget oldWidget) {
     super.didUpdateWidget(oldWidget);
 
-    // якщо керований — синхронізуємося з value
     if (_isControlled && widget.value != oldWidget.value) {
       _count = (widget.value ?? widget.min).clamp(
         widget.min,
@@ -78,7 +72,6 @@ class _CustomButtonCountWidgetState extends State<CustomButtonCountWidget> {
   void _emitChanged(int next) {
     final clamped = next.clamp(widget.min, widget.max ?? 1 << 30);
 
-    // якщо НЕ керований — оновлюємо локально
     if (!_isControlled) {
       setState(() => _count = clamped);
     }
@@ -87,7 +80,6 @@ class _CustomButtonCountWidgetState extends State<CustomButtonCountWidget> {
   }
 
   void _handleDec() {
-    // якщо дали onDec (CartBloc) — делегуємо туди
     if (widget.onDec != null) {
       widget.onDec!.call();
       return;

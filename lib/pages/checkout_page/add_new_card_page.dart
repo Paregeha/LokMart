@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_base_architecture/widgets/buttons/custom_button_widget.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
-import 'package:flutter_base_architecture/widgets/buttons/custom_button_widget.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../features/payments/blocs/add_card_bloc.dart';
@@ -52,7 +51,7 @@ class _AddNewCardPageState extends State<AddNewCardPage> {
             );
           }
           if (state.success) {
-            context.pop(); // повертаємось на Payment
+            context.pop();
           }
         },
         child: Scaffold(

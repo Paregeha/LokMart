@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_base_architecture/widgets/text_fields/custom_text_field_widget.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:widgetbook/widgetbook.dart';
 
 import '../../../gen/assets.gen.dart';

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_base_architecture/resources/app_colors.dart';
 import 'package:flutter_base_architecture/routes/app_routes.dart';
 import 'package:flutter_base_architecture/widgets/buttons/custom_button_widget.dart';
 import 'package:flutter_base_architecture/widgets/buttons/custom_square_check_box_widget.dart';
 import 'package:flutter_base_architecture/widgets/checkout/custom_checkout_widget.dart';
 import 'package:flutter_base_architecture/widgets/text_fields/custom_text_field_widget.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 
@@ -72,6 +72,7 @@ class _CheckoutAddressPageState extends State<CheckoutAddressPage> {
         _countryCtrl.text = def.country;
       }
     } catch (_) {
+      // ignore
     } finally {
       if (mounted) setState(() => _loadingPrefill = false);
     }
@@ -123,9 +124,15 @@ class _CheckoutAddressPageState extends State<CheckoutAddressPage> {
   Future<void> _onNext() async {
     if (!_validate()) return;
 
-    // якщо чекбокс вимкнений — просто йдемо далі, нічого не зберігаємо
     if (!_saveAddress) {
-      context.push(AppRoutes.checkoutPayment);
+      final docId = _defaultAddress?.documentId ?? '';
+      if (docId.trim().isEmpty) {
+        _showError(
+          'No saved address found. Please enable "Save shipping address" once.',
+        );
+        return;
+      }
+      context.push(AppRoutes.checkoutPayment, extra: docId);
       return;
     }
 
@@ -133,8 +140,6 @@ class _CheckoutAddressPageState extends State<CheckoutAddressPage> {
     try {
       final repo = context.read<AddressRepository>();
 
-      // Якщо є default — оновлюємо його (PUT по documentId)
-      // Якщо нема — створюємо новий (POST)
       final addr = Address(
         id: _defaultAddress?.id ?? 0,
         documentId: _defaultAddress?.documentId ?? '',
@@ -150,9 +155,17 @@ class _CheckoutAddressPageState extends State<CheckoutAddressPage> {
 
       await repo.saveAsDefault(addr);
 
-      // після save — можна підтягнути дефолт знову (щоб documentId точно був актуальний)
-      // але це необовʼязково. Залишаю легкий варіант:
-      context.push(AppRoutes.checkoutPayment);
+      final savedDefault = await repo.fetchDefault();
+      final docId = savedDefault?.documentId ?? '';
+
+      if (docId.trim().isEmpty) {
+        _showError(
+          'Address saved, but documentId is missing from API response.',
+        );
+        return;
+      }
+
+      context.push(AppRoutes.checkoutPayment, extra: docId);
     } catch (e) {
       _showError(e.toString());
     } finally {

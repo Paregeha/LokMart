@@ -326,7 +326,7 @@ class _SearchPageState extends State<SearchPage> {
                           padding: const EdgeInsets.only(top: 8),
                           itemCount: products.length,
                           separatorBuilder:
-                              (_, __) => const SizedBox(height: 16),
+                              (_, _) => const SizedBox(height: 16),
                           itemBuilder:
                               (_, i) =>
                                   CustomItemCartWidget(products: products[i]),

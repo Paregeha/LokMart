@@ -3,9 +3,9 @@ import 'package:flutter_base_architecture/gen/assets.gen.dart';
 import 'package:flutter_base_architecture/resources/app_colors.dart';
 import 'package:flutter_base_architecture/resources/app_fonts.dart';
 import 'package:flutter_base_architecture/widgets/cart/custom_item_cart_widget.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../features/category/models/category.dart';
 import '../../features/products/blocs/products_bloc.dart';

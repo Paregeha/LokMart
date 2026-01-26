@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_base_architecture/features/cart/blocs/cart_bloc.dart';
+import 'package:flutter_base_architecture/features/cart/blocs/cart_event.dart';
+import 'package:flutter_base_architecture/features/products/data/products_repository.dart';
+import 'package:flutter_base_architecture/features/products/models/products.dart';
 import 'package:flutter_base_architecture/gen/assets.gen.dart';
 import 'package:flutter_base_architecture/resources/app_colors.dart';
 import 'package:flutter_base_architecture/resources/app_fonts.dart';
@@ -6,14 +10,9 @@ import 'package:flutter_base_architecture/routes/app_routes.dart';
 import 'package:flutter_base_architecture/widgets/buttons/custom_button_count_widget.dart';
 import 'package:flutter_base_architecture/widgets/buttons/custom_button_widget.dart';
 import 'package:flutter_base_architecture/widgets/buttons/custom_related_product.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-
-import 'package:flutter_base_architecture/features/products/data/products_repository.dart';
-import 'package:flutter_base_architecture/features/products/models/products.dart';
-import 'package:flutter_base_architecture/features/cart/blocs/cart_bloc.dart';
-import 'package:flutter_base_architecture/features/cart/blocs/cart_event.dart';
 
 class DetailInformationPage extends StatefulWidget {
   const DetailInformationPage({super.key, required this.documentId});
@@ -53,7 +52,6 @@ class _DetailInformationPageState extends State<DetailInformationPage> {
         centerTitle: false,
       ),
 
-      // ✅ UI не змінюю — тільки логіку onPressed
       bottomNavigationBar: SafeArea(
         child: Container(
           padding: const EdgeInsets.fromLTRB(20, 12, 20, 12),
@@ -61,7 +59,7 @@ class _DetailInformationPageState extends State<DetailInformationPage> {
             color: AppColors.white,
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.06),
+                color: Colors.black.withValues(alpha: 0.06),
                 blurRadius: 12,
                 offset: const Offset(0, -4),
               ),
@@ -152,7 +150,7 @@ class _DetailInformationPageState extends State<DetailInformationPage> {
                                 product.photoUrl!,
                                 fit: BoxFit.cover,
                                 errorBuilder:
-                                    (_, __, ___) => Assets.images.banana.image(
+                                    (_, _, _) => Assets.images.banana.image(
                                       fit: BoxFit.cover,
                                     ),
                               )
@@ -348,7 +346,7 @@ class _DetailInformationPageState extends State<DetailInformationPage> {
                       padding: EdgeInsets.symmetric(
                         horizontal: width < 360 ? 0 : 4,
                       ),
-                      separatorBuilder: (_, __) => const SizedBox(width: 12.0),
+                      separatorBuilder: (_, _) => const SizedBox(width: 12.0),
                       itemCount: 3,
                       itemBuilder: (_, i) => const CustomRelatedProduct(),
                     ),

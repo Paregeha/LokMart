@@ -24,6 +24,7 @@ mixin _$CartEvent {
     required TResult Function(CartItem item) inc,
     required TResult Function(CartItem item) dec,
     required TResult Function(String cartItemDocumentId) remove,
+    required TResult Function() clear,
   }) => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
@@ -32,6 +33,7 @@ mixin _$CartEvent {
     TResult? Function(CartItem item)? inc,
     TResult? Function(CartItem item)? dec,
     TResult? Function(String cartItemDocumentId)? remove,
+    TResult? Function()? clear,
   }) => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
@@ -40,6 +42,7 @@ mixin _$CartEvent {
     TResult Function(CartItem item)? inc,
     TResult Function(CartItem item)? dec,
     TResult Function(String cartItemDocumentId)? remove,
+    TResult Function()? clear,
     required TResult orElse(),
   }) => throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -49,6 +52,7 @@ mixin _$CartEvent {
     required TResult Function(_Inc value) inc,
     required TResult Function(_Dec value) dec,
     required TResult Function(_Remove value) remove,
+    required TResult Function(_Clear value) clear,
   }) => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
@@ -57,6 +61,7 @@ mixin _$CartEvent {
     TResult? Function(_Inc value)? inc,
     TResult? Function(_Dec value)? dec,
     TResult? Function(_Remove value)? remove,
+    TResult? Function(_Clear value)? clear,
   }) => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
@@ -65,6 +70,7 @@ mixin _$CartEvent {
     TResult Function(_Inc value)? inc,
     TResult Function(_Dec value)? dec,
     TResult Function(_Remove value)? remove,
+    TResult Function(_Clear value)? clear,
     required TResult orElse(),
   }) => throw _privateConstructorUsedError;
 }
@@ -135,6 +141,7 @@ class _$LoadImpl implements _Load {
     required TResult Function(CartItem item) inc,
     required TResult Function(CartItem item) dec,
     required TResult Function(String cartItemDocumentId) remove,
+    required TResult Function() clear,
   }) {
     return load();
   }
@@ -147,6 +154,7 @@ class _$LoadImpl implements _Load {
     TResult? Function(CartItem item)? inc,
     TResult? Function(CartItem item)? dec,
     TResult? Function(String cartItemDocumentId)? remove,
+    TResult? Function()? clear,
   }) {
     return load?.call();
   }
@@ -159,6 +167,7 @@ class _$LoadImpl implements _Load {
     TResult Function(CartItem item)? inc,
     TResult Function(CartItem item)? dec,
     TResult Function(String cartItemDocumentId)? remove,
+    TResult Function()? clear,
     required TResult orElse(),
   }) {
     if (load != null) {
@@ -175,6 +184,7 @@ class _$LoadImpl implements _Load {
     required TResult Function(_Inc value) inc,
     required TResult Function(_Dec value) dec,
     required TResult Function(_Remove value) remove,
+    required TResult Function(_Clear value) clear,
   }) {
     return load(this);
   }
@@ -187,6 +197,7 @@ class _$LoadImpl implements _Load {
     TResult? Function(_Inc value)? inc,
     TResult? Function(_Dec value)? dec,
     TResult? Function(_Remove value)? remove,
+    TResult? Function(_Clear value)? clear,
   }) {
     return load?.call(this);
   }
@@ -199,6 +210,7 @@ class _$LoadImpl implements _Load {
     TResult Function(_Inc value)? inc,
     TResult Function(_Dec value)? dec,
     TResult Function(_Remove value)? remove,
+    TResult Function(_Clear value)? clear,
     required TResult orElse(),
   }) {
     if (load != null) {
@@ -294,6 +306,7 @@ class _$AddImpl implements _Add {
     required TResult Function(CartItem item) inc,
     required TResult Function(CartItem item) dec,
     required TResult Function(String cartItemDocumentId) remove,
+    required TResult Function() clear,
   }) {
     return add(productId, count);
   }
@@ -306,6 +319,7 @@ class _$AddImpl implements _Add {
     TResult? Function(CartItem item)? inc,
     TResult? Function(CartItem item)? dec,
     TResult? Function(String cartItemDocumentId)? remove,
+    TResult? Function()? clear,
   }) {
     return add?.call(productId, count);
   }
@@ -318,6 +332,7 @@ class _$AddImpl implements _Add {
     TResult Function(CartItem item)? inc,
     TResult Function(CartItem item)? dec,
     TResult Function(String cartItemDocumentId)? remove,
+    TResult Function()? clear,
     required TResult orElse(),
   }) {
     if (add != null) {
@@ -334,6 +349,7 @@ class _$AddImpl implements _Add {
     required TResult Function(_Inc value) inc,
     required TResult Function(_Dec value) dec,
     required TResult Function(_Remove value) remove,
+    required TResult Function(_Clear value) clear,
   }) {
     return add(this);
   }
@@ -346,6 +362,7 @@ class _$AddImpl implements _Add {
     TResult? Function(_Inc value)? inc,
     TResult? Function(_Dec value)? dec,
     TResult? Function(_Remove value)? remove,
+    TResult? Function(_Clear value)? clear,
   }) {
     return add?.call(this);
   }
@@ -358,6 +375,7 @@ class _$AddImpl implements _Add {
     TResult Function(_Inc value)? inc,
     TResult Function(_Dec value)? dec,
     TResult Function(_Remove value)? remove,
+    TResult Function(_Clear value)? clear,
     required TResult orElse(),
   }) {
     if (add != null) {
@@ -453,6 +471,7 @@ class _$IncImpl implements _Inc {
     required TResult Function(CartItem item) inc,
     required TResult Function(CartItem item) dec,
     required TResult Function(String cartItemDocumentId) remove,
+    required TResult Function() clear,
   }) {
     return inc(item);
   }
@@ -465,6 +484,7 @@ class _$IncImpl implements _Inc {
     TResult? Function(CartItem item)? inc,
     TResult? Function(CartItem item)? dec,
     TResult? Function(String cartItemDocumentId)? remove,
+    TResult? Function()? clear,
   }) {
     return inc?.call(item);
   }
@@ -477,6 +497,7 @@ class _$IncImpl implements _Inc {
     TResult Function(CartItem item)? inc,
     TResult Function(CartItem item)? dec,
     TResult Function(String cartItemDocumentId)? remove,
+    TResult Function()? clear,
     required TResult orElse(),
   }) {
     if (inc != null) {
@@ -493,6 +514,7 @@ class _$IncImpl implements _Inc {
     required TResult Function(_Inc value) inc,
     required TResult Function(_Dec value) dec,
     required TResult Function(_Remove value) remove,
+    required TResult Function(_Clear value) clear,
   }) {
     return inc(this);
   }
@@ -505,6 +527,7 @@ class _$IncImpl implements _Inc {
     TResult? Function(_Inc value)? inc,
     TResult? Function(_Dec value)? dec,
     TResult? Function(_Remove value)? remove,
+    TResult? Function(_Clear value)? clear,
   }) {
     return inc?.call(this);
   }
@@ -517,6 +540,7 @@ class _$IncImpl implements _Inc {
     TResult Function(_Inc value)? inc,
     TResult Function(_Dec value)? dec,
     TResult Function(_Remove value)? remove,
+    TResult Function(_Clear value)? clear,
     required TResult orElse(),
   }) {
     if (inc != null) {
@@ -610,6 +634,7 @@ class _$DecImpl implements _Dec {
     required TResult Function(CartItem item) inc,
     required TResult Function(CartItem item) dec,
     required TResult Function(String cartItemDocumentId) remove,
+    required TResult Function() clear,
   }) {
     return dec(item);
   }
@@ -622,6 +647,7 @@ class _$DecImpl implements _Dec {
     TResult? Function(CartItem item)? inc,
     TResult? Function(CartItem item)? dec,
     TResult? Function(String cartItemDocumentId)? remove,
+    TResult? Function()? clear,
   }) {
     return dec?.call(item);
   }
@@ -634,6 +660,7 @@ class _$DecImpl implements _Dec {
     TResult Function(CartItem item)? inc,
     TResult Function(CartItem item)? dec,
     TResult Function(String cartItemDocumentId)? remove,
+    TResult Function()? clear,
     required TResult orElse(),
   }) {
     if (dec != null) {
@@ -650,6 +677,7 @@ class _$DecImpl implements _Dec {
     required TResult Function(_Inc value) inc,
     required TResult Function(_Dec value) dec,
     required TResult Function(_Remove value) remove,
+    required TResult Function(_Clear value) clear,
   }) {
     return dec(this);
   }
@@ -662,6 +690,7 @@ class _$DecImpl implements _Dec {
     TResult? Function(_Inc value)? inc,
     TResult? Function(_Dec value)? dec,
     TResult? Function(_Remove value)? remove,
+    TResult? Function(_Clear value)? clear,
   }) {
     return dec?.call(this);
   }
@@ -674,6 +703,7 @@ class _$DecImpl implements _Dec {
     TResult Function(_Inc value)? inc,
     TResult Function(_Dec value)? dec,
     TResult Function(_Remove value)? remove,
+    TResult Function(_Clear value)? clear,
     required TResult orElse(),
   }) {
     if (dec != null) {
@@ -772,6 +802,7 @@ class _$RemoveImpl implements _Remove {
     required TResult Function(CartItem item) inc,
     required TResult Function(CartItem item) dec,
     required TResult Function(String cartItemDocumentId) remove,
+    required TResult Function() clear,
   }) {
     return remove(cartItemDocumentId);
   }
@@ -784,6 +815,7 @@ class _$RemoveImpl implements _Remove {
     TResult? Function(CartItem item)? inc,
     TResult? Function(CartItem item)? dec,
     TResult? Function(String cartItemDocumentId)? remove,
+    TResult? Function()? clear,
   }) {
     return remove?.call(cartItemDocumentId);
   }
@@ -796,6 +828,7 @@ class _$RemoveImpl implements _Remove {
     TResult Function(CartItem item)? inc,
     TResult Function(CartItem item)? dec,
     TResult Function(String cartItemDocumentId)? remove,
+    TResult Function()? clear,
     required TResult orElse(),
   }) {
     if (remove != null) {
@@ -812,6 +845,7 @@ class _$RemoveImpl implements _Remove {
     required TResult Function(_Inc value) inc,
     required TResult Function(_Dec value) dec,
     required TResult Function(_Remove value) remove,
+    required TResult Function(_Clear value) clear,
   }) {
     return remove(this);
   }
@@ -824,6 +858,7 @@ class _$RemoveImpl implements _Remove {
     TResult? Function(_Inc value)? inc,
     TResult? Function(_Dec value)? dec,
     TResult? Function(_Remove value)? remove,
+    TResult? Function(_Clear value)? clear,
   }) {
     return remove?.call(this);
   }
@@ -836,6 +871,7 @@ class _$RemoveImpl implements _Remove {
     TResult Function(_Inc value)? inc,
     TResult Function(_Dec value)? dec,
     TResult Function(_Remove value)? remove,
+    TResult Function(_Clear value)? clear,
     required TResult orElse(),
   }) {
     if (remove != null) {
@@ -856,4 +892,135 @@ abstract class _Remove implements CartEvent {
   @JsonKey(includeFromJson: false, includeToJson: false)
   _$$RemoveImplCopyWith<_$RemoveImpl> get copyWith =>
       throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$ClearImplCopyWith<$Res> {
+  factory _$$ClearImplCopyWith(
+    _$ClearImpl value,
+    $Res Function(_$ClearImpl) then,
+  ) = __$$ClearImplCopyWithImpl<$Res>;
+}
+
+/// @nodoc
+class __$$ClearImplCopyWithImpl<$Res>
+    extends _$CartEventCopyWithImpl<$Res, _$ClearImpl>
+    implements _$$ClearImplCopyWith<$Res> {
+  __$$ClearImplCopyWithImpl(
+    _$ClearImpl _value,
+    $Res Function(_$ClearImpl) _then,
+  ) : super(_value, _then);
+
+  /// Create a copy of CartEvent
+  /// with the given fields replaced by the non-null parameter values.
+}
+
+/// @nodoc
+
+class _$ClearImpl implements _Clear {
+  const _$ClearImpl();
+
+  @override
+  String toString() {
+    return 'CartEvent.clear()';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType && other is _$ClearImpl);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() load,
+    required TResult Function(int productId, int count) add,
+    required TResult Function(CartItem item) inc,
+    required TResult Function(CartItem item) dec,
+    required TResult Function(String cartItemDocumentId) remove,
+    required TResult Function() clear,
+  }) {
+    return clear();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? load,
+    TResult? Function(int productId, int count)? add,
+    TResult? Function(CartItem item)? inc,
+    TResult? Function(CartItem item)? dec,
+    TResult? Function(String cartItemDocumentId)? remove,
+    TResult? Function()? clear,
+  }) {
+    return clear?.call();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? load,
+    TResult Function(int productId, int count)? add,
+    TResult Function(CartItem item)? inc,
+    TResult Function(CartItem item)? dec,
+    TResult Function(String cartItemDocumentId)? remove,
+    TResult Function()? clear,
+    required TResult orElse(),
+  }) {
+    if (clear != null) {
+      return clear();
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(_Load value) load,
+    required TResult Function(_Add value) add,
+    required TResult Function(_Inc value) inc,
+    required TResult Function(_Dec value) dec,
+    required TResult Function(_Remove value) remove,
+    required TResult Function(_Clear value) clear,
+  }) {
+    return clear(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_Load value)? load,
+    TResult? Function(_Add value)? add,
+    TResult? Function(_Inc value)? inc,
+    TResult? Function(_Dec value)? dec,
+    TResult? Function(_Remove value)? remove,
+    TResult? Function(_Clear value)? clear,
+  }) {
+    return clear?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(_Load value)? load,
+    TResult Function(_Add value)? add,
+    TResult Function(_Inc value)? inc,
+    TResult Function(_Dec value)? dec,
+    TResult Function(_Remove value)? remove,
+    TResult Function(_Clear value)? clear,
+    required TResult orElse(),
+  }) {
+    if (clear != null) {
+      return clear(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class _Clear implements CartEvent {
+  const factory _Clear() = _$ClearImpl;
 }

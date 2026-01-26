@@ -1,9 +1,5 @@
-import 'dart:math' as math;
-
 import 'package:flutter/material.dart';
 import 'package:flutter_base_architecture/widgets/buttons/custom_drop_down_order_widget.dart';
-import 'package:flutter_base_architecture/widgets/order_cart/custom_order_cart_widget.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../gen/assets.gen.dart';
 import '../../resources/app_colors.dart';

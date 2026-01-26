@@ -22,7 +22,6 @@ class _SplashScreenPageState extends State<SplashScreenPage> {
   }
 
   Future<void> _bootstrap() async {
-    // Коротка пауза, щоб Splash відмальувався (опційно)
     await Future<void>.delayed(const Duration(milliseconds: 300));
 
     try {

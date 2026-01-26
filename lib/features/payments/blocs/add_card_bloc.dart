@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '../data/payments_repository.dart';
 
@@ -43,7 +43,7 @@ class AddCardBloc extends Bloc<AddCardEvent, AddCardState> {
       );
 
       final pmId = setupIntent.paymentMethodId;
-      if (pmId == null || pmId.isEmpty) {
+      if (pmId.isEmpty) {
         throw Exception('Stripe did not return paymentMethodId');
       }
 

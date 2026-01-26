@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_base_architecture/widgets/buttons/custom_circle_check_box_widget.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'dart:math' as math;
 
 import '../../gen/assets.gen.dart';
 import '../../resources/app_colors.dart';

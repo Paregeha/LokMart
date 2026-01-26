@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_svg/svg.dart';
 
 import '../../gen/assets.gen.dart';
 import '../../resources/app_colors.dart';
@@ -165,7 +164,6 @@ class _CustomTextFieldWidgetState extends State<CustomTextFieldWidget> {
                     letterSpacing: 0,
                   ),
 
-              // ✅ фон теж тримаємо тут, але рамка — тільки у Container
               filled: true,
               fillColor: widget.color,
 

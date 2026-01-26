@@ -6,7 +6,6 @@ import 'package:flutter_base_architecture/widgets/buttons/custom_button_count_wi
 import '../../gen/assets.gen.dart';
 
 class CustomShoppingCartWidget extends StatelessWidget {
-  /// ✅ Новий конструктор під реальні дані з бекенду
   const CustomShoppingCartWidget({
     super.key,
     required this.itemId,
@@ -25,10 +24,8 @@ class CustomShoppingCartWidget extends StatelessWidget {
   final String title;
   final String category;
 
-  /// current price
   final double price;
 
-  /// old/striked price (optional)
   final double? oldPrice;
 
   final String? imageUrl;
@@ -121,7 +118,7 @@ class CustomShoppingCartWidget extends StatelessWidget {
                           heightCount: 30.0,
                           widthCount: 87.0,
                           paddingCount: 10.0,
-                          value: count, // ✅ controlled
+                          value: count,
                           onInc: onInc,
                           onDec: onDec,
                           min: 1,
@@ -153,7 +150,7 @@ class CustomShoppingCartWidget extends StatelessWidget {
       height: 57.0,
       fit: BoxFit.cover,
       errorBuilder:
-          (_, __, ___) => Assets.images.banana.image(
+          (_, _, _) => Assets.images.banana.image(
             width: 57.0,
             height: 57.0,
             fit: BoxFit.fill,

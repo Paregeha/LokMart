@@ -48,7 +48,6 @@ class CartBloc extends Bloc<CartEvent, CartState> {
         try {
           final next = item.count - 1;
 
-          // ✅ якщо стало 0 або менше — видаляємо позицію з кошика
           if (next <= 0) {
             await _repo.removeItem(item.documentId);
           } else {
@@ -69,6 +68,15 @@ class CartBloc extends Bloc<CartEvent, CartState> {
           await _repo.removeItem(cartItemDocumentId);
           final items = await _repo.fetchMyCart();
           emit(CartState.success(items: items, total: _calcTotal(items)));
+        } catch (e) {
+          emit(CartState.failure(e.toString()));
+        }
+      },
+      clear: () async {
+        emit(const CartState.loading());
+        try {
+          await _repo.clearMyCart();
+          emit(const CartState.success(items: [], total: 0));
         } catch (e) {
           emit(CartState.failure(e.toString()));
         }

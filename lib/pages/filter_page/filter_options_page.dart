@@ -10,9 +10,8 @@ import '../../features/products/models/products_filter.dart';
 import '../../gen/assets.gen.dart';
 
 class FilterOptionsPage extends StatefulWidget {
-  final ProductsFilter initialFilter;
-
   const FilterOptionsPage({super.key, required this.initialFilter});
+  final ProductsFilter initialFilter;
 
   @override
   State<FilterOptionsPage> createState() => _FilterOptionsPageState();
@@ -24,7 +23,6 @@ class _FilterOptionsPageState extends State<FilterOptionsPage> {
   int? _selectedRatingRange;
   int? _selectedDiscountRange;
 
-  // ✅ це НЕ categoryId з бекенду. Це просто індекс 1..4 для UI
   int? _selectedCategoryIndex;
 
   bool _discount = false;
@@ -43,7 +41,6 @@ class _FilterOptionsPageState extends State<FilterOptionsPage> {
     _selectedRatingRange = _ratingGroupFromFilter(f);
     _selectedDiscountRange = _discountGroupFromFilter(f);
 
-    // ✅ тепер категорія береться з title, а не з id
     _selectedCategoryIndex = _indexFromCategoryTitle(f.categoryTitle);
 
     _discount = f.onlyDiscount;
@@ -51,8 +48,6 @@ class _FilterOptionsPageState extends State<FilterOptionsPage> {
     _voucher = f.onlyVoucher;
     _sameDay = f.onlySameDayDelivery;
   }
-
-  // -------------------- MAPPINGS --------------------
 
   int? _ratingGroupFromFilter(ProductsFilter f) {
     if (f.minRating == null || f.maxRating == null) return null;
@@ -79,8 +74,9 @@ class _FilterOptionsPageState extends State<FilterOptionsPage> {
   }
 
   int? _discountGroupFromFilter(ProductsFilter f) {
-    if (f.minDiscountPercent == null || f.maxDiscountPercent == null)
+    if (f.minDiscountPercent == null || f.maxDiscountPercent == null) {
       return null;
+    }
     if (f.minDiscountPercent == 10 && f.maxDiscountPercent == 20) return 1;
     if (f.minDiscountPercent == 25 && f.maxDiscountPercent == 50) return 2;
     if (f.minDiscountPercent == 50 && f.maxDiscountPercent == 70) return 3;
@@ -133,8 +129,6 @@ class _FilterOptionsPageState extends State<FilterOptionsPage> {
     }
   }
 
-  // -------------------- ACTIONS --------------------
-
   void _reset() {
     setState(() {
       const def = ProductsFilter();
@@ -171,17 +165,13 @@ class _FilterOptionsPageState extends State<FilterOptionsPage> {
       onlyVoucher: _voucher,
       onlySameDayDelivery: _sameDay,
 
-      // ✅ тут ми НЕ знаємо id, тому залишаємо null
       categoryId: null,
 
-      // ✅ передаємо title для фільтрації в Strapi
       categoryTitle: categoryTitle,
     );
 
     context.pop(result);
   }
-
-  // -------------------- UI --------------------
 
   @override
   Widget build(BuildContext context) {

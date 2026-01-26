@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_base_architecture/features/products/models/products.dart';
 import 'package:flutter_base_architecture/resources/app_colors.dart';
 import 'package:flutter_base_architecture/resources/app_fonts.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import '../../gen/assets.gen.dart';
 import '../../routes/app_routes.dart';

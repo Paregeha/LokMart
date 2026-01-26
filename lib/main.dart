@@ -11,6 +11,8 @@ import 'features/cart/data/cart_repository.dart';
 import 'features/category/blocs/category_bloc.dart';
 import 'features/category/blocs/category_event.dart';
 import 'features/category/data/category_repository.dart';
+import 'features/order/data/orders_repository.dart';
+import 'features/payments/blocs/checkout_payment_bloc.dart';
 import 'features/payments/blocs/payment_methods_bloc.dart';
 import 'features/payments/blocs/payment_methods_event.dart';
 import 'features/payments/data/payments_repository.dart';
@@ -23,10 +25,17 @@ import 'services/dio_service.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // ✅ STRIPE init (publishable key тільки на клієнті)
-  Stripe.publishableKey = 'pk_test_XXXXXXXXXXXX'; // TODO: твій publishableKey
-  Stripe.merchantIdentifier = 'merchant.com.lokmart'; // iOS (можна лишити)
+  Stripe.publishableKey =
+      'pk_test_51SmEQQJpswxfMmVNAqRpC2JVjRrWhvilTFv8hpmXZTaJsYmVewT6VeLEw8ultM1EJpis9qmcX94zwaCodUl3SAMS00XuY3TBJZ'
+          .trim();
+  Stripe.merchantIdentifier = 'merchant.com.lokmart';
   await Stripe.instance.applySettings();
+
+  final key = Stripe.publishableKey;
+  debugPrint('Stripe PK starts: ${key.substring(0, 10)} len=${key.length}');
+  if (!key.startsWith('pk_') || key.length < 30) {
+    throw Exception('Stripe publishable key looks invalid');
+  }
 
   final dio = DioService.instance;
   final authRepository = AuthRepository(dio: dio);
@@ -69,30 +78,43 @@ class MyApp extends StatelessWidget {
               ),
         ),
 
-        // ✅ PAYMENTS
         RepositoryProvider<PaymentsRepository>(
           create: (_) => PaymentsRepository(dio: dio),
+        ),
+
+        RepositoryProvider<OrdersRepository>(
+          create: (_) => OrdersRepository(dio: dio),
         ),
       ],
       child: MultiBlocProvider(
         providers: [
+          BlocProvider<CartBloc>(
+            create: (ctx) => CartBloc(ctx.read<CartRepository>()),
+          ),
+
+          BlocProvider<CheckoutPaymentBloc>(
+            create:
+                (ctx) => CheckoutPaymentBloc(
+                  paymentsRepo: ctx.read<PaymentsRepository>(),
+                  ordersRepo: ctx.read<OrdersRepository>(),
+                  cartBloc: ctx.read<CartBloc>(),
+                ),
+          ),
+
           BlocProvider<CategoryBloc>(
             create:
                 (ctx) =>
                     CategoryBloc(ctx.read<CategoryRepository>())
                       ..add(const CategoryEvent.fetch()),
           ),
+
           BlocProvider<ProductsBloc>(
             create:
                 (ctx) =>
                     ProductsBloc(ctx.read<ProductRepository>())
                       ..add(ProductsEvent.fetchFirst()),
           ),
-          BlocProvider<CartBloc>(
-            create: (ctx) => CartBloc(ctx.read<CartRepository>()),
-          ),
 
-          // ✅ cards list bloc (глобально, щоб працювало і на Payment і після AddCard)
           BlocProvider<PaymentMethodsBloc>(
             create:
                 (ctx) =>

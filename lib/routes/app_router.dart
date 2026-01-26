@@ -248,8 +248,10 @@ class AppRouter {
         path: AppRoutes.checkoutPayment,
         name: 'CheckoutPayment',
         pageBuilder: (BuildContext context, GoRouterState state) {
+          final addressDocumentId = (state.extra as String?) ?? '';
+
           return CustomTransitionPage(
-            child: CheckoutPaymentPage(),
+            child: CheckoutPaymentPage(addressDocumentId: addressDocumentId),
             transitionsBuilder: (
               context,
               animation,

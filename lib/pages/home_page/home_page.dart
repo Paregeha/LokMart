@@ -341,7 +341,7 @@ class _HomePageState extends State<HomePage> {
                                   horizontal: 32.0,
                                 ),
                                 separatorBuilder:
-                                    (_, __) => const SizedBox(width: 15.0),
+                                    (_, _) => const SizedBox(width: 15.0),
                                 itemCount: items.length,
                                 itemBuilder:
                                     (_, i) => _CategoryChip(item: items[i]),
@@ -431,7 +431,6 @@ class _HomePageState extends State<HomePage> {
                                       product: rated[i],
                                       onPressed: () {
                                         final product = rated[i];
-                                        if (product == null) return;
 
                                         if (product.documentId == null ||
                                             product.documentId!.isEmpty) {
@@ -577,7 +576,7 @@ Widget _ProductsList(List<Products> products) {
   return Padding(
     padding: const EdgeInsets.symmetric(horizontal: 32.0),
     child: ListView.separated(
-      separatorBuilder: (_, __) => const SizedBox(height: 25.0),
+      separatorBuilder: (_, _) => const SizedBox(height: 25.0),
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       itemCount: products.length,
@@ -594,9 +593,9 @@ class _CategoriesSkeleton extends StatelessWidget {
     return ListView.separated(
       scrollDirection: Axis.horizontal,
       padding: const EdgeInsets.symmetric(horizontal: 32.0),
-      separatorBuilder: (_, __) => const SizedBox(width: 15.0),
+      separatorBuilder: (_, _) => const SizedBox(width: 15.0),
       itemCount: 5,
-      itemBuilder: (_, __) => const _CategoryChip.skeleton(),
+      itemBuilder: (_, _) => const _CategoryChip.skeleton(),
     );
   }
 }
@@ -628,10 +627,6 @@ class _CategoriesError extends StatelessWidget {
 }
 
 class _CategoryChip extends StatelessWidget {
-  const _CategoryChip({required this.item});
-
-  final Category item;
-
   const _CategoryChip.skeleton()
     : item = const Category(
         id: 0,
@@ -641,6 +636,9 @@ class _CategoryChip extends StatelessWidget {
         slug: null,
         description: null,
       );
+  const _CategoryChip({required this.item});
+
+  final Category item;
 
   @override
   Widget build(BuildContext context) {
@@ -680,7 +678,7 @@ class _CategoryChip extends StatelessWidget {
 
   Widget _buildIcon(Category c, bool isSkeleton) {
     if (isSkeleton) {
-      return ColoredBox(color: AppColors.gray1.withOpacity(0.2));
+      return ColoredBox(color: AppColors.gray1.withValues(alpha: 0.2));
     }
     if (c.photoUrl != null && c.photoUrl!.isNotEmpty) {
       return Image.network(
@@ -699,7 +697,7 @@ class _CategoryChip extends StatelessWidget {
         width: 64,
         height: 16,
         decoration: BoxDecoration(
-          color: AppColors.gray1.withOpacity(0.2),
+          color: AppColors.gray1.withValues(alpha: 0.2),
           borderRadius: BorderRadius.circular(4),
         ),
       );
@@ -726,7 +724,7 @@ class _CategoryChip extends StatelessWidget {
           width: 54,
           height: 12,
           decoration: BoxDecoration(
-            color: AppColors.gray1.withOpacity(0.2),
+            color: AppColors.gray1.withValues(alpha: 0.2),
             borderRadius: BorderRadius.circular(4),
           ),
         ),
@@ -761,7 +759,7 @@ class _DealsSkeleton extends StatelessWidget {
         Container(
           width: 120,
           height: 16,
-          color: AppColors.gray1.withOpacity(0.2),
+          color: AppColors.gray1.withValues(alpha: 0.2),
         ),
         const SizedBox(height: 8),
         Row(
@@ -772,13 +770,13 @@ class _DealsSkeleton extends StatelessWidget {
                 Container(
                   width: 50,
                   height: 22,
-                  color: AppColors.gray1.withOpacity(0.2),
+                  color: AppColors.gray1.withValues(alpha: 0.2),
                 ),
                 const SizedBox(width: 7),
                 Container(
                   width: 70,
                   height: 14,
-                  color: AppColors.gray1.withOpacity(0.2),
+                  color: AppColors.gray1.withValues(alpha: 0.2),
                 ),
               ],
             ),
@@ -786,7 +784,7 @@ class _DealsSkeleton extends StatelessWidget {
             Container(
               width: 60,
               height: 16,
-              color: AppColors.gray1.withOpacity(0.2),
+              color: AppColors.gray1.withValues(alpha: 0.2),
             ),
           ],
         ),

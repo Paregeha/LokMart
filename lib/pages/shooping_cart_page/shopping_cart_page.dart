@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_base_architecture/resources/app_colors.dart';
 import 'package:flutter_base_architecture/resources/app_fonts.dart';
 import 'package:flutter_base_architecture/routes/app_routes.dart';
 import 'package:flutter_base_architecture/widgets/buttons/custom_button_widget.dart';
 import 'package:flutter_base_architecture/widgets/cart/custom_shopping_cart_widget.dart';
 import 'package:flutter_base_architecture/widgets/checkout/custom_checkout_widget.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../gen/assets.gen.dart';
 import '../../features/cart/blocs/cart_bloc.dart';
 import '../../features/cart/blocs/cart_event.dart';
 import '../../features/cart/blocs/cart_state.dart';
+import '../../gen/assets.gen.dart';
 
 class ShoppingCartPage extends StatefulWidget {
   const ShoppingCartPage({super.key});

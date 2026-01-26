@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:widgetbook/widgetbook.dart';
 import 'package:flutter_base_architecture/widgets/navigations/custom_bottom_bar_widget.dart';
+import 'package:widgetbook/widgetbook.dart';
 
 final customBottomBarWidget = WidgetbookComponent(
   name: 'CustomBottomBarWidget',
@@ -8,7 +8,7 @@ final customBottomBarWidget = WidgetbookComponent(
     WidgetbookUseCase(
       name: 'BottomBar',
       builder: (context) {
-        int index = 0; // локальний стан для цього use case
+        int index = 0;
 
         return Align(
           alignment: Alignment.bottomCenter,

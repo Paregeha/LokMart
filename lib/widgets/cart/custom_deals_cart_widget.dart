@@ -78,7 +78,7 @@ class CustomDealsCartWidget extends StatelessWidget {
                             SvgPicture.asset(Assets.icons.star.path),
                             const SizedBox(width: 4.0),
                             Text(
-                              (4 ?? 0).toStringAsFixed(1),
+                              (4).toStringAsFixed(1),
                               style: const TextStyle(
                                 fontFamily: AppFonts.fontFamily,
                                 fontWeight: AppFonts.w600semiBold,

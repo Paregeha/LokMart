@@ -14,7 +14,8 @@ class CartEvent with _$CartEvent {
 
   const factory CartEvent.dec({required CartItem item}) = _Dec;
 
-  // ✅ було int cartItemId → стало String cartItemDocumentId
   const factory CartEvent.remove({required String cartItemDocumentId}) =
       _Remove;
+
+  const factory CartEvent.clear() = _Clear;
 }

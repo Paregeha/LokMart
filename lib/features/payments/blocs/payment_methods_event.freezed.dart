@@ -21,22 +21,22 @@ mixin _$PaymentMethodsEvent {
   TResult when<TResult extends Object?>({
     required TResult Function() fetch,
     required TResult Function(int id) select,
-    required TResult Function(int id) setDefault,
-    required TResult Function(int id) delete,
+    required TResult Function(String documentId) setDefault,
+    required TResult Function(String documentId) delete,
   }) => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? fetch,
     TResult? Function(int id)? select,
-    TResult? Function(int id)? setDefault,
-    TResult? Function(int id)? delete,
+    TResult? Function(String documentId)? setDefault,
+    TResult? Function(String documentId)? delete,
   }) => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? fetch,
     TResult Function(int id)? select,
-    TResult Function(int id)? setDefault,
-    TResult Function(int id)? delete,
+    TResult Function(String documentId)? setDefault,
+    TResult Function(String documentId)? delete,
     required TResult orElse(),
   }) => throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -130,8 +130,8 @@ class _$FetchImpl implements _Fetch {
   TResult when<TResult extends Object?>({
     required TResult Function() fetch,
     required TResult Function(int id) select,
-    required TResult Function(int id) setDefault,
-    required TResult Function(int id) delete,
+    required TResult Function(String documentId) setDefault,
+    required TResult Function(String documentId) delete,
   }) {
     return fetch();
   }
@@ -141,8 +141,8 @@ class _$FetchImpl implements _Fetch {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? fetch,
     TResult? Function(int id)? select,
-    TResult? Function(int id)? setDefault,
-    TResult? Function(int id)? delete,
+    TResult? Function(String documentId)? setDefault,
+    TResult? Function(String documentId)? delete,
   }) {
     return fetch?.call();
   }
@@ -152,8 +152,8 @@ class _$FetchImpl implements _Fetch {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? fetch,
     TResult Function(int id)? select,
-    TResult Function(int id)? setDefault,
-    TResult Function(int id)? delete,
+    TResult Function(String documentId)? setDefault,
+    TResult Function(String documentId)? delete,
     required TResult orElse(),
   }) {
     if (fetch != null) {
@@ -276,8 +276,8 @@ class _$SelectImpl implements _Select {
   TResult when<TResult extends Object?>({
     required TResult Function() fetch,
     required TResult Function(int id) select,
-    required TResult Function(int id) setDefault,
-    required TResult Function(int id) delete,
+    required TResult Function(String documentId) setDefault,
+    required TResult Function(String documentId) delete,
   }) {
     return select(id);
   }
@@ -287,8 +287,8 @@ class _$SelectImpl implements _Select {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? fetch,
     TResult? Function(int id)? select,
-    TResult? Function(int id)? setDefault,
-    TResult? Function(int id)? delete,
+    TResult? Function(String documentId)? setDefault,
+    TResult? Function(String documentId)? delete,
   }) {
     return select?.call(id);
   }
@@ -298,8 +298,8 @@ class _$SelectImpl implements _Select {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? fetch,
     TResult Function(int id)? select,
-    TResult Function(int id)? setDefault,
-    TResult Function(int id)? delete,
+    TResult Function(String documentId)? setDefault,
+    TResult Function(String documentId)? delete,
     required TResult orElse(),
   }) {
     if (select != null) {
@@ -365,7 +365,7 @@ abstract class _$$SetDefaultImplCopyWith<$Res> {
     $Res Function(_$SetDefaultImpl) then,
   ) = __$$SetDefaultImplCopyWithImpl<$Res>;
   @useResult
-  $Res call({int id});
+  $Res call({String documentId});
 }
 
 /// @nodoc
@@ -381,13 +381,13 @@ class __$$SetDefaultImplCopyWithImpl<$Res>
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? id = null}) {
+  $Res call({Object? documentId = null}) {
     return _then(
       _$SetDefaultImpl(
-        null == id
-            ? _value.id
-            : id // ignore: cast_nullable_to_non_nullable
-                as int,
+        null == documentId
+            ? _value.documentId
+            : documentId // ignore: cast_nullable_to_non_nullable
+                as String,
       ),
     );
   }
@@ -396,14 +396,14 @@ class __$$SetDefaultImplCopyWithImpl<$Res>
 /// @nodoc
 
 class _$SetDefaultImpl implements _SetDefault {
-  const _$SetDefaultImpl(this.id);
+  const _$SetDefaultImpl(this.documentId);
 
   @override
-  final int id;
+  final String documentId;
 
   @override
   String toString() {
-    return 'PaymentMethodsEvent.setDefault(id: $id)';
+    return 'PaymentMethodsEvent.setDefault(documentId: $documentId)';
   }
 
   @override
@@ -411,11 +411,12 @@ class _$SetDefaultImpl implements _SetDefault {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$SetDefaultImpl &&
-            (identical(other.id, id) || other.id == id));
+            (identical(other.documentId, documentId) ||
+                other.documentId == documentId));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, id);
+  int get hashCode => Object.hash(runtimeType, documentId);
 
   /// Create a copy of PaymentMethodsEvent
   /// with the given fields replaced by the non-null parameter values.
@@ -430,10 +431,10 @@ class _$SetDefaultImpl implements _SetDefault {
   TResult when<TResult extends Object?>({
     required TResult Function() fetch,
     required TResult Function(int id) select,
-    required TResult Function(int id) setDefault,
-    required TResult Function(int id) delete,
+    required TResult Function(String documentId) setDefault,
+    required TResult Function(String documentId) delete,
   }) {
-    return setDefault(id);
+    return setDefault(documentId);
   }
 
   @override
@@ -441,10 +442,10 @@ class _$SetDefaultImpl implements _SetDefault {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? fetch,
     TResult? Function(int id)? select,
-    TResult? Function(int id)? setDefault,
-    TResult? Function(int id)? delete,
+    TResult? Function(String documentId)? setDefault,
+    TResult? Function(String documentId)? delete,
   }) {
-    return setDefault?.call(id);
+    return setDefault?.call(documentId);
   }
 
   @override
@@ -452,12 +453,12 @@ class _$SetDefaultImpl implements _SetDefault {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? fetch,
     TResult Function(int id)? select,
-    TResult Function(int id)? setDefault,
-    TResult Function(int id)? delete,
+    TResult Function(String documentId)? setDefault,
+    TResult Function(String documentId)? delete,
     required TResult orElse(),
   }) {
     if (setDefault != null) {
-      return setDefault(id);
+      return setDefault(documentId);
     }
     return orElse();
   }
@@ -501,9 +502,9 @@ class _$SetDefaultImpl implements _SetDefault {
 }
 
 abstract class _SetDefault implements PaymentMethodsEvent {
-  const factory _SetDefault(final int id) = _$SetDefaultImpl;
+  const factory _SetDefault(final String documentId) = _$SetDefaultImpl;
 
-  int get id;
+  String get documentId;
 
   /// Create a copy of PaymentMethodsEvent
   /// with the given fields replaced by the non-null parameter values.
@@ -519,7 +520,7 @@ abstract class _$$DeleteImplCopyWith<$Res> {
     $Res Function(_$DeleteImpl) then,
   ) = __$$DeleteImplCopyWithImpl<$Res>;
   @useResult
-  $Res call({int id});
+  $Res call({String documentId});
 }
 
 /// @nodoc
@@ -535,13 +536,13 @@ class __$$DeleteImplCopyWithImpl<$Res>
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({Object? id = null}) {
+  $Res call({Object? documentId = null}) {
     return _then(
       _$DeleteImpl(
-        null == id
-            ? _value.id
-            : id // ignore: cast_nullable_to_non_nullable
-                as int,
+        null == documentId
+            ? _value.documentId
+            : documentId // ignore: cast_nullable_to_non_nullable
+                as String,
       ),
     );
   }
@@ -550,14 +551,14 @@ class __$$DeleteImplCopyWithImpl<$Res>
 /// @nodoc
 
 class _$DeleteImpl implements _Delete {
-  const _$DeleteImpl(this.id);
+  const _$DeleteImpl(this.documentId);
 
   @override
-  final int id;
+  final String documentId;
 
   @override
   String toString() {
-    return 'PaymentMethodsEvent.delete(id: $id)';
+    return 'PaymentMethodsEvent.delete(documentId: $documentId)';
   }
 
   @override
@@ -565,11 +566,12 @@ class _$DeleteImpl implements _Delete {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$DeleteImpl &&
-            (identical(other.id, id) || other.id == id));
+            (identical(other.documentId, documentId) ||
+                other.documentId == documentId));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, id);
+  int get hashCode => Object.hash(runtimeType, documentId);
 
   /// Create a copy of PaymentMethodsEvent
   /// with the given fields replaced by the non-null parameter values.
@@ -584,10 +586,10 @@ class _$DeleteImpl implements _Delete {
   TResult when<TResult extends Object?>({
     required TResult Function() fetch,
     required TResult Function(int id) select,
-    required TResult Function(int id) setDefault,
-    required TResult Function(int id) delete,
+    required TResult Function(String documentId) setDefault,
+    required TResult Function(String documentId) delete,
   }) {
-    return delete(id);
+    return delete(documentId);
   }
 
   @override
@@ -595,10 +597,10 @@ class _$DeleteImpl implements _Delete {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? fetch,
     TResult? Function(int id)? select,
-    TResult? Function(int id)? setDefault,
-    TResult? Function(int id)? delete,
+    TResult? Function(String documentId)? setDefault,
+    TResult? Function(String documentId)? delete,
   }) {
-    return delete?.call(id);
+    return delete?.call(documentId);
   }
 
   @override
@@ -606,12 +608,12 @@ class _$DeleteImpl implements _Delete {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? fetch,
     TResult Function(int id)? select,
-    TResult Function(int id)? setDefault,
-    TResult Function(int id)? delete,
+    TResult Function(String documentId)? setDefault,
+    TResult Function(String documentId)? delete,
     required TResult orElse(),
   }) {
     if (delete != null) {
-      return delete(id);
+      return delete(documentId);
     }
     return orElse();
   }
@@ -655,9 +657,9 @@ class _$DeleteImpl implements _Delete {
 }
 
 abstract class _Delete implements PaymentMethodsEvent {
-  const factory _Delete(final int id) = _$DeleteImpl;
+  const factory _Delete(final String documentId) = _$DeleteImpl;
 
-  int get id;
+  String get documentId;
 
   /// Create a copy of PaymentMethodsEvent
   /// with the given fields replaced by the non-null parameter values.

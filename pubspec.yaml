@@ -13,6 +13,9 @@ dependencies:
 
   cupertino_icons: ^1.0.8
 
+  geolocator: ^13.0.2
+  http: ^1.2.2
+
   # Networking
   dio: ^5.9.0
   pretty_dio_logger: ^1.4.0
