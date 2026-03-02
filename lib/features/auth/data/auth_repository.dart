@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:jwt_decode/jwt_decode.dart';
@@ -31,7 +33,6 @@ class AuthRepository {
 
   static String? _jwtCache;
 
-  /// Інтерсептор: автоматично додає Bearer якщо є токен
   static final _authInterceptor = InterceptorsWrapper(
     onRequest: (options, handler) async {
       final noAuth = options.extra['noAuth'] == true;
@@ -64,7 +65,6 @@ class AuthRepository {
     },
   );
 
-  /// Реєстрація
   Future<StrapiAuthResponse> register({
     required String username,
     required String email,
@@ -81,7 +81,6 @@ class AuthRepository {
     return data;
   }
 
-  /// Логін із прапорцем rememberMe
   Future<StrapiAuthResponse> login({
     required String identifier,
     required String password,
@@ -98,12 +97,11 @@ class AuthRepository {
   }
 
   Future<StrapiUser> me() async {
-    final res = await _dio.get('/users/me');
+    final res = await _dio.get('/users/me?populate=avatar');
     _throwIfError(res);
     return StrapiUser.fromMap(res.data as Map<String, dynamic>);
   }
 
-  /// Відновлення сесії зі сховища (викликати на Splash)
   Future<bool> tryRestoreSession() async {
     final saved = await _safeGetJwt();
     if (saved == null || saved.isEmpty) return false;
@@ -126,7 +124,6 @@ class AuthRepository {
     } catch (_) {}
   }
 
-  /// Персистимо тільки якщо remember=true
   Future<void> _persistAuth(
     StrapiAuthResponse data, {
     required bool remember,
@@ -188,5 +185,82 @@ class AuthRepository {
       return body['message'] as String;
     }
     return null;
+  }
+
+  Future<StrapiUser> updateProfile({
+    required int userId,
+    required String username,
+    required String email,
+    int? avatarId,
+  }) async {
+    final payload = <String, dynamic>{'username': username, 'email': email};
+
+    if (avatarId != null) {
+      payload['avatar'] = avatarId;
+    }
+
+    final res = await _dio.put('/users/$userId?populate=avatar', data: payload);
+    _throwIfError(res);
+    return StrapiUser.fromMap(res.data as Map<String, dynamic>);
+  }
+
+  Future<void> changePassword({
+    required String currentPassword,
+    required String newPassword,
+    required String confirmPassword,
+  }) async {
+    final res = await _dio.post(
+      '/auth/change-password',
+      data: {
+        'currentPassword': currentPassword,
+        'password': newPassword,
+        'passwordConfirmation': confirmPassword,
+      },
+    );
+    _throwIfError(res);
+
+    try {
+      if (res.data is Map && (res.data as Map)['jwt'] is String) {
+        final jwt = (res.data as Map)['jwt'] as String;
+        _jwtCache = jwt;
+
+        final remember = await _storage.read(key: _kRememberKey) == '1';
+        if (remember) await _storage.write(key: _kJwtKey, value: jwt);
+      }
+    } catch (_) {}
+  }
+
+  String get baseUrl {
+    final u = _dio.options.baseUrl;
+    return u.endsWith('/') ? u.substring(0, u.length - 1) : u;
+  }
+
+  String get rootBaseUrl {
+    return baseUrl.replaceFirst(RegExp(r'/api/?$'), '');
+  }
+
+  String toAbsoluteUrl(String url) {
+    if (url.startsWith('http')) return url;
+
+    final u = url.startsWith('/') ? url : '/$url';
+    return '$rootBaseUrl$u';
+  }
+
+  Future<int> uploadAvatar(String localPath) async {
+    final file = File(localPath);
+
+    final form = FormData.fromMap({
+      'files': await MultipartFile.fromFile(
+        file.path,
+        filename: file.path.split('/').last,
+      ),
+    });
+
+    final res = await _dio.post('/upload', data: form);
+    _throwIfError(res);
+
+    final list = res.data as List;
+    final first = list.first as Map<String, dynamic>;
+    return first['id'] as int;
   }
 }

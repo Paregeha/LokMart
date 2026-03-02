@@ -21,6 +21,12 @@ class CheckoutPaymentEvent with _$CheckoutPaymentEvent {
     String? orderId,
     required String addressDocumentId,
   }) = _Pay;
+
+  const factory CheckoutPaymentEvent.payCash({
+    required int amount,
+    @Default('usd') String currency,
+    required String addressDocumentId,
+  }) = _PayCash;
 }
 
 @freezed
@@ -44,6 +50,7 @@ class CheckoutPaymentBloc
        _cartBloc = cartBloc,
        super(const CheckoutPaymentState()) {
     on<_Pay>(_onPay);
+    on<_PayCash>(_onPayCash);
   }
 
   final PaymentsRepository _paymentsRepo;
@@ -68,10 +75,11 @@ class CheckoutPaymentBloc
         orderId: e.orderId,
       );
 
-      debugPrint('PI status=${pi.status}');
+      debugPrint('PI status(from backend)=${pi.status}');
 
+      PaymentIntent? confirmed;
       if (pi.status != 'succeeded') {
-        await Stripe.instance.confirmPayment(
+        confirmed = await Stripe.instance.confirmPayment(
           paymentIntentClientSecret: pi.clientSecret,
           data: PaymentMethodParams.cardFromMethodId(
             paymentMethodData: PaymentMethodDataCardFromMethod(
@@ -79,8 +87,19 @@ class CheckoutPaymentBloc
             ),
           ),
         );
+        debugPrint('PI status(after confirm)=${confirmed.status}');
       } else {
         debugPrint('PI already succeeded on backend. Skipping confirmPayment.');
+      }
+
+      final ok =
+          (pi.status == 'succeeded') ||
+          (confirmed?.status == PaymentIntentsStatus.Succeeded);
+
+      if (!ok) {
+        throw Exception(
+          'Payment not completed. Status=${confirmed?.status ?? pi.status}',
+        );
       }
 
       final routePoints = await _ordersRepo.buildRoutePointsToCurrentUser();
@@ -105,16 +124,53 @@ class CheckoutPaymentBloc
       debugPrint(
         'StripeException: code=${ex.error.code} message=${ex.error.message} localized=${ex.error.localizedMessage}',
       );
+
+      final msg =
+          ex.error.localizedMessage ?? ex.error.message ?? 'Stripe error';
+
+      emit(state.copyWith(loading: false, error: msg, success: false));
+    } catch (err) {
+      debugPrint('Pay error: $err');
+      emit(
+        state.copyWith(loading: false, error: err.toString(), success: false),
+      );
+    }
+  }
+
+  Future<void> _onPayCash(
+    _PayCash e,
+    Emitter<CheckoutPaymentState> emit,
+  ) async {
+    emit(
+      state.copyWith(
+        loading: true,
+        error: null,
+        success: false,
+        createdOrderDocumentId: null,
+      ),
+    );
+
+    try {
+      final routePoints = await _ordersRepo.buildRoutePointsToCurrentUser();
+
+      final OrderModel created = await _ordersRepo.createOrderMine(
+        amount: e.amount,
+        currency: e.currency,
+        addressDocumentId: e.addressDocumentId,
+        routePoints: routePoints,
+      );
+
+      _cartBloc.add(const CartEvent.clear());
+
       emit(
         state.copyWith(
           loading: false,
-          error:
-              ex.error.localizedMessage ?? ex.error.message ?? 'Stripe error',
-          success: false,
+          success: true,
+          createdOrderDocumentId: created.documentId,
         ),
       );
     } catch (err) {
-      debugPrint('Pay error: $err');
+      debugPrint('Cash order error: $err');
       emit(
         state.copyWith(loading: false, error: err.toString(), success: false),
       );

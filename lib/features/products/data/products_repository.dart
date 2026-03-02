@@ -62,18 +62,13 @@ class ProductRepository {
     if (filter != null) {
       const def = ProductsFilter();
 
-      // ✅ CATEGORY
-      // 1) якщо є categoryId — фільтруємо по id
       if (filter.categoryId != null) {
         qp['filters[category][id][\$eq]'] = filter.categoryId;
-      }
-      // 2) якщо id немає, але є categoryTitle — фільтруємо по title (case-insensitive)
-      else if (filter.categoryTitle != null &&
+      } else if (filter.categoryTitle != null &&
           filter.categoryTitle!.trim().isNotEmpty) {
         qp['filters[category][title][\$eqi]'] = filter.categoryTitle!.trim();
       }
 
-      // PRICE
       if (filter.minPrice != def.minPrice) {
         qp['filters[price][\$gte]'] = filter.minPrice;
       }
@@ -81,7 +76,6 @@ class ProductRepository {
         qp['filters[price][\$lte]'] = filter.maxPrice;
       }
 
-      // RATING (в Strapi поле "raiting")
       if (filter.minRating != null) {
         qp['filters[raiting][\$gte]'] = filter.minRating;
       }
@@ -89,12 +83,10 @@ class ProductRepository {
         qp['filters[raiting][\$lte]'] = filter.maxRating;
       }
 
-      // ONLY DISCOUNT (поле isDiscount у тебе є)
       if (filter.onlyDiscount) {
         qp['filters[isDiscount][\$eq]'] = true;
       }
 
-      // DISCOUNT % (працює лише якщо реально є поле discountPercent)
       if (filter.minDiscountPercent != null) {
         qp['filters[discountPercent][\$gte]'] = filter.minDiscountPercent;
       }
@@ -102,7 +94,6 @@ class ProductRepository {
         qp['filters[discountPercent][\$lte]'] = filter.maxDiscountPercent;
       }
 
-      // OTHERS (тільки якщо реально є ці поля в Strapi)
       if (filter.onlyFreeShipping) {
         qp['filters[freeShipping][\$eq]'] = true;
       }
@@ -121,7 +112,6 @@ class ProductRepository {
     return rows.cast<Map<String, dynamic>>().map(Products.fromStrapi).toList();
   }
 
-  /// ✅ щоб DetailInformationPage не падав
   Future<Products> fetchByDocumentId(String documentId) async {
     final qp = <String, dynamic>{
       'filters[documentId][\$eq]': documentId,

@@ -21,7 +21,7 @@ class OrdersRepository {
     double courierOffsetLat = 0.01,
     double courierOffsetLng = -0.01,
   }) async {
-    final client = await _getMyLocation(); // {lat,lng}
+    final client = await _getMyLocation();
 
     final courier = {
       'lat': client['lat']! + courierOffsetLat,
@@ -83,7 +83,7 @@ class OrdersRepository {
   }
 
   Future<OrderModel> createOrderMine({
-    required int amount, // cents
+    required int amount,
     required String currency,
     required String addressDocumentId,
     required List<Map<String, double>> routePoints,

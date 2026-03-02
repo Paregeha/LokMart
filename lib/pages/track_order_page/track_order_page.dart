@@ -1,21 +1,24 @@
-import 'dart:async';
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_map/flutter_map.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:geolocator/geolocator.dart';
+import 'package:flutter_map_dragmarker/flutter_map_dragmarker.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
-import 'package:http/http.dart' as http;
 import 'package:latlong2/latlong.dart';
 
+import '../../features/notifications/app_notifications.dart';
+import '../../features/order/data/orders_repository.dart';
+import '../../features/track/blocs/track_order_bloc.dart';
+import '../../features/track/blocs/track_order_event.dart';
+import '../../features/track/blocs/track_order_state.dart';
 import '../../gen/assets.gen.dart';
 import '../../resources/app_colors.dart';
 import '../../resources/app_fonts.dart';
 import '../../routes/app_routes.dart';
 
 class TrackOrderPage extends StatefulWidget {
-  const TrackOrderPage({super.key});
+  const TrackOrderPage({super.key, required this.documentId});
+  final String documentId;
 
   @override
   State<TrackOrderPage> createState() => _TrackOrderPageState();
@@ -23,320 +26,318 @@ class TrackOrderPage extends StatefulWidget {
 
 class _TrackOrderPageState extends State<TrackOrderPage> {
   final _mapController = MapController();
+  bool _cameraInitialized = false;
 
-  LatLng? _client;
-  LatLng? _courier;
-  List<LatLng> _route = [];
+  void _fitRouteOnce(List<LatLng> route, {LatLng? courier, LatLng? client}) {
+    if (_cameraInitialized) return;
 
-  bool _loading = true;
-  String? _error;
+    final pts = <LatLng>[
+      ...route,
+      if (courier != null) courier,
+      if (client != null) client,
+    ];
 
-  Timer? _tick;
-  int _routeIndex = 0;
+    if (pts.isEmpty) return;
 
-  @override
-  void initState() {
-    super.initState();
-    _init();
+    if (pts.length == 1) {
+      _mapController.move(pts.first, 14);
+      _cameraInitialized = true;
+      return;
+    }
+
+    var minLat = pts.first.latitude;
+    var maxLat = pts.first.latitude;
+    var minLng = pts.first.longitude;
+    var maxLng = pts.first.longitude;
+
+    for (final p in pts) {
+      if (p.latitude < minLat) minLat = p.latitude;
+      if (p.latitude > maxLat) maxLat = p.latitude;
+      if (p.longitude < minLng) minLng = p.longitude;
+      if (p.longitude > maxLng) maxLng = p.longitude;
+    }
+
+    final bounds = LatLngBounds(LatLng(minLat, minLng), LatLng(maxLat, maxLng));
+
+    _mapController.fitCamera(
+      CameraFit.bounds(bounds: bounds, padding: const EdgeInsets.all(64)),
+    );
+
+    _cameraInitialized = true;
   }
 
-  @override
-  void dispose() {
-    _tick?.cancel();
-    super.dispose();
-  }
+  Future<void> _openConfirmDialog(BuildContext context) async {
+    final bloc = context.read<TrackOrderBloc>();
+    final repo = context.read<OrdersRepository>();
 
-  Future<void> _init() async {
-    setState(() {
-      _loading = true;
-      _error = null;
-    });
+    final o = bloc.state.order;
+    if (o == null) return;
+    if (bloc.state.locked) return;
+
+    bloc.add(const TrackOrderDialogOpened());
+
+    final decision = await showDialog<_Decision>(
+      context: context,
+      barrierDismissible: false,
+      builder:
+          (_) => AlertDialog(
+            title: const Text('Order delivered'),
+            content: const Text('Confirm delivery or decline this order?'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context, _Decision.decline),
+                child: const Text('Decline'),
+              ),
+              ElevatedButton(
+                onPressed: () => Navigator.pop(context, _Decision.confirm),
+                child: const Text('Confirm'),
+              ),
+            ],
+          ),
+    );
+
+    if (!mounted) return;
 
     try {
-      final client = await _getMyLocation();
-      _client = client;
-
-      _courier = LatLng(client.latitude + 0.01, client.longitude - 0.01);
-
-      _route = await _fetchRouteOSRM(from: _courier!, to: _client!);
-
-      _mapController.move(_client!, 14);
-
-      _startCourierSimulation();
-
-      setState(() {
-        _loading = false;
-      });
-    } catch (e) {
-      setState(() {
-        _loading = false;
-        _error = e.toString();
-      });
-    }
-  }
-
-  Future<LatLng> _getMyLocation() async {
-    bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
-    if (!serviceEnabled) {
-      throw Exception('Location services are disabled');
-    }
-
-    LocationPermission perm = await Geolocator.checkPermission();
-    if (perm == LocationPermission.denied) {
-      perm = await Geolocator.requestPermission();
-    }
-    if (perm == LocationPermission.denied) {
-      throw Exception('Location permission denied');
-    }
-    if (perm == LocationPermission.deniedForever) {
-      throw Exception('Location permission denied forever');
-    }
-
-    final pos = await Geolocator.getCurrentPosition(
-      desiredAccuracy: LocationAccuracy.high,
-    );
-    return LatLng(pos.latitude, pos.longitude);
-  }
-
-  Future<List<LatLng>> _fetchRouteOSRM({
-    required LatLng from,
-    required LatLng to,
-  }) async {
-    final url =
-        'https://router.project-osrm.org/route/v1/driving/'
-        '${from.longitude},${from.latitude};${to.longitude},${to.latitude}'
-        '?overview=full&geometries=geojson';
-
-    final res = await http.get(Uri.parse(url));
-    if (res.statusCode != 200) {
-      throw Exception('OSRM error: ${res.statusCode} ${res.body}');
-    }
-
-    final json = jsonDecode(res.body) as Map<String, dynamic>;
-    final routes = (json['routes'] as List?) ?? [];
-    if (routes.isEmpty) throw Exception('No routes returned');
-
-    final geom = (routes.first as Map<String, dynamic>)['geometry'];
-    final coords = (geom as Map<String, dynamic>)['coordinates'] as List;
-
-    return coords.map((p) {
-      final lon = (p as List)[0] as num;
-      final lat = p[1] as num;
-      return LatLng(lat.toDouble(), lon.toDouble());
-    }).toList();
-  }
-
-  void _startCourierSimulation() {
-    _tick?.cancel();
-    if (_route.length < 2) return;
-
-    _routeIndex = 0;
-
-    _tick = Timer.periodic(const Duration(milliseconds: 700), (_) {
-      if (!mounted) return;
-      if (_routeIndex >= _route.length) {
-        _tick?.cancel();
+      if (decision == _Decision.confirm) {
+        await repo.confirmMine(documentId: o.documentId);
+      } else if (decision == _Decision.decline) {
+        await repo.cancelMine(documentId: o.documentId);
+      } else {
         return;
       }
 
-      setState(() {
-        _courier = _route[_routeIndex];
-        _routeIndex += 1;
-      });
-    });
+      bloc.add(const TrackOrderFinishAndLock());
+      if (mounted) context.go(AppRoutes.order);
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Action failed: $e')));
+    }
+  }
+
+  String _statusText(TrackOrderState s) {
+    final o = s.order;
+    if (o == null) return '...';
+
+    final status = o.orderStatus.trim().toLowerCase();
+
+    if (o.clientConfirmed == true) return '$status • confirmed';
+    if (status == 'cancelled' || status == 'canceled') return status;
+
+    if (status == 'completed') return 'completed • awaiting confirmation';
+    if (s.atEnd && !s.locked) return 'completed • awaiting confirmation';
+
+    return 'in_progress';
   }
 
   @override
   Widget build(BuildContext context) {
-    final client = _client;
-    final courier = _courier;
+    return BlocListener<TrackOrderBloc, TrackOrderState>(
+      listenWhen:
+          (prev, next) =>
+              prev.notifyArrived != next.notifyArrived ||
+              prev.error != next.error,
+      listener: (context, state) async {
+        if (state.error != null) {
+          ScaffoldMessenger.of(context)
+            ..hideCurrentSnackBar()
+            ..showSnackBar(SnackBar(content: Text(state.error!)));
+          return;
+        }
 
-    final markers = <Marker>[];
-    if (client != null) {
-      markers.add(
-        Marker(
-          point: client,
-          width: 44,
-          height: 44,
-          child: _pin(color: const Color(0xFF1CAF5E), icon: Icons.person_pin),
-        ),
-      );
-    }
-    if (courier != null) {
-      markers.add(
-        Marker(
-          point: courier,
-          width: 44,
-          height: 44,
-          child: _pin(color: AppColors.orange, icon: Icons.delivery_dining),
-        ),
-      );
-    }
+        if (state.notifyArrived) {
+          await AppNotifications.instance.showCourierArrived(
+            documentId: widget.documentId,
+          );
 
-    return Scaffold(
-      backgroundColor: AppColors.white,
-      appBar: AppBar(
-        backgroundColor: AppColors.white,
-        scrolledUnderElevation: 0,
-        title: const Text(
-          'Track Order',
-          style: TextStyle(
-            fontFamily: AppFonts.fontFamily,
-            fontWeight: AppFonts.w600semiBold,
-            fontSize: 22.0,
-            color: AppColors.dark,
-          ),
-        ),
-        centerTitle: false,
-        leading: IconButton(
-          onPressed: () => context.go(AppRoutes.home),
-          icon: SvgPicture.asset(
-            Assets.icons.icBack.path,
-            width: 24,
-            height: 24,
-          ),
-        ),
-        actions: [
-          IconButton(
-            tooltip: 'Refresh location',
-            onPressed: _init,
-            icon: const Icon(Icons.refresh, color: AppColors.orange, size: 26),
-          ),
-          const SizedBox(width: 8),
-        ],
-      ),
-      body: Stack(
-        children: [
-          FlutterMap(
-            mapController: _mapController,
-            options: MapOptions(
-              initialCenter: client ?? const LatLng(40.7419, -73.9900),
-              initialZoom: 14,
-            ),
-            children: [
-              TileLayer(
-                urlTemplate:
-                    'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',
-                subdomains: const ['a', 'b', 'c', 'd'],
-                userAgentPackageName: 'com.example.app',
-                retinaMode: RetinaMode.isHighDensity(context),
+          if (!context.mounted) return;
+          context.read<TrackOrderBloc>().add(
+            const TrackOrderNotificationShown(),
+          );
+        }
+      },
+      child: BlocBuilder<TrackOrderBloc, TrackOrderState>(
+        builder: (context, s) {
+          final courier = s.courier;
+          final route = s.route;
+          final clientPoint = s.clientPoint;
+          final remaining = s.remainingRoute;
+
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            _fitRouteOnce(route, courier: courier, client: clientPoint);
+          });
+
+          final markers = <Marker>[];
+
+          if (clientPoint != null) {
+            markers.add(
+              Marker(
+                point: clientPoint,
+                width: 44,
+                height: 44,
+                child: _pin(
+                  color: const Color(0xFF1CAF5E),
+                  icon: Icons.person_pin,
+                ),
               ),
+            );
+          }
 
-              if (_route.isNotEmpty)
-                PolylineLayer(
-                  polylines: [
-                    Polyline(
-                      points: _route,
-                      strokeWidth: 5,
-                      color: AppColors.orange.withValues(alpha: 0.75),
+          return Scaffold(
+            backgroundColor: AppColors.white,
+            appBar: AppBar(
+              backgroundColor: AppColors.white,
+              scrolledUnderElevation: 0,
+              title: const Text(
+                'Track Order',
+                style: TextStyle(
+                  fontFamily: AppFonts.fontFamily,
+                  fontWeight: AppFonts.w600semiBold,
+                  fontSize: 22.0,
+                  color: AppColors.dark,
+                ),
+              ),
+              centerTitle: false,
+              leading: IconButton(
+                onPressed: () => context.go(AppRoutes.home),
+                icon: SvgPicture.asset(
+                  Assets.icons.icBack.path,
+                  width: 24,
+                  height: 24,
+                ),
+              ),
+              actions: [
+                IconButton(
+                  tooltip: 'Refresh',
+                  onPressed: () {
+                    _cameraInitialized = false;
+                    context.read<TrackOrderBloc>().add(const TrackOrderBoot());
+                  },
+                  icon: const Icon(
+                    Icons.refresh,
+                    color: AppColors.orange,
+                    size: 26,
+                  ),
+                ),
+                const SizedBox(width: 8),
+              ],
+            ),
+            body: Stack(
+              children: [
+                FlutterMap(
+                  mapController: _mapController,
+                  options: const MapOptions(
+                    initialCenter: LatLng(40.7419, -73.9900),
+                    initialZoom: 14,
+                  ),
+                  children: [
+                    TileLayer(
+                      urlTemplate:
+                          'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',
+                      subdomains: const ['a', 'b', 'c', 'd'],
+                      userAgentPackageName: 'com.example.app',
+                      retinaMode: RetinaMode.isHighDensity(context),
                     ),
+
+                    if (route.length >= 2)
+                      PolylineLayer(
+                        polylines: [
+                          Polyline(
+                            points: route,
+                            strokeWidth: 5,
+                            color: AppColors.gray1.withValues(alpha: 0.55),
+                          ),
+                        ],
+                      ),
+
+                    if (remaining.length >= 2)
+                      PolylineLayer(
+                        polylines: [
+                          Polyline(
+                            points: remaining,
+                            strokeWidth: 5,
+                            color: AppColors.orange.withValues(alpha: 0.85),
+                          ),
+                        ],
+                      ),
+
+                    if (courier != null)
+                      DragMarkers(
+                        markers: [
+                          DragMarker(
+                            point: courier,
+                            size: const Size(44, 44),
+                            builder: (context, point, isDragging) {
+                              return _pin(
+                                color:
+                                    s.locked
+                                        ? AppColors.gray1
+                                        : AppColors.orange,
+                                icon: Icons.delivery_dining,
+                              );
+                            },
+                            onDragUpdate:
+                                s.locked
+                                    ? null
+                                    : (details, rawPoint) {
+                                      context.read<TrackOrderBloc>().add(
+                                        TrackOrderDragUpdate(
+                                          rawPoint: rawPoint,
+                                        ),
+                                      );
+                                    },
+                            onDragEnd:
+                                s.locked
+                                    ? null
+                                    : (details, point) {
+                                      context.read<TrackOrderBloc>().add(
+                                        const TrackOrderDragEnd(),
+                                      );
+                                    },
+                          ),
+                        ],
+                      ),
+
+                    MarkerLayer(markers: markers),
                   ],
                 ),
 
-              MarkerLayer(markers: markers),
-            ],
-          ),
-
-          if (_loading)
-            const Positioned(
-              top: 16,
-              left: 16,
-              right: 16,
-              child: _TopMessage(text: 'Loading map & route...'),
-            ),
-
-          if (_error != null)
-            Positioned(
-              top: 16,
-              left: 16,
-              right: 16,
-              child: _TopMessage(text: _error!, isError: true),
-            ),
-
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: Container(
-              height: 150.0,
-              padding: const EdgeInsets.all(16),
-              decoration: const BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(24.0),
-                  topRight: Radius.circular(24.0),
-                ),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black12,
-                    blurRadius: 24,
-                    offset: Offset(0, 8),
+                if (s.loading)
+                  const Positioned(
+                    top: 16,
+                    left: 16,
+                    right: 16,
+                    child: _TopMessage(text: 'Loading...'),
                   ),
-                ],
-              ),
-              child: Column(
-                children: [
-                  Container(
-                    width: 46.0,
-                    height: 6,
-                    decoration: BoxDecoration(
-                      color: AppColors.gray1,
-                      borderRadius: BorderRadius.circular(6),
+
+                if (s.order != null)
+                  Positioned(
+                    top: 62,
+                    left: 16,
+                    child: _StatusChip(text: _statusText(s)),
+                  ),
+
+                if (s.pendingDecision && !s.locked)
+                  Positioned(
+                    left: 16,
+                    right: 16,
+                    bottom: 170,
+                    child: ElevatedButton(
+                      onPressed: () => _openConfirmDialog(context),
+                      child: const Text('Open confirmation'),
                     ),
                   ),
-                  const SizedBox(height: 21.0),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        children: [
-                          SizedBox(
-                            width: 56.0,
-                            height: 56.0,
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(12.0),
-                              child: Assets.images.man.image(
-                                fit: BoxFit.contain,
-                              ),
-                            ),
-                          ),
-                          const SizedBox(width: 21.0),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: const [
-                              Text(
-                                'Devin Joseph',
-                                style: TextStyle(
-                                  fontFamily: AppFonts.fontFamily,
-                                  fontWeight: AppFonts.w600semiBold,
-                                  fontSize: 18.0,
-                                  letterSpacing: -0.24,
-                                  color: AppColors.dark,
-                                ),
-                              ),
-                              SizedBox(height: 6),
-                              Text('ID 2445556'),
-                            ],
-                          ),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          SvgPicture.asset(Assets.icons.phoneCall.path),
-                          const SizedBox(width: 23.0),
-                          SvgPicture.asset(Assets.icons.chat.path),
-                        ],
-                      ),
-                    ],
-                  ),
-                ],
-              ),
+              ],
             ),
-          ),
-        ],
+          );
+        },
       ),
     );
   }
 
-  Widget _pin({required Color color, required IconData icon}) {
+  static Widget _pin({required Color color, required IconData icon}) {
     return Container(
       decoration: BoxDecoration(
         color: color,
@@ -354,9 +355,10 @@ class _TrackOrderPageState extends State<TrackOrderPage> {
   }
 }
 
+enum _Decision { confirm, decline }
+
 class _TopMessage extends StatelessWidget {
   const _TopMessage({required this.text, this.isError = false});
-
   final String text;
   final bool isError;
 
@@ -369,6 +371,24 @@ class _TopMessage extends StatelessWidget {
           isError ? Colors.red.shade600 : Colors.black.withValues(alpha: 0.75),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+        child: Text(text, style: const TextStyle(color: Colors.white)),
+      ),
+    );
+  }
+}
+
+class _StatusChip extends StatelessWidget {
+  const _StatusChip({required this.text});
+  final String text;
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      elevation: 4,
+      borderRadius: BorderRadius.circular(999),
+      color: Colors.black.withValues(alpha: 0.55),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
         child: Text(text, style: const TextStyle(color: Colors.white)),
       ),
     );

@@ -19,7 +19,6 @@ class SavedCard with _$SavedCard {
   factory SavedCard.fromJson(Map<String, dynamic> json) =>
       _$SavedCardFromJson(json);
 
-  // ✅ Strapi v4/v5 compatibility (v4 -> attributes, v5 -> flat)
   static SavedCard fromStrapiItem(Map<String, dynamic> item) {
     final attrs =
         (item['attributes'] is Map<String, dynamic>)

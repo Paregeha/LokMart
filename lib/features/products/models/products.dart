@@ -26,13 +26,11 @@ class Products with _$Products {
       _$ProductsFromJson(json);
 
   factory Products.fromStrapi(Map<String, dynamic> row) {
-    // ---------- ATTRIBUTES ----------
     final attrRaw = row['attributes'];
     final attrs =
         (attrRaw is Map ? attrRaw.cast<String, dynamic>() : null) ??
         row.cast<String, dynamic>();
 
-    // ---------- PHOTO ----------
     String? photoUrl;
     final photo = attrs['photo'];
 

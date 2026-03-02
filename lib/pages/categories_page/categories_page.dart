@@ -43,7 +43,6 @@ class CategoriesPage extends StatelessWidget {
       body: BlocBuilder<CategoryBloc, CategoryState>(
         builder: (context, state) {
           return state.when(
-            // НІЯКИХ МОКІВ: тільки лоадер
             initial: () => const _Loading(),
             loading: (_) => const _Loading(),
             failure:

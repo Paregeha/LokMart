@@ -3,7 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_base_architecture/features/products/models/products.dart';
 import 'package:flutter_base_architecture/resources/app_colors.dart';
 import 'package:flutter_base_architecture/resources/app_fonts.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import '../../features/wishlist/blocs/wishlist_bloc.dart';
+import '../../features/wishlist/blocs/wishlist_event.dart';
+import '../../features/wishlist/blocs/wishlist_state.dart';
 import '../../gen/assets.gen.dart';
 import '../../routes/app_routes.dart';
 
@@ -17,8 +21,6 @@ class CustomItemCartWidget extends StatefulWidget {
 }
 
 class _CustomItemCartWidgetState extends State<CustomItemCartWidget> {
-  bool enableHeart = false;
-
   @override
   Widget build(BuildContext context) {
     final product = widget.products;
@@ -87,12 +89,44 @@ class _CustomItemCartWidgetState extends State<CustomItemCartWidget> {
                 Positioned(
                   top: 8,
                   right: 8,
-                  child: GestureDetector(
-                    onTap: () => setState(() => enableHeart = !enableHeart),
-                    child:
-                        enableHeart
-                            ? Assets.icons.heartRed.svg(width: 22, height: 22)
-                            : Assets.icons.heart.svg(width: 22, height: 22),
+                  child: BlocBuilder<WishlistBloc, WishlistState>(
+                    buildWhen: (prev, next) {
+                      // перебудовуємо тільки якщо змінились ids
+                      Set<int> idsOf(WishlistState s) => s.when(
+                        initial: () => const <int>{},
+                        loading: (_, ids) => ids,
+                        ready: (ids) => ids,
+                        failure: (_, ids) => ids,
+                      );
+                      return idsOf(prev) != idsOf(next);
+                    },
+                    builder: (context, state) {
+                      final ids = state.when(
+                        initial: () => const <int>{},
+                        loading: (_, ids) => ids,
+                        ready: (ids) => ids,
+                        failure: (_, ids) => ids,
+                      );
+
+                      final isFav = product != null && ids.contains(product.id);
+
+                      return GestureDetector(
+                        behavior: HitTestBehavior.opaque,
+                        onTap: () {
+                          if (product == null) return;
+                          context.read<WishlistBloc>().add(
+                            WishlistEvent.toggle(productId: product.id),
+                          );
+                        },
+                        child:
+                            isFav
+                                ? Assets.icons.heartRed.svg(
+                                  width: 22,
+                                  height: 22,
+                                )
+                                : Assets.icons.heart.svg(width: 22, height: 22),
+                      );
+                    },
                   ),
                 ),
               ],

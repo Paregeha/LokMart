@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 import '../../features/cart/blocs/cart_bloc.dart';
+import '../../features/cart/blocs/cart_event.dart';
 import '../../features/payments/blocs/checkout_payment_bloc.dart';
 import '../../features/payments/blocs/payment_methods_bloc.dart';
 import '../../features/payments/blocs/payment_methods_event.dart';
@@ -38,6 +39,7 @@ class _CheckoutPaymentPageState extends State<CheckoutPaymentPage> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<PaymentMethodsBloc>().add(const PaymentMethodsEvent.fetch());
+      context.read<CartBloc>().add(const CartEvent.load());
     });
   }
 
@@ -58,7 +60,11 @@ class _CheckoutPaymentPageState extends State<CheckoutPaymentPage> {
   @override
   Widget build(BuildContext context) {
     return BlocListener<CheckoutPaymentBloc, CheckoutPaymentState>(
-      listenWhen: (p, c) => p.success != c.success || p.error != c.error,
+      listenWhen:
+          (p, c) =>
+              p.success != c.success ||
+              p.error != c.error ||
+              p.createdOrderDocumentId != c.createdOrderDocumentId,
       listener: (context, state) {
         if (state.error != null) {
           ScaffoldMessenger.of(
@@ -66,10 +72,8 @@ class _CheckoutPaymentPageState extends State<CheckoutPaymentPage> {
           ).showSnackBar(SnackBar(content: Text(state.error!)));
         }
 
-        if (state.success) {
-          // Якщо хочеш — тут краще перейти в TrackOrder конкретного orderId
-          // а не просто AppRoutes.trackOrder.
-          context.go(AppRoutes.trackOrder);
+        if (state.success && state.createdOrderDocumentId != null) {
+          context.go(AppRoutes.trackOrder, extra: state.createdOrderDocumentId);
         }
       },
       child: Scaffold(
@@ -91,7 +95,6 @@ class _CheckoutPaymentPageState extends State<CheckoutPaymentPage> {
             icon: SvgPicture.asset(Assets.icons.icBack.path),
           ),
         ),
-
         bottomNavigationBar: SafeArea(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 32),
@@ -114,7 +117,6 @@ class _CheckoutPaymentPageState extends State<CheckoutPaymentPage> {
             ),
           ),
         ),
-
         body: SafeArea(
           child: Column(
             children: [
@@ -130,7 +132,6 @@ class _CheckoutPaymentPageState extends State<CheckoutPaymentPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const SizedBox(height: 12),
-
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -157,7 +158,6 @@ class _CheckoutPaymentPageState extends State<CheckoutPaymentPage> {
                           ),
                         ],
                       ),
-
                       BlocBuilder<PaymentMethodsBloc, PaymentMethodsState>(
                         builder: (context, state) {
                           if (state.loading) {
@@ -225,25 +225,20 @@ class _CheckoutPaymentPageState extends State<CheckoutPaymentPage> {
                           );
                         },
                       ),
-
                       const SizedBox(height: 24),
-
                       _paymentTile(
                         title: 'Cash Payment',
                         icon: Assets.icons.cashonIcon.path,
                         selected: _type == PaymentType.cash,
                         onTap: () => setState(() => _type = PaymentType.cash),
                       ),
-
                       const SizedBox(height: 16),
-
                       _paymentTile(
                         title: 'Paypal',
                         icon: Assets.icons.paypal.path,
                         selected: _type == PaymentType.paypal,
                         onTap: () => setState(() => _type = PaymentType.paypal),
                       ),
-
                       const SizedBox(height: 24),
                     ],
                   ),
@@ -257,14 +252,34 @@ class _CheckoutPaymentPageState extends State<CheckoutPaymentPage> {
   }
 
   void _onPayPressed(BuildContext context, PaymentMethodsState pmState) {
-    if (_type == PaymentType.cash) {
-      context.go(AppRoutes.trackOrder);
-      return;
-    }
-
     if (widget.addressDocumentId.trim().isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Missing addressDocumentId')),
+      );
+      return;
+    }
+
+    final cartState = context.read<CartBloc>().state;
+    final total = cartState.maybeWhen(
+      success: (_, total) => total,
+      orElse: () => 0.0,
+    );
+
+    final amountCents = (total * 100).round();
+    if (amountCents <= 0) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Cart total is 0')));
+      return;
+    }
+
+    if (_type == PaymentType.cash) {
+      context.read<CheckoutPaymentBloc>().add(
+        CheckoutPaymentEvent.payCash(
+          amount: amountCents,
+          currency: 'usd',
+          addressDocumentId: widget.addressDocumentId,
+        ),
       );
       return;
     }
@@ -282,27 +297,13 @@ class _CheckoutPaymentPageState extends State<CheckoutPaymentPage> {
 
     final card = pmState.cards.firstWhere((c) => c.id == selectedId);
 
-    final cartState = context.read<CartBloc>().state;
-    final total = cartState.maybeWhen(
-      success: (_, total) => total,
-      orElse: () => 0.0,
-    );
-
-    final amountCents = (total * 100).round();
-    if (amountCents <= 0) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text('Cart total is 0')));
-      return;
-    }
-
     context.read<CheckoutPaymentBloc>().add(
       CheckoutPaymentEvent.pay(
         selectedCard: card,
         amount: amountCents,
         currency: 'usd',
         orderId: null,
-        addressDocumentId: widget.addressDocumentId, // ✅ ОЦЕ ГОЛОВНЕ
+        addressDocumentId: widget.addressDocumentId,
       ),
     );
   }

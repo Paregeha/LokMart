@@ -9,11 +9,13 @@ class CustomButtonProfileWidget extends StatelessWidget {
     required this.icon,
     required this.label,
     this.isLogout = false,
+    this.onTap,
   });
 
   final Widget icon;
   final String label;
   final bool isLogout;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -24,12 +26,13 @@ class CustomButtonProfileWidget extends StatelessWidget {
     );
 
     return Material(
+      color: Colors.transparent,
       child: Ink(
         width: double.infinity,
         height: 41.0,
-        decoration: BoxDecoration(color: Colors.white),
+        decoration: const BoxDecoration(color: Colors.white),
         child: InkWell(
-          onTap: () {},
+          onTap: onTap,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -44,11 +47,10 @@ class CustomButtonProfileWidget extends StatelessWidget {
                     ),
                     child: Center(child: icon),
                   ),
-                  SizedBox(width: 20.0),
+                  const SizedBox(width: 20.0),
                   Text(label),
                 ],
               ),
-
               if (!isLogout) Assets.icons.icArrowNext.svg(),
             ],
           ),

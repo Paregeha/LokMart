@@ -17,10 +17,8 @@ final _privateConstructorUsedError = UnsupportedError(
 
 /// @nodoc
 mixin _$CheckoutPaymentEvent {
-  SavedCard get selectedCard => throw _privateConstructorUsedError;
-  int get amount => throw _privateConstructorUsedError;
+  int get amount => throw _privateConstructorUsedError; // cents
   String get currency => throw _privateConstructorUsedError;
-  String? get orderId => throw _privateConstructorUsedError;
   String get addressDocumentId => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
@@ -32,6 +30,12 @@ mixin _$CheckoutPaymentEvent {
       String addressDocumentId,
     )
     pay,
+    required TResult Function(
+      int amount,
+      String currency,
+      String addressDocumentId,
+    )
+    payCash,
   }) => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
@@ -43,6 +47,8 @@ mixin _$CheckoutPaymentEvent {
       String addressDocumentId,
     )?
     pay,
+    TResult? Function(int amount, String currency, String addressDocumentId)?
+    payCash,
   }) => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
@@ -54,19 +60,24 @@ mixin _$CheckoutPaymentEvent {
       String addressDocumentId,
     )?
     pay,
+    TResult Function(int amount, String currency, String addressDocumentId)?
+    payCash,
     required TResult orElse(),
   }) => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(_Pay value) pay,
+    required TResult Function(_PayCash value) payCash,
   }) => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(_Pay value)? pay,
+    TResult? Function(_PayCash value)? payCash,
   }) => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_Pay value)? pay,
+    TResult Function(_PayCash value)? payCash,
     required TResult orElse(),
   }) => throw _privateConstructorUsedError;
 
@@ -84,15 +95,7 @@ abstract class $CheckoutPaymentEventCopyWith<$Res> {
     $Res Function(CheckoutPaymentEvent) then,
   ) = _$CheckoutPaymentEventCopyWithImpl<$Res, CheckoutPaymentEvent>;
   @useResult
-  $Res call({
-    SavedCard selectedCard,
-    int amount,
-    String currency,
-    String? orderId,
-    String addressDocumentId,
-  });
-
-  $SavedCardCopyWith<$Res> get selectedCard;
+  $Res call({int amount, String currency, String addressDocumentId});
 }
 
 /// @nodoc
@@ -113,19 +116,12 @@ class _$CheckoutPaymentEventCopyWithImpl<
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? selectedCard = null,
     Object? amount = null,
     Object? currency = null,
-    Object? orderId = freezed,
     Object? addressDocumentId = null,
   }) {
     return _then(
       _value.copyWith(
-            selectedCard:
-                null == selectedCard
-                    ? _value.selectedCard
-                    : selectedCard // ignore: cast_nullable_to_non_nullable
-                        as SavedCard,
             amount:
                 null == amount
                     ? _value.amount
@@ -136,11 +132,6 @@ class _$CheckoutPaymentEventCopyWithImpl<
                     ? _value.currency
                     : currency // ignore: cast_nullable_to_non_nullable
                         as String,
-            orderId:
-                freezed == orderId
-                    ? _value.orderId
-                    : orderId // ignore: cast_nullable_to_non_nullable
-                        as String?,
             addressDocumentId:
                 null == addressDocumentId
                     ? _value.addressDocumentId
@@ -149,16 +140,6 @@ class _$CheckoutPaymentEventCopyWithImpl<
           )
           as $Val,
     );
-  }
-
-  /// Create a copy of CheckoutPaymentEvent
-  /// with the given fields replaced by the non-null parameter values.
-  @override
-  @pragma('vm:prefer-inline')
-  $SavedCardCopyWith<$Res> get selectedCard {
-    return $SavedCardCopyWith<$Res>(_value.selectedCard, (value) {
-      return _then(_value.copyWith(selectedCard: value) as $Val);
-    });
   }
 }
 
@@ -177,7 +158,6 @@ abstract class _$$PayImplCopyWith<$Res>
     String addressDocumentId,
   });
 
-  @override
   $SavedCardCopyWith<$Res> get selectedCard;
 }
 
@@ -229,6 +209,16 @@ class __$$PayImplCopyWithImpl<$Res>
       ),
     );
   }
+
+  /// Create a copy of CheckoutPaymentEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $SavedCardCopyWith<$Res> get selectedCard {
+    return $SavedCardCopyWith<$Res>(_value.selectedCard, (value) {
+      return _then(_value.copyWith(selectedCard: value));
+    });
+  }
 }
 
 /// @nodoc
@@ -246,6 +236,7 @@ class _$PayImpl implements _Pay {
   final SavedCard selectedCard;
   @override
   final int amount;
+  // cents
   @override
   @JsonKey()
   final String currency;
@@ -303,6 +294,12 @@ class _$PayImpl implements _Pay {
       String addressDocumentId,
     )
     pay,
+    required TResult Function(
+      int amount,
+      String currency,
+      String addressDocumentId,
+    )
+    payCash,
   }) {
     return pay(selectedCard, amount, currency, orderId, addressDocumentId);
   }
@@ -318,6 +315,8 @@ class _$PayImpl implements _Pay {
       String addressDocumentId,
     )?
     pay,
+    TResult? Function(int amount, String currency, String addressDocumentId)?
+    payCash,
   }) {
     return pay?.call(
       selectedCard,
@@ -339,6 +338,8 @@ class _$PayImpl implements _Pay {
       String addressDocumentId,
     )?
     pay,
+    TResult Function(int amount, String currency, String addressDocumentId)?
+    payCash,
     required TResult orElse(),
   }) {
     if (pay != null) {
@@ -351,6 +352,7 @@ class _$PayImpl implements _Pay {
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(_Pay value) pay,
+    required TResult Function(_PayCash value) payCash,
   }) {
     return pay(this);
   }
@@ -359,6 +361,7 @@ class _$PayImpl implements _Pay {
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(_Pay value)? pay,
+    TResult? Function(_PayCash value)? payCash,
   }) {
     return pay?.call(this);
   }
@@ -367,6 +370,7 @@ class _$PayImpl implements _Pay {
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_Pay value)? pay,
+    TResult Function(_PayCash value)? payCash,
     required TResult orElse(),
   }) {
     if (pay != null) {
@@ -385,13 +389,11 @@ abstract class _Pay implements CheckoutPaymentEvent {
     required final String addressDocumentId,
   }) = _$PayImpl;
 
-  @override
   SavedCard get selectedCard;
   @override
-  int get amount;
+  int get amount; // cents
   @override
   String get currency;
-  @override
   String? get orderId;
   @override
   String get addressDocumentId;
@@ -401,6 +403,218 @@ abstract class _Pay implements CheckoutPaymentEvent {
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
   _$$PayImplCopyWith<_$PayImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$PayCashImplCopyWith<$Res>
+    implements $CheckoutPaymentEventCopyWith<$Res> {
+  factory _$$PayCashImplCopyWith(
+    _$PayCashImpl value,
+    $Res Function(_$PayCashImpl) then,
+  ) = __$$PayCashImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({int amount, String currency, String addressDocumentId});
+}
+
+/// @nodoc
+class __$$PayCashImplCopyWithImpl<$Res>
+    extends _$CheckoutPaymentEventCopyWithImpl<$Res, _$PayCashImpl>
+    implements _$$PayCashImplCopyWith<$Res> {
+  __$$PayCashImplCopyWithImpl(
+    _$PayCashImpl _value,
+    $Res Function(_$PayCashImpl) _then,
+  ) : super(_value, _then);
+
+  /// Create a copy of CheckoutPaymentEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? amount = null,
+    Object? currency = null,
+    Object? addressDocumentId = null,
+  }) {
+    return _then(
+      _$PayCashImpl(
+        amount:
+            null == amount
+                ? _value.amount
+                : amount // ignore: cast_nullable_to_non_nullable
+                    as int,
+        currency:
+            null == currency
+                ? _value.currency
+                : currency // ignore: cast_nullable_to_non_nullable
+                    as String,
+        addressDocumentId:
+            null == addressDocumentId
+                ? _value.addressDocumentId
+                : addressDocumentId // ignore: cast_nullable_to_non_nullable
+                    as String,
+      ),
+    );
+  }
+}
+
+/// @nodoc
+
+class _$PayCashImpl implements _PayCash {
+  const _$PayCashImpl({
+    required this.amount,
+    this.currency = 'usd',
+    required this.addressDocumentId,
+  });
+
+  @override
+  final int amount;
+  // cents
+  @override
+  @JsonKey()
+  final String currency;
+  @override
+  final String addressDocumentId;
+
+  @override
+  String toString() {
+    return 'CheckoutPaymentEvent.payCash(amount: $amount, currency: $currency, addressDocumentId: $addressDocumentId)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$PayCashImpl &&
+            (identical(other.amount, amount) || other.amount == amount) &&
+            (identical(other.currency, currency) ||
+                other.currency == currency) &&
+            (identical(other.addressDocumentId, addressDocumentId) ||
+                other.addressDocumentId == addressDocumentId));
+  }
+
+  @override
+  int get hashCode =>
+      Object.hash(runtimeType, amount, currency, addressDocumentId);
+
+  /// Create a copy of CheckoutPaymentEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$PayCashImplCopyWith<_$PayCashImpl> get copyWith =>
+      __$$PayCashImplCopyWithImpl<_$PayCashImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(
+      SavedCard selectedCard,
+      int amount,
+      String currency,
+      String? orderId,
+      String addressDocumentId,
+    )
+    pay,
+    required TResult Function(
+      int amount,
+      String currency,
+      String addressDocumentId,
+    )
+    payCash,
+  }) {
+    return payCash(amount, currency, addressDocumentId);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(
+      SavedCard selectedCard,
+      int amount,
+      String currency,
+      String? orderId,
+      String addressDocumentId,
+    )?
+    pay,
+    TResult? Function(int amount, String currency, String addressDocumentId)?
+    payCash,
+  }) {
+    return payCash?.call(amount, currency, addressDocumentId);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(
+      SavedCard selectedCard,
+      int amount,
+      String currency,
+      String? orderId,
+      String addressDocumentId,
+    )?
+    pay,
+    TResult Function(int amount, String currency, String addressDocumentId)?
+    payCash,
+    required TResult orElse(),
+  }) {
+    if (payCash != null) {
+      return payCash(amount, currency, addressDocumentId);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(_Pay value) pay,
+    required TResult Function(_PayCash value) payCash,
+  }) {
+    return payCash(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(_Pay value)? pay,
+    TResult? Function(_PayCash value)? payCash,
+  }) {
+    return payCash?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(_Pay value)? pay,
+    TResult Function(_PayCash value)? payCash,
+    required TResult orElse(),
+  }) {
+    if (payCash != null) {
+      return payCash(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class _PayCash implements CheckoutPaymentEvent {
+  const factory _PayCash({
+    required final int amount,
+    final String currency,
+    required final String addressDocumentId,
+  }) = _$PayCashImpl;
+
+  @override
+  int get amount; // cents
+  @override
+  String get currency;
+  @override
+  String get addressDocumentId;
+
+  /// Create a copy of CheckoutPaymentEvent
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$PayCashImplCopyWith<_$PayCashImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 

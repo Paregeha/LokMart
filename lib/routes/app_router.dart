@@ -20,10 +20,17 @@ import 'package:flutter_base_architecture/widgets/navigations/custom_bottom_bar_
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
+import '../features/auth/data/auth_repository.dart';
+import '../features/order/blocs/orders_bloc.dart';
+import '../features/order/data/orders_repository.dart';
 import '../features/products/blocs/products_bloc.dart';
 import '../features/products/blocs/products_event.dart';
 import '../features/products/data/products_repository.dart';
 import '../features/products/models/products_filter.dart';
+import '../features/profile/bloc/profile_bloc.dart';
+import '../features/profile/bloc/profile_event.dart';
+import '../features/track/blocs/track_order_bloc.dart';
+import '../features/track/blocs/track_order_event.dart';
 import '../pages/filter_page/filter_options_page.dart';
 import '../pages/search_page/search_page.dart';
 import 'app_routes.dart';
@@ -33,7 +40,12 @@ class AppRouter {
 
   static const int kCartTabIndex = 2;
 
+  static final GlobalKey<NavigatorState> rootNavKey = GlobalKey<NavigatorState>(
+    debugLabel: 'root',
+  );
+
   static final GoRouter instance = GoRouter(
+    navigatorKey: rootNavKey, // ✅ NEW
     initialLocation: AppRoutes.splash,
     routes: [
       GoRoute(
@@ -125,7 +137,6 @@ class AppRouter {
           );
         },
       ),
-
       GoRoute(
         path: AppRoutes.categoryItems,
         name: 'CategoryItems',
@@ -143,7 +154,6 @@ class AppRouter {
           );
         },
       ),
-
       GoRoute(
         path: AppRoutes.searchPage,
         name: 'SearchPage',
@@ -170,7 +180,6 @@ class AppRouter {
           );
         },
       ),
-
       GoRoute(
         path: AppRoutes.filterOptionsPage,
         name: 'FilterOptionsPage',
@@ -191,7 +200,6 @@ class AppRouter {
           );
         },
       ),
-
       GoRoute(
         path: AppRoutes.detailInformation,
         name: 'DetailInformation',
@@ -199,7 +207,6 @@ class AppRouter {
           final extra = state.extra;
 
           if (extra is! String) {
-            // Якщо хтось відкрив сторінку без documentId — не падаємо
             return const NoTransitionPage(
               child: Scaffold(
                 body: Center(
@@ -280,12 +287,29 @@ class AppRouter {
           );
         },
       ),
+
       GoRoute(
         path: AppRoutes.trackOrder,
         name: 'TrackOrder',
         pageBuilder: (BuildContext context, GoRouterState state) {
+          final extra = state.extra;
+          if (extra is! String || extra.trim().isEmpty) {
+            return const NoTransitionPage(
+              child: Scaffold(body: Center(child: Text('Order ID is missing'))),
+            );
+          }
+
+          final documentId = extra.trim();
+
           return CustomTransitionPage(
-            child: TrackOrderPage(),
+            child: BlocProvider(
+              create:
+                  (ctx) => TrackOrderBloc(
+                    documentId: documentId,
+                    ordersRepo: ctx.read<OrdersRepository>(),
+                  )..add(const TrackOrderBoot()),
+              child: TrackOrderPage(documentId: documentId),
+            ),
             transitionsBuilder: (
               context,
               animation,
@@ -297,6 +321,7 @@ class AppRouter {
           );
         },
       ),
+
       GoRoute(
         path: AppRoutes.shoppingCart,
         name: 'shopping cart',
@@ -347,7 +372,6 @@ class AppRouter {
               ),
             ],
           ),
-
           StatefulShellBranch(
             navigatorKey: GlobalKey<NavigatorState>(debugLabel: 'order'),
             routes: [
@@ -355,11 +379,15 @@ class AppRouter {
                 path: AppRoutes.order,
                 name: 'orders',
                 pageBuilder:
-                    (ctx, st) => const NoTransitionPage(child: OrderPage()),
+                    (ctx, st) => NoTransitionPage(
+                      child: BlocProvider(
+                        create: (c) => OrdersBloc(c.read<OrdersRepository>()),
+                        child: const OrderPage(),
+                      ),
+                    ),
               ),
             ],
           ),
-
           StatefulShellBranch(
             navigatorKey: GlobalKey<NavigatorState>(debugLabel: 'wishlist'),
             routes: [
@@ -371,15 +399,23 @@ class AppRouter {
               ),
             ],
           ),
-
           StatefulShellBranch(
             navigatorKey: GlobalKey<NavigatorState>(debugLabel: 'profile'),
             routes: [
               GoRoute(
                 path: AppRoutes.profile,
                 name: 'profile',
-                pageBuilder:
-                    (ctx, st) => const NoTransitionPage(child: ProfilePage()),
+                pageBuilder: (ctx, st) {
+                  return NoTransitionPage(
+                    child: BlocProvider(
+                      create:
+                          (c) =>
+                              ProfileBloc(c.read<AuthRepository>())
+                                ..add(const ProfileBoot()),
+                      child: const ProfilePage(),
+                    ),
+                  );
+                },
               ),
             ],
           ),
