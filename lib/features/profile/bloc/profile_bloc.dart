@@ -149,23 +149,30 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         avatarId = await _authRepo.uploadAvatar(state.avatarLocalPath!);
       }
 
-      final updated = await _authRepo.updateProfile(
+      // 1) апдейтимо профіль (може повернути юзера без avatar/без правильного avatarUrl)
+      await _authRepo.updateProfile(
         userId: u.id,
         username: state.username.trim(),
         email: state.email.trim(),
         avatarId: avatarId,
       );
 
+      // ✅ 2) беремо "свіжого" юзера з /me?populate=avatar
+      final fresh = await _authRepo.me();
+
+      final bumpedRev = state.avatarRev + 1;
+
       emit(
         state
             .copyWith(
               status: ProfileStatus.successProfile,
-              user: updated,
+              user: fresh, // ✅ важливо: саме fresh
               editOpen: false,
               avatarLocalPath: null,
+              avatarRev: bumpedRev,
               clearError: true,
             )
-            .fillFormFromUser(updated),
+            .fillFormFromUser(fresh),
       );
 
       emit(state.copyWith(status: ProfileStatus.ready));

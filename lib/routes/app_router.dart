@@ -10,6 +10,7 @@ import 'package:flutter_base_architecture/pages/detail_information/detail_inform
 import 'package:flutter_base_architecture/pages/home_page/home_page.dart';
 import 'package:flutter_base_architecture/pages/on_boarding_page/OnBoardingPage.dart';
 import 'package:flutter_base_architecture/pages/order_page/OrderPage.dart';
+import 'package:flutter_base_architecture/pages/profile_page/account_info_page.dart';
 import 'package:flutter_base_architecture/pages/profile_page/profile_page.dart';
 import 'package:flutter_base_architecture/pages/shooping_cart_page/shopping_cart_page.dart';
 import 'package:flutter_base_architecture/pages/test_adapt.dart';
@@ -271,6 +272,61 @@ class AppRouter {
         },
       ),
       GoRoute(
+        path: AppRoutes.accountInfo,
+        name: 'AccountInfo',
+        pageBuilder: (BuildContext context, GoRouterState state) {
+          return CustomTransitionPage(
+            child: AccountInfoPage(),
+            transitionsBuilder: (
+              context,
+              animation,
+              secondaryAnimation,
+              child,
+            ) {
+              return FadeTransition(opacity: animation, child: child);
+            },
+          );
+        },
+      ),
+      GoRoute(
+        path: AppRoutes.checkoutPayment,
+        name: 'Delivery',
+        pageBuilder: (BuildContext context, GoRouterState state) {
+          final addressDocumentId = (state.extra as String?) ?? '';
+
+          return CustomTransitionPage(
+            child: AccountInfoPage(),
+            transitionsBuilder: (
+              context,
+              animation,
+              secondaryAnimation,
+              child,
+            ) {
+              return FadeTransition(opacity: animation, child: child);
+            },
+          );
+        },
+      ),
+      GoRoute(
+        path: AppRoutes.checkoutPayment,
+        name: 'Setting',
+        pageBuilder: (BuildContext context, GoRouterState state) {
+          final addressDocumentId = (state.extra as String?) ?? '';
+
+          return CustomTransitionPage(
+            child: CheckoutPaymentPage(addressDocumentId: addressDocumentId),
+            transitionsBuilder: (
+              context,
+              animation,
+              secondaryAnimation,
+              child,
+            ) {
+              return FadeTransition(opacity: animation, child: child);
+            },
+          );
+        },
+      ),
+      GoRoute(
         path: AppRoutes.addNewCard,
         name: 'AddNewCard',
         pageBuilder: (BuildContext context, GoRouterState state) {
@@ -406,15 +462,7 @@ class AppRouter {
                 path: AppRoutes.profile,
                 name: 'profile',
                 pageBuilder: (ctx, st) {
-                  return NoTransitionPage(
-                    child: BlocProvider(
-                      create:
-                          (c) =>
-                              ProfileBloc(c.read<AuthRepository>())
-                                ..add(const ProfileBoot()),
-                      child: const ProfilePage(),
-                    ),
-                  );
+                  return const NoTransitionPage(child: ProfilePage());
                 },
               ),
             ],

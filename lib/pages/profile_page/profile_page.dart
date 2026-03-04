@@ -54,6 +54,10 @@ Message:
 
   @override
   Widget build(BuildContext context) {
+    debugPrint(
+      'PROFILE ProfileBloc hash=${identityHashCode(context.read<ProfileBloc>())}',
+    );
+
     final gradient = LinearGradient(
       colors: [AppColors.gradientOne, AppColors.gradientTwo],
       begin: Alignment.centerLeft,
@@ -205,19 +209,9 @@ Message:
                     children: [
                       _buildCard([
                         _button(
-                          iconPath: Assets.icons.profile.path,
-                          label: 'Account info',
-                          onTap:
-                              () => context.read<ProfileBloc>().add(
-                                const ProfileEditOpened(),
-                              ),
-                        ),
-                        const SizedBox(height: 20),
-                        _button(
                           iconPath: Assets.icons.order.path,
                           label: 'My order',
                           onTap: () {
-                            // TODO: navigate to orders if you have route
                             context.go(AppRoutes.order);
                           },
                         ),
@@ -226,15 +220,7 @@ Message:
                           iconPath: Assets.icons.payment.path,
                           label: 'Payment Method',
                           onTap: () {
-                            // TODO: navigate
-                          },
-                        ),
-                        const SizedBox(height: 20),
-                        _button(
-                          iconPath: Assets.icons.location.path,
-                          label: 'Delivery Address',
-                          onTap: () {
-                            // TODO: navigate
+                            context.push(AppRoutes.addNewCard);
                           },
                         ),
                       ]),
@@ -242,19 +228,9 @@ Message:
 
                       _buildCard([
                         _button(
-                          iconPath: Assets.icons.setting.path,
-                          label: 'Setting',
-                          onTap: () {
-                            // TODO: navigate
-                          },
-                        ),
-                        const SizedBox(height: 20),
-                        _button(
                           iconPath: Assets.icons.helper.path,
                           label: 'Help Center',
-                          onTap: () {
-                            // TODO: navigate
-                          },
+                          onTap: () => _showHelpDialog(context),
                         ),
                         const SizedBox(height: 20),
 
@@ -290,6 +266,56 @@ Message:
               ),
             ],
           ),
+        );
+      },
+    );
+  }
+
+  void _showHelpDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          backgroundColor: AppColors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          title: const Text(
+            'About Our Store',
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+          ),
+          content: const SingleChildScrollView(
+            child: Text('''
+Welcome to LokMarT 🛒
+
+LokMarT is your trusted online grocery store, delivering fresh and high-quality products straight to your door.
+
+We carefully select fruits, vegetables, meat, dairy, and everyday essentials to ensure top freshness and competitive prices.
+
+Why choose us?
+
+• Fast delivery
+• Fresh daily products
+• Secure payments
+• Friendly customer support
+• Easy returns
+
+Our mission is to make grocery shopping simple, fast, and enjoyable.
+
+If you have any questions, feel free to contact our support team anytime.
+
+Thank you for choosing FreshMart!
+            ''', style: TextStyle(fontSize: 14, height: 1.4)),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text(
+                'Close',
+                style: TextStyle(color: AppColors.orange),
+              ),
+            ),
+          ],
         );
       },
     );
@@ -553,6 +579,7 @@ class _EditProfileDialogState extends State<_EditProfileDialog> {
                     (busy || !s.canSaveProfile)
                         ? null
                         : () => bloc.add(const ProfileSaveProfileSubmitted()),
+
                 child: const Text(
                   'Save profile',
                   style: TextStyle(color: AppColors.orange),

@@ -30,6 +30,9 @@ class ProfileState extends Equatable {
     this.currentPassword = '',
     this.newPassword = '',
     this.confirmPassword = '',
+
+    // ✅ NEW: cache-bust для аватарки
+    this.avatarRev = 0,
   });
 
   final ProfileStatus status;
@@ -44,6 +47,9 @@ class ProfileState extends Equatable {
   final String currentPassword;
   final String newPassword;
   final String confirmPassword;
+
+  // ✅ NEW
+  final int avatarRev;
 
   bool get canSaveProfile {
     if (user == null) return false;
@@ -82,6 +88,9 @@ class ProfileState extends Equatable {
     String? currentPassword,
     String? newPassword,
     String? confirmPassword,
+
+    // ✅ NEW
+    int? avatarRev,
   }) {
     return ProfileState(
       status: status ?? this.status,
@@ -94,6 +103,9 @@ class ProfileState extends Equatable {
       currentPassword: currentPassword ?? this.currentPassword,
       newPassword: newPassword ?? this.newPassword,
       confirmPassword: confirmPassword ?? this.confirmPassword,
+
+      // ✅ NEW
+      avatarRev: avatarRev ?? this.avatarRev,
     );
   }
 
@@ -121,5 +133,8 @@ class ProfileState extends Equatable {
     currentPassword,
     newPassword,
     confirmPassword,
+
+    // ✅ NEW
+    avatarRev,
   ];
 }

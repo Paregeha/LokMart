@@ -27,4 +27,8 @@ class AppRoutes {
 
   static const searchPage = '/search';
   static const filterOptionsPage = '/filter-options';
+
+  static const setting = '/setting';
+  static const delivery = '/delivery';
+  static const accountInfo = '/account_info';
 }

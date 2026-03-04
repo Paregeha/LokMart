@@ -25,6 +25,29 @@ class CategoryItemsPage extends StatefulWidget {
 }
 
 class _CategoryItemsPageState extends State<CategoryItemsPage> {
+  late final ScrollController _ctrl;
+
+  @override
+  void initState() {
+    super.initState();
+    _ctrl = ScrollController()..addListener(_onScroll);
+  }
+
+  void _onScroll() {
+    if (!_ctrl.hasClients) return;
+    final pos = _ctrl.position;
+    if (pos.pixels >= pos.maxScrollExtent - 300) {
+      context.read<ProductsBloc>().add(const ProductsEvent.loadMore());
+    }
+  }
+
+  @override
+  void dispose() {
+    _ctrl.removeListener(_onScroll);
+    _ctrl.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     final category = GoRouterState.of(context).extra as Category?;
@@ -101,7 +124,6 @@ class _CategoryItemsPageState extends State<CategoryItemsPage> {
               ),
             ),
             const SizedBox(height: 30.0),
-
             Expanded(
               child: BlocBuilder<ProductsBloc, ProductsState>(
                 builder: (context, state) {
@@ -120,11 +142,18 @@ class _CategoryItemsPageState extends State<CategoryItemsPage> {
                                 ),
                               ),
                         ),
-                    loadingMore:
-                        (products, _) =>
-                            _ProductsListColumn(products: products),
                     success:
-                        (products) => _ProductsListColumn(products: products),
+                        (products) => _ProductsListColumn(
+                          products: products,
+                          controller: _ctrl,
+                          isLoadingMore: false,
+                        ),
+                    loadingMore:
+                        (products, _) => _ProductsListColumn(
+                          products: products,
+                          controller: _ctrl,
+                          isLoadingMore: true,
+                        ),
                   );
                 },
               ),
@@ -180,8 +209,15 @@ class _ProductsError extends StatelessWidget {
 }
 
 class _ProductsListColumn extends StatelessWidget {
-  const _ProductsListColumn({required this.products});
+  const _ProductsListColumn({
+    required this.products,
+    required this.controller,
+    required this.isLoadingMore,
+  });
+
   final List<Products> products;
+  final ScrollController controller;
+  final bool isLoadingMore;
 
   @override
   Widget build(BuildContext context) {
@@ -198,20 +234,28 @@ class _ProductsListColumn extends StatelessWidget {
     }
 
     return SingleChildScrollView(
+      controller: controller,
       child: Column(
         children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 32.0),
-            child: CustomItemCartWidget(products: products.first),
-          ),
-          const SizedBox(height: 25.0),
-          for (int i = 1; i < products.length; i++) ...[
+          for (final p in products) ...[
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 32.0),
-              child: CustomItemCartWidget(products: products[i]),
+              child: CustomItemCartWidget(products: p),
             ),
             const SizedBox(height: 25.0),
           ],
+          if (isLoadingMore)
+            const Padding(
+              padding: EdgeInsets.only(bottom: 24, top: 8),
+              child: Center(
+                child: SizedBox(
+                  width: 22,
+                  height: 22,
+                  child: CircularProgressIndicator(strokeWidth: 2),
+                ),
+              ),
+            ),
+          const SizedBox(height: 12),
         ],
       ),
     );

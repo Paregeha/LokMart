@@ -16,7 +16,6 @@ import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 import '../../core/env.dart';
 import '../../features/auth/data/auth_repository.dart';
-import '../../features/auth/models/strapi_auth_response.dart'; // StrapiUser
 import '../../features/category/blocs/category_bloc.dart';
 import '../../features/category/blocs/category_event.dart';
 import '../../features/category/blocs/category_state.dart';
@@ -27,6 +26,10 @@ import '../../features/products/blocs/products_state.dart';
 import '../../features/products/models/products.dart';
 import '../../resources/app_fonts.dart';
 
+// ✅ Profile imports
+import '../../features/profile/bloc/profile_bloc.dart';
+import '../../features/profile/bloc/profile_state.dart';
+
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
@@ -36,6 +39,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   late final PageController _bannerCtrl;
+  late final ScrollController _scrollCtrl;
 
   int indexBottomBar = 0;
   int indexAdvertising = 0;
@@ -46,50 +50,38 @@ class _HomePageState extends State<HomePage> {
     Assets.images.bannerMeat.image(),
   ];
 
-  StrapiUser? _me;
-  bool _loadingMe = false;
-
   @override
   void initState() {
     super.initState();
     final start = _banners.length * 1000 + 1;
     _bannerCtrl = PageController(viewportFraction: 0.7, initialPage: start);
 
-    _loadMe();
+    _scrollCtrl = ScrollController()..addListener(_onScroll);
   }
 
-  Future<void> _loadMe() async {
-    setState(() => _loadingMe = true);
-    try {
-      final repo = context.read<AuthRepository>();
-      final u = await repo.me();
-      if (!mounted) return;
-      setState(() => _me = u);
-    } catch (_) {
-    } finally {
-      if (mounted) setState(() => _loadingMe = false);
+  void _onScroll() {
+    if (!_scrollCtrl.hasClients) return;
+    final pos = _scrollCtrl.position;
+
+    // за 300px до низу — просимо loadMore
+    if (pos.pixels >= pos.maxScrollExtent - 300) {
+      context.read<ProductsBloc>().add(const ProductsEvent.loadMore());
     }
   }
 
   @override
   void dispose() {
+    _scrollCtrl.removeListener(_onScroll);
+    _scrollCtrl.dispose();
     _bannerCtrl.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final authRepo = context.read<AuthRepository>();
-
-    final username =
-        (_me?.username.trim().isNotEmpty ?? false)
-            ? _me!.username.trim()
-            : '...';
-
-    final avatarUrl =
-        (_me?.avatarUrl?.trim().isNotEmpty ?? false)
-            ? authRepo.toAbsoluteUrl(_me!.avatarUrl!.trim())
-            : null;
+    debugPrint(
+      'HOME ProfileBloc hash=${identityHashCode(context.read<ProfileBloc>())}',
+    );
 
     return LayoutBuilder(
       builder: (context, constraints) {
@@ -107,68 +99,113 @@ class _HomePageState extends State<HomePage> {
               centerTitle: false,
               toolbarHeight: 50.0,
               titleSpacing: 30.0,
-              title: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    'Hello, $username',
-                    style: const TextStyle(
-                      fontFamily: AppFonts.fontFamily,
-                      fontWeight: AppFonts.w700bold,
-                      fontSize: 22.0,
-                      height: 1.0,
-                      letterSpacing: -0.3,
-                      color: AppColors.dark,
-                    ),
-                  ),
-                  const Text(
-                    'Good morning.',
-                    style: TextStyle(
-                      fontFamily: AppFonts.fontFamily,
-                      fontWeight: AppFonts.w400regular,
-                      fontSize: 14.0,
-                      height: 1.0,
-                      letterSpacing: -0.3,
-                      color: AppColors.softGray,
-                    ),
-                  ),
-                ],
+
+              // ✅ username from ProfileBloc
+              title: BlocSelector<ProfileBloc, ProfileState, String>(
+                selector:
+                    (s) =>
+                        (s.user?.username.trim().isNotEmpty ?? false)
+                            ? s.user!.username.trim()
+                            : '...',
+                builder: (context, username) {
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        'Hello, $username',
+                        style: const TextStyle(
+                          fontFamily: AppFonts.fontFamily,
+                          fontWeight: AppFonts.w700bold,
+                          fontSize: 22.0,
+                          height: 1.0,
+                          letterSpacing: -0.3,
+                          color: AppColors.dark,
+                        ),
+                      ),
+                      const Text(
+                        'Good morning.',
+                        style: TextStyle(
+                          fontFamily: AppFonts.fontFamily,
+                          fontWeight: AppFonts.w400regular,
+                          fontSize: 14.0,
+                          height: 1.0,
+                          letterSpacing: -0.3,
+                          color: AppColors.softGray,
+                        ),
+                      ),
+                    ],
+                  );
+                },
               ),
+
               actions: [
                 Padding(
                   padding: const EdgeInsets.only(right: 25.0),
-                  child: Container(
-                    width: 43.0,
-                    height: 43.0,
-                    decoration: const BoxDecoration(shape: BoxShape.circle),
-                    clipBehavior: Clip.antiAlias,
-                    child: Stack(
-                      children: [
-                        Positioned.fill(child: _HomeAvatar(url: avatarUrl)),
-                        if (_loadingMe)
-                          const Positioned.fill(
-                            child: ColoredBox(
-                              color: Color(0x22FFFFFF),
-                              child: Center(
-                                child: SizedBox(
-                                  width: 16,
-                                  height: 16,
-                                  child: CircularProgressIndicator(
-                                    strokeWidth: 2,
+                  child: BlocSelector<
+                    ProfileBloc,
+                    ProfileState,
+                    ({String? url, bool loading})
+                  >(
+                    selector: (ps) {
+                      final authRepo = context.read<AuthRepository>();
+                      final raw = ps.user?.avatarUrl?.trim();
+
+                      String? url =
+                          (raw != null && raw.isNotEmpty)
+                              ? authRepo.toAbsoluteUrl(raw)
+                              : null;
+
+                      // ✅ cache-bust
+                      if (url != null) {
+                        url = '$url?v=${ps.avatarRev}';
+                      }
+
+                      return (
+                        url: url,
+                        loading: ps.status == ProfileStatus.loading,
+                      );
+                    },
+                    builder: (context, v) {
+                      return Container(
+                        width: 43.0,
+                        height: 43.0,
+                        decoration: const BoxDecoration(shape: BoxShape.circle),
+                        clipBehavior: Clip.antiAlias,
+                        child: Stack(
+                          children: [
+                            Positioned.fill(
+                              child: _HomeAvatar(
+                                key: ValueKey(v.url ?? 'no-avatar'),
+                                url: v.url,
+                              ),
+                            ),
+                            if (v.loading)
+                              const Positioned.fill(
+                                child: ColoredBox(
+                                  color: Color(0x22FFFFFF),
+                                  child: Center(
+                                    child: SizedBox(
+                                      width: 16,
+                                      height: 16,
+                                      child: CircularProgressIndicator(
+                                        strokeWidth: 2,
+                                      ),
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
-                          ),
-                      ],
-                    ),
+                          ],
+                        ),
+                      );
+                    },
                   ),
                 ),
               ],
             ),
             body: SafeArea(
               child: SingleChildScrollView(
+                controller: _scrollCtrl,
                 child: Column(
                   children: [
                     const SizedBox(height: 19.0),
@@ -208,6 +245,7 @@ class _HomePageState extends State<HomePage> {
                         ],
                       ),
                     ),
+
                     const SizedBox(height: 3.0),
                     AspectRatio(
                       aspectRatio: 18 / 7,
@@ -226,8 +264,10 @@ class _HomePageState extends State<HomePage> {
                                       ? (_bannerCtrl.page ??
                                           _bannerCtrl.initialPage.toDouble())
                                       : _bannerCtrl.initialPage.toDouble();
+
                               final distance = (i - currentPage).abs();
                               final proximity = (1 - distance).clamp(0.0, 1.0);
+
                               const minScale = 0.80;
                               const maxScale = 1.00;
                               final scale =
@@ -246,6 +286,7 @@ class _HomePageState extends State<HomePage> {
                         },
                       ),
                     ),
+
                     AnimatedSmoothIndicator(
                       activeIndex: indexAdvertising,
                       count: _banners.length,
@@ -346,7 +387,7 @@ class _HomePageState extends State<HomePage> {
                                   horizontal: 32.0,
                                 ),
                                 separatorBuilder:
-                                    (_, _) => const SizedBox(width: 15.0),
+                                    (_, __) => const SizedBox(width: 15.0),
                                 itemCount: items.length,
                                 itemBuilder:
                                     (_, i) => _CategoryChip(item: items[i]),
@@ -357,7 +398,6 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ),
 
-                    // ---- решта твого коду без змін ----
                     const SizedBox(height: 39.0),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 32.0),
@@ -398,6 +438,7 @@ class _HomePageState extends State<HomePage> {
                         ],
                       ),
                     ),
+
                     SizedBox(
                       height: 267.0,
                       child: BlocBuilder<ProductsBloc, ProductsState>(
@@ -429,7 +470,7 @@ class _HomePageState extends State<HomePage> {
                                   horizontal: 32.0,
                                 ),
                                 separatorBuilder:
-                                    (_, _) => const SizedBox(width: 15.0),
+                                    (_, __) => const SizedBox(width: 15.0),
                                 itemCount: count,
                                 itemBuilder:
                                     (_, i) => CustomDealsCartWidget(
@@ -455,10 +496,10 @@ class _HomePageState extends State<HomePage> {
                                     horizontal: 32.0,
                                   ),
                                   separatorBuilder:
-                                      (_, _) => const SizedBox(width: 15.0),
+                                      (_, __) => const SizedBox(width: 15.0),
                                   itemCount: 5,
                                   itemBuilder:
-                                      (_, _) => const SizedBox(
+                                      (_, __) => const SizedBox(
                                         width: 287,
                                         child: Opacity(
                                           opacity: 0.3,
@@ -475,6 +516,7 @@ class _HomePageState extends State<HomePage> {
                         },
                       ),
                     ),
+
                     const SizedBox(height: 39.0),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 32.0),
@@ -495,6 +537,8 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ),
                     const SizedBox(height: 25.0),
+
+                    // ✅ Infinite scroll based on ProductsBloc loadMore()
                     BlocBuilder<ProductsBloc, ProductsState>(
                       builder: (context, state) {
                         return state.when(
@@ -526,8 +570,34 @@ class _HomePageState extends State<HomePage> {
                                   ],
                                 ),
                               ),
-                          success: (products) => _ProductsList(products),
-                          loadingMore: (products, _) => _ProductsList(products),
+                          success:
+                              (products) => Column(
+                                children: [
+                                  _ProductsList(products),
+                                  const SizedBox(height: 8),
+                                ],
+                              ),
+                          loadingMore:
+                              (products, _) => Column(
+                                children: [
+                                  _ProductsList(products),
+                                  const Padding(
+                                    padding: EdgeInsets.only(
+                                      bottom: 24,
+                                      top: 8,
+                                    ),
+                                    child: Center(
+                                      child: SizedBox(
+                                        width: 22,
+                                        height: 22,
+                                        child: CircularProgressIndicator(
+                                          strokeWidth: 2,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
                         );
                       },
                     ),
@@ -543,7 +613,7 @@ class _HomePageState extends State<HomePage> {
 }
 
 class _HomeAvatar extends StatelessWidget {
-  const _HomeAvatar({this.url});
+  const _HomeAvatar({super.key, this.url});
 
   final String? url;
 
@@ -569,12 +639,12 @@ class _ProductsSkeleton extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 32.0),
       child: ListView.separated(
-        separatorBuilder: (_, _) => const SizedBox(height: 25.0),
+        separatorBuilder: (_, __) => const SizedBox(height: 25.0),
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
         itemCount: 3,
         itemBuilder:
-            (_, _) => Opacity(
+            (_, __) => Opacity(
               opacity: 0.3,
               child: Assets.images.apple.image(
                 width: double.infinity,
@@ -590,12 +660,13 @@ class _ProductsSkeleton extends StatelessWidget {
 Widget _ProductsList(List<Products> products) {
   return Padding(
     padding: const EdgeInsets.symmetric(horizontal: 32.0),
-    child: ListView.separated(
-      separatorBuilder: (_, _) => const SizedBox(height: 25.0),
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      itemCount: products.length,
-      itemBuilder: (_, i) => CustomItemCartWidget(products: products[i]),
+    child: Column(
+      children: [
+        for (final p in products) ...[
+          CustomItemCartWidget(products: p),
+          const SizedBox(height: 25.0),
+        ],
+      ],
     ),
   );
 }
@@ -608,9 +679,9 @@ class _CategoriesSkeleton extends StatelessWidget {
     return ListView.separated(
       scrollDirection: Axis.horizontal,
       padding: const EdgeInsets.symmetric(horizontal: 32.0),
-      separatorBuilder: (_, _) => const SizedBox(width: 15.0),
+      separatorBuilder: (_, __) => const SizedBox(width: 15.0),
       itemCount: 5,
-      itemBuilder: (_, _) => const _CategoryChip.skeleton(),
+      itemBuilder: (_, __) => const _CategoryChip.skeleton(),
     );
   }
 }
