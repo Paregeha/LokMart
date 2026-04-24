@@ -85,7 +85,7 @@ lib/
 flutter pub get
 ```
 
-2. Start backend (Strapi) first.
+2. Start backend (Strapi) first. https://github.com/Paregeha/strapi_lokmart
 
 If your backend is in a folder like `~/Strapi` (as in your terminal prompt), run:
 
